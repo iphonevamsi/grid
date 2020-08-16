@@ -462,6 +462,7 @@ const TextEditor: React.FC<EditableProps & RefAttribute> = memo(
                         text,
                         isShiftKey ? Direction.Left : Direction.Right
                       );
+                    return;
                   }
 
                   /* Trap focus inside the grid */
