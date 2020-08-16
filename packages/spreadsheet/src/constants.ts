@@ -177,7 +177,7 @@ export const format = (
  * Check if a cell is numeric
  */
 export const isNumeric = (cell: CellConfig) => {
-  return cell && cell.datatype === "number";
+  return cell && (cell.datatype === "number" || cell.resultType === 'number');
 };
 
 /**

@@ -43,9 +43,13 @@ const StatusBar: React.FC<StatusBarProps> = memo(
         for (let k = left; k <= right; k++) {
           const cell = cells[j]?.[k];
           if (cell === void 0 || isNull(cell)) continue;
-          if (!isNull(cell.text) && isNumeric(cell)) {
+          const isFormula = cell.datatype === 'formula'
+          const value = isFormula
+            ? cell.result
+            : cell.text
+          if (!isNull(value) && isNumeric(cell)) {
             count += 1;
-            sum += Number(cell.text);
+            sum += Number(value);
           }
         }
       }
