@@ -182,8 +182,8 @@ const HeaderCell: React.FC<HeaderCellProps> = memo((props) => {
   return (
     <Cell
       {...rest}
-      x={x + 0.5}
-      y={y + 0.5}
+      x={x}
+      y={y}
       fill={fill}
       align="center"
       value={value}
