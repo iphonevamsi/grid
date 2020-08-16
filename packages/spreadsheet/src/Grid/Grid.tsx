@@ -39,7 +39,7 @@ import Grid, {
   throttle,
 } from "@rowsncolumns/grid";
 import { debounce, cellIdentifier } from "@rowsncolumns/grid";
-import { ThemeProvider, ColorModeProvider, usePrevious } from "@chakra-ui/core";
+import { ThemeProvider, ColorModeProvider } from "@chakra-ui/core";
 import {
   DEFAULT_COLUMN_WIDTH,
   DEFAULT_ROW_HEIGHT,
@@ -74,7 +74,6 @@ import {
   getSelectionColorAtIndex,
   getSelectionsFromInput,
 } from "./../formulas/helpers";
-import isEqual from "lodash.isequal";
 
 const EMPTY_ARRAY: any = [];
 const EMPTY_OBJECT: any = {};
@@ -339,7 +338,6 @@ const SheetGrid: React.FC<GridProps & RefAttributeGrid> = memo(
       selectionBorderColor = "#1a73e8",
       isFormulaMode,
       setFormulaMode,
-      isFormulaInputActive,
       supportedFormulas = EMPTY_ARRAY,
       onEditorKeyDown,
     } = props;

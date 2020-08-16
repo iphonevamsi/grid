@@ -62,7 +62,7 @@ import StatusBarComponent from "./StatusBar";
 import { StatusBarProps } from "./StatusBar/StatusBar";
 import useFonts from "./hooks/useFonts";
 import { createStateReducer, ACTION_TYPE, ActionTypes } from "./state";
-import { Patch, applyPatches } from "immer";
+import { Patch } from "immer";
 import { ContextMenuComponentProps } from "./ContextMenu/ContextMenu";
 import ContextMenuComponent from "./ContextMenu";
 import TooltipComponent, { TooltipProps } from "./Tooltip";
@@ -792,26 +792,6 @@ const Spreadsheet: React.FC<SpreadSheetProps & RefAttributeSheetGrid> = memo(
     getCellConfigRef.current = getCellConfig;
     getCellConfigBySheetNameRef.current = getCellConfigBySheetName;
     getSheetRef.current = getSheet;
-
-    /**
-     * Get max rows in a sheet
-     */
-    const getMinMaxRows = useCallback(
-      (sheet: SheetID) => {
-        return getMinMax(sheetsByName[sheet]?.cells);
-      },
-      [sheetsByName]
-    );
-
-    /**
-     * Get max columns in a sheet row
-     */
-    const getMinMaxColumns = useCallback(
-      (sheet: SheetID, rowIndex: number) => {
-        return getMinMax(sheetsByName[sheet].cells?.[rowIndex]);
-      },
-      [sheetsByName]
-    );
 
     /**
      * Get properties of a sheet
@@ -1717,10 +1697,9 @@ const Spreadsheet: React.FC<SpreadSheetProps & RefAttributeSheetGrid> = memo(
           newSelection: isSingleCellSelection ? void 0 : newSelection,
         });
 
-        if (activeCell) {
-          const value = getCellConfigRef.current?.(id, activeCell)?.text;
-          handleActiveCellValueChange(id, activeCell, value);
-        }
+        /* Update formula bar input */
+        const value = getCellConfigRef.current?.(id, activeCell)?.text;
+        handleActiveCellValueChange(id, activeCell, value);
 
         /* Trigger callback and calculation */
 
@@ -1840,8 +1819,6 @@ const Spreadsheet: React.FC<SpreadSheetProps & RefAttributeSheetGrid> = memo(
 
     const handleEditorKeyDown = useCallback(
       (event: React.KeyboardEvent<any>) => {
-        const isMeta = event.metaKey || event.ctrlKey;
-        const isShift = event.shiftKey;
         const keyCode = event.which;
         const isAlt = event.altKey;
         switch (keyCode) {

@@ -40,7 +40,7 @@ import { CellRenderer as defaultOverlayRenderer } from "./CellOverlay";
 import Selection from "./Selection";
 import FillHandle from "./FillHandle";
 import GridLine from "./GridLine";
-import { createCanvasBox, createHTMLBox } from "./utils";
+import { createHTMLBox } from "./utils";
 import invariant from "tiny-invariant";
 import { StageConfig } from "konva/types/Stage";
 import { Direction } from "./types";
@@ -552,7 +552,6 @@ const Grid: React.FC<GridProps & RefAttribute> = memo(
     const verticalScrollRef = useRef<HTMLDivElement>(null);
     const wheelingRef = useRef<number | null>(null);
     const horizontalScrollRef = useRef<HTMLDivElement>(null);
-    const scrollerRef = useRef(null);
     const [_, forceRender] = useReducer((s) => s + 1, 0);
     const [scrollState, setScrollState] = useState<ScrollState>({
       scrollTop: 0,
@@ -640,7 +639,6 @@ const Grid: React.FC<GridProps & RefAttribute> = memo(
       const mergedCellMap = new Map();
       for (let i = 0; i < mergedCells.length; i++) {
         const bounds = mergedCells[i];
-        const { top, left } = bounds;
         for (const cell of getBoundedCells(bounds)) {
           mergedCellMap.set(cell, bounds);
         }

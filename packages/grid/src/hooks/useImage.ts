@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 
 export interface UseImageProps {
   url: string;

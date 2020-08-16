@@ -1,7 +1,6 @@
 import {
   FormulaParser,
   Sheet,
-  GetValue,
   CellRange,
   Functions,
   ParseResults,
@@ -248,7 +247,6 @@ class CalcEngine {
             currentConfig?.parentCell !== address
           ) {
             return currentCell;
-            break;
           }
         }
       }

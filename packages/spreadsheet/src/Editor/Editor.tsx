@@ -98,7 +98,6 @@ const Editor: React.FC<CustomEditorProps & RefAttribute> = forwardRef(
       isFormulaMode,
       supportedFormulas,
       onFormulaChange,
-      ...rest
     } = props;
     const wrapping: any = cellWrap === "wrap" ? "wrap" : "nowrap";
     const { colorMode } = useColorMode();

@@ -174,7 +174,7 @@ const useFilter = ({
 
   const values = useMemo(() => {
     if (!filterCell || !currentFilter) return [];
-    const { filter, filterView } = currentFilter;
+    const { filterView } = currentFilter;
     const { columnIndex } = filterCell;
     const { bounds } = filterView;
     var filterValues = new Set();

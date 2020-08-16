@@ -106,10 +106,7 @@ const useShiftDown = (props: ShiftDownProps): ShiftDownResults => {
     }
     return (options as any[])
       .filter((item) => {
-        if (
-          !inputValue ||
-          (!isDirty.current && !filterOnInitialOpen && inputValue)
-        )
+        if (!inputValue || (!isDirty.current && !filterOnInitialOpen))
           return true;
         if (filter) return filter(item);
         const key = typeof item === "object" ? item.value || item.label : item;

@@ -118,7 +118,6 @@ const TextEditor: React.FC<EditableProps & RefAttribute> = memo(
       bold,
       scale,
       color,
-      wrapping,
       horizontalAlign,
       underline,
       onKeyDown,
@@ -269,37 +268,35 @@ const TextEditor: React.FC<EditableProps & RefAttribute> = memo(
         const [node, path] = entry;
         const { text } = node;
         let offset = 0;
-        if (isFormulaMode) {
-          const tokens = normalizeTokens(text as string);
-          if (cursorToken && tokens.length && cursorToken.path[0] === path[0]) {
-            ranges.push({
-              anchor: { path, offset: cursorToken.offset },
-              focus: { path, offset: cursorToken.offset },
-              cursor: true,
-            });
-          }
-          let prevToken: Token;
-          tokens.forEach((token) => {
-            let add = token.startOffset - (prevToken?.endColumn ?? 0);
-            ranges.push({
-              anchor: { path, offset: offset + token.image.length + add },
-              focus: { path, offset },
-              selection: !!token.sel,
-              color:
-                token?.index !== void 0
-                  ? getSelectionColorAtIndex(token.index)
-                  : token.tokenType.name === "String"
-                  ? "green"
-                  : token.tokenType.name === "Number"
-                  ? "#15c"
-                  : void 0,
-            });
-
-            prevToken = token;
-
-            offset = offset + token.image.length + add;
+        const tokens = normalizeTokens(text as string);
+        if (cursorToken && tokens.length && cursorToken.path[0] === path[0]) {
+          ranges.push({
+            anchor: { path, offset: cursorToken.offset },
+            focus: { path, offset: cursorToken.offset },
+            cursor: true,
           });
         }
+        let prevToken: Token;
+        tokens.forEach((token) => {
+          let add = token.startOffset - (prevToken?.endColumn ?? 0);
+          ranges.push({
+            anchor: { path, offset: offset + token.image.length + add },
+            focus: { path, offset },
+            selection: !!token.sel,
+            color:
+              token?.index !== void 0
+                ? getSelectionColorAtIndex(token.index)
+                : token.tokenType.name === "String"
+                ? "green"
+                : token.tokenType.name === "Number"
+                ? "#15c"
+                : void 0,
+          });
+
+          prevToken = token;
+
+          offset = offset + token.image.length + add;
+        });
 
         return ranges;
       },
@@ -391,7 +388,6 @@ const TextEditor: React.FC<EditableProps & RefAttribute> = memo(
                 const isCell = isCurrentPositionACell(editor, tokens);
                 const isTokenAtEdgeofCell =
                   curToken?.endColumn === start.offset;
-                const isNewCell = !isCurrentPositionACell(editor, tokens);
                 if (showFnSuggestions) {
                   setSuggestionToken(fnToken);
                   setInputValue(cleanFunctionToken(fnToken?.image ?? ""));

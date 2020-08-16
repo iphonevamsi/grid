@@ -1,4 +1,4 @@
-import React, { useState, useEffect, isValidElement } from "react";
+import React, { useState, useEffect } from "react";
 
 export interface PaginationProps {
   /**

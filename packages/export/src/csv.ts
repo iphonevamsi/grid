@@ -1,9 +1,4 @@
-import {
-  Sheet,
-  CellConfig,
-  uuid,
-  createNewSheet,
-} from "@rowsncolumns/spreadsheet";
+import { Sheet, createNewSheet } from "@rowsncolumns/spreadsheet";
 import { ParseProps, ParseResults } from "./excel";
 
 const DELIMITER = ",";

@@ -26,7 +26,6 @@ import {
   CellInterface,
   getBoundedCells,
   cellIdentifier,
-  isNull,
 } from "@rowsncolumns/grid";
 import { DATATYPES } from "@rowsncolumns/spreadsheet";
 
@@ -251,7 +250,6 @@ export const parseExcel = async ({
         _sheet.cells[rowId] = {};
         for (let j = 1; j <= columnCount; j++) {
           const cell = row.getCell(j);
-          let value = cell.value;
 
           const currentCell: CellInterface = {
             rowIndex: rowId,

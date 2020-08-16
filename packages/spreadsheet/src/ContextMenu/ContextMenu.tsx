@@ -5,13 +5,11 @@ import {
   MenuList,
   MenuDivider,
   useColorMode,
-  theme,
   useTheme,
 } from "@chakra-ui/core";
 import { MdContentCut, MdContentCopy, MdContentPaste } from "react-icons/md";
 import { ContextMenuProps } from "../Grid/Grid";
 import { CellInterface, SelectionArea } from "@rowsncolumns/grid";
-import { DARK_MODE_COLOR } from "../constants";
 import { MenuItem } from "./../styled";
 
 export interface ContextMenuComponentProps extends ContextMenuProps {

@@ -20,7 +20,7 @@ export const validate = async (
   cell: CellInterface,
   cellConfig: CellConfig | undefined
 ): Promise<ValidationResponse | undefined> => {
-  let valid = true;
+  let valid;
   switch (cellConfig?.dataValidation?.type) {
     case "list": {
       const validList = cellConfig?.dataValidation?.formulae;
@@ -87,7 +87,6 @@ export const validate = async (
       return {
         valid,
       };
-      break;
     }
 
     default:

@@ -1,4 +1,4 @@
-import produce, { enablePatches, applyPatches, Patch, original } from "immer";
+import produce, { enablePatches, applyPatches, Patch } from "immer";
 import {
   uuid,
   cellsInSelectionVariant,
@@ -1155,7 +1155,6 @@ export const createStateReducer = ({
               (sheet) => sheet.id === action.id
             ) as Sheet;
             if (sheet && !sheet.locked) {
-              const { selections } = sheet;
               const { rows, activeCell, selection, newSelection } = action;
               const { rowIndex, columnIndex } = activeCell;
               const { cells } = sheet;

@@ -64,8 +64,6 @@ function extractIfJSON(str: string) {
     return str;
   }
 }
-
-const defaultMinMaxRows = () => [0, 100];
 /**
  * Create a formula parser
  * @param param0

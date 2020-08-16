@@ -384,7 +384,6 @@ const DefaultEditor: React.FC<EditorProps> = (props) => {
 
 const getDefaultEditor = (cell: CellInterface | null) => DefaultEditor;
 const defaultCanEdit = (cell: CellInterface) => true;
-const EMPTY_ID: number[] = [];
 const defaultIsHidden = (i: number) => false;
 
 /**
@@ -625,7 +624,7 @@ const useEditable = ({
       /* Next immediate cell */
       const bounds = gridRef.current?.getCellBounds(currentCell);
       if (!bounds) return null;
-      let nextActiveCell = currentCell;
+      let nextActiveCell;
       switch (direction) {
         case Direction.Right: {
           let columnIndex = clampIndex(

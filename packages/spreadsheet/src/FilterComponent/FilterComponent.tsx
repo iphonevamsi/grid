@@ -1,9 +1,6 @@
 import React, { useState, useCallback, useRef, useEffect } from "react";
 import {
   Box,
-  Menu,
-  MenuList,
-  MenuDivider,
   useColorMode,
   useTheme,
   InputGroup,
@@ -13,7 +10,7 @@ import {
   Checkbox,
 } from "@chakra-ui/core";
 import { DARK_MODE_COLOR } from "../constants";
-import { MenuItem, Button } from "./../styled";
+import { Button } from "./../styled";
 import { CellPosition, FilterDefinition } from "@rowsncolumns/grid";
 import ReactList from "react-list";
 
@@ -92,7 +89,6 @@ const FilterComponent = ({
     onChange?.(index, columnIndex, selectedFilter);
   }, [userValues]);
   const isSelectAll = values.length === userValues.length;
-  const isIndeterminate = !isSelectAll && userValues.length > 0;
   const items = values
     .filter((value) => new RegExp(filterText, "gi").test(value.toString()))
     .sort(sortFn);

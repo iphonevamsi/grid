@@ -1,6 +1,5 @@
 import React, { useRef, useEffect, useCallback, useMemo } from "react";
 import CalcEngine, {
-  CellConfig as CalcCellConfig,
   CellConfigGetter as CalcCellConfigGetter,
 } from "@rowsncolumns/calc";
 import { CellInterface, castToString } from "@rowsncolumns/grid";

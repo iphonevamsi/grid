@@ -5,13 +5,7 @@ import Grid from "./../Grid";
 import { Flex, useColorMode } from "@chakra-ui/core";
 import { BottomPanel, ThemeType } from "./../styled";
 import Tabs from "./../Tabs";
-import {
-  SpreadSheetProps,
-  Sheet,
-  Cells,
-  SizeType,
-  SheetID,
-} from "../Spreadsheet";
+import { SpreadSheetProps, Sheet, SizeType, SheetID } from "../Spreadsheet";
 import {
   CellInterface,
   SelectionArea,
@@ -27,7 +21,6 @@ import {
   DEFAULT_COLUMN_COUNT,
   DEFAULT_ROW_COUNT,
 } from "../constants";
-import { current } from "immer";
 
 export interface WorkbookProps
   extends Omit<

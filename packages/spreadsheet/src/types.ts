@@ -1,5 +1,3 @@
-import { AreaProps } from "@rowsncolumns/grid";
-
 export enum FORMATTING_TYPE {
   BOLD = "bold",
   ITALIC = "italic",
