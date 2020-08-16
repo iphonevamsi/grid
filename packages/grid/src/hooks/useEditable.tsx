@@ -595,6 +595,7 @@ const useEditable = ({
       if (keyCode === KeyCodes.Delete || keyCode === KeyCodes.BackSpace) {
         // TODO: onbefore  delete
         onDelete && onDelete(activeCell, selections);
+        e.preventDefault();
         return;
       }
 
