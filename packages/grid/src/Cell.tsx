@@ -17,10 +17,10 @@ export interface CellProps extends RendererProps {
  * Default cell component
  * @param props
  */
-const Cell: React.FC<CellProps> = memo(props => {
+const Cell: React.FC<CellProps> = memo((props) => {
   const {
-    x,
-    y,
+    x = 0,
+    y = 0,
     width,
     height,
     value,
@@ -44,14 +44,14 @@ const Cell: React.FC<CellProps> = memo(props => {
     isOverlay,
     ...rest
   } = props;
-  if (isOverlay) return null
+  if (isOverlay) return null;
   const fillEnabled = !!fill;
   const textStyle = `${fontWeight} ${fontStyle}`;
   return (
     <Group {...rest}>
       <Rect
-        x={x}
-        y={y}
+        x={x + 0.5}
+        y={y + 0.5}
         height={height}
         width={width}
         fill={fill}

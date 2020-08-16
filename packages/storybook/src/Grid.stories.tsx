@@ -336,16 +336,6 @@ export const BaseGridWithSelection: React.FC = () => {
     const text = `${rowIndex}x${columnIndex}`;
     return (
       <>
-        <Rect
-          x={x}
-          y={y}
-          height={height}
-          width={width}
-          fill="white"
-          stroke="grey"
-          strokeWidth={0.5}
-          listening={false}
-        />
         <Text
           x={x}
           y={y}
@@ -374,8 +364,14 @@ export const BaseGridWithSelection: React.FC = () => {
         height={height}
         selections={selections}
         activeCell={activeCell}
-        columnCount={200}
-        rowCount={200}
+        columnCount={2000}
+        rowCount={2000}
+        showGridLines
+        gridLineColor="gray"
+        showFillHandle={false}
+        frozenColumns={1}
+        frozenRows={1}
+        snap
         ref={gridRef}
         {...selectionProps}
         columnWidth={(index) => {
