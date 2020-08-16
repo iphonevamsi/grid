@@ -810,7 +810,7 @@ const SheetGrid: React.FC<GridProps & RefAttributeGrid> = memo(
 
     useEffect(() => {
       updateFormulaEditorThrottle.current = throttle(updateFormulaEditor, 60);
-    }, [updateFormulaEditor, selectedSheet]);
+    }, [updateFormulaEditor, selectedSheet, sheetName]);
 
     /**
      * TOOD
