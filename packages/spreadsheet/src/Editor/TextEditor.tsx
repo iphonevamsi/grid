@@ -454,6 +454,9 @@ const TextEditor: React.FC<EditableProps & RefAttribute> = memo(
                 }
 
                 if (e.which === KeyCodes.Tab) {
+                  /* Trap focus inside the grid */
+                  e.preventDefault();
+
                   if (isFormulaMode && isFromSelection) {
                     setInputValue("");
                   } else {
@@ -464,9 +467,6 @@ const TextEditor: React.FC<EditableProps & RefAttribute> = memo(
                       );
                     return;
                   }
-
-                  /* Trap focus inside the grid */
-                  e.preventDefault();
                 }
                 /* Global handler */
                 onKeyDown?.(e);
