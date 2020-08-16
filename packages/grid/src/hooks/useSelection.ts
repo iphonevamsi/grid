@@ -136,7 +136,11 @@ export interface SelectionResults {
   /**
    * Use this to update selections without clearning old selection.
    */
-  setSelections: (selection: SelectionArea[]) => void;
+  setSelections: (
+    selections:
+      | SelectionArea[]
+      | ((selections: SelectionArea[]) => SelectionArea[])
+  ) => void;
   /**
    * Modify selectio
    */

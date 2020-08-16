@@ -1005,6 +1005,18 @@ const SheetGrid: React.FC<GridProps & RefAttributeGrid> = memo(
     }, [selectedSheet]);
 
     /**
+     * Remove forula selections from original grid selections
+     */
+    const restoreSelections = useCallback(() => {
+      const len = formulaSelections.length;
+      /* Clear selections */
+      setSelections((prev) => {
+        const newLen = prev.length - len;
+        return prev.filter((_, idx) => idx < newLen);
+      });
+    }, [formulaSelections]);
+
+    /**
      * When user submits the cell editor
      */
     const handleSubmit = useCallback(
@@ -1051,13 +1063,15 @@ const SheetGrid: React.FC<GridProps & RefAttributeGrid> = memo(
         /* Switch off formula mode */
         setFormulaMode(false);
 
-        /* Clear selections */
-        clearSelections();
+        /* Restore previous selections */
+        if (isFormulaMode) {
+          restoreSelections();
+        }
 
         /* Reset edit ref */
         editingCellRef.current = undefined;
       },
-      [selectedSheet, scale, rowSizes, isFormulaMode]
+      [selectedSheet, scale, rowSizes, isFormulaMode, formulaSelections]
     );
 
     const handleEditorCancel = useCallback(
@@ -1078,16 +1092,14 @@ const SheetGrid: React.FC<GridProps & RefAttributeGrid> = memo(
           /* Switch off formula mode */
           setFormulaMode(false);
 
-          /**
-           * Clear selections
-           */
-          clearSelections();
+          /* Restore previous selections */
+          restoreSelections();
         }
 
         /* Reset ref */
         editingCellRef.current = undefined;
       },
-      [isFormulaMode]
+      [isFormulaMode, formulaSelections]
     );
 
     const { tooltipComponent, ...tooltipProps } = useTooltip({
@@ -1565,6 +1577,7 @@ const SheetGrid: React.FC<GridProps & RefAttributeGrid> = memo(
         const isSelection = type === "selection";
 
         /* if the selection does not belong in this sheet */
+
         if (
           isFormulaMode &&
           isSelection &&
