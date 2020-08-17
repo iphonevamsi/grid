@@ -1271,9 +1271,7 @@ const BorderSelection: React.FC<BorderProps> = ({
 }) => {
   const [borderColor, setBorderColor] = useState<string | undefined>("#000000");
   const [borderVariant, setBorderVariant] = useState<BORDER_VARIANT>();
-  const [borderStyle, setBorderStyle] = useState<BORDER_STYLE>(
-    'thin'
-  );
+  const [borderStyle, setBorderStyle] = useState<BORDER_STYLE>("thin");
   const theme = useTheme();
   const handleChangeColor = (value: string | undefined) => {
     setBorderColor(value);
@@ -1326,176 +1324,102 @@ const BorderSelection: React.FC<BorderProps> = ({
           <Box flex={1} display="flex" p={2} flexWrap="wrap" width={180}>
             <IconButton
               aria-label={translations.border_all}
-              background={
-                borderVariant === 'all' ? bgColor : "none"
-              }
-              variant={borderVariant === 'all' ? "solid" : "ghost"}
-              color={
-                borderVariant === 'all'
-                  ? activeIconColor
-                  : iconColor
-              }
-              onClick={() => handleChangeVariant('all')}
+              background={borderVariant === "all" ? bgColor : "none"}
+              variant={borderVariant === "all" ? "solid" : "ghost"}
+              color={borderVariant === "all" ? activeIconColor : iconColor}
+              onClick={() => handleChangeVariant("all")}
               icon={MdBorderAll}
               fontSize={20}
               size="sm"
             />
             <IconButton
               aria-label={translations.border_inner}
-              background={
-                borderVariant === 'inner' ? bgColor : "none"
-              }
-              variant={
-                borderVariant === 'inner' ? "solid" : "ghost"
-              }
-              color={
-                borderVariant === 'inner'
-                  ? activeIconColor
-                  : iconColor
-              }
-              onClick={() => handleChangeVariant('inner')}
+              background={borderVariant === "inner" ? bgColor : "none"}
+              variant={borderVariant === "inner" ? "solid" : "ghost"}
+              color={borderVariant === "inner" ? activeIconColor : iconColor}
+              onClick={() => handleChangeVariant("inner")}
               icon={MdBorderInner}
               fontSize={20}
               size="sm"
             />
             <IconButton
               aria-label={translations.border_horizontal}
-              background={
-                borderVariant === 'horizontal' ? bgColor : "none"
-              }
-              variant={
-                borderVariant === 'horizontal' ? "solid" : "ghost"
-              }
+              background={borderVariant === "horizontal" ? bgColor : "none"}
+              variant={borderVariant === "horizontal" ? "solid" : "ghost"}
               color={
-                borderVariant === 'horizontal'
-                  ? activeIconColor
-                  : iconColor
+                borderVariant === "horizontal" ? activeIconColor : iconColor
               }
-              onClick={() => handleChangeVariant('horizontal')}
+              onClick={() => handleChangeVariant("horizontal")}
               icon={MdBorderHorizontal}
               fontSize={20}
               size="sm"
             />
             <IconButton
               aria-label={translations.border_vertical}
-              background={
-                borderVariant === 'vertical' ? bgColor : "none"
-              }
-              variant={
-                borderVariant === 'vertical' ? "solid" : "ghost"
-              }
-              color={
-                borderVariant === 'vertical'
-                  ? activeIconColor
-                  : iconColor
-              }
-              onClick={() => handleChangeVariant('vertical')}
+              background={borderVariant === "vertical" ? bgColor : "none"}
+              variant={borderVariant === "vertical" ? "solid" : "ghost"}
+              color={borderVariant === "vertical" ? activeIconColor : iconColor}
+              onClick={() => handleChangeVariant("vertical")}
               icon={MdBorderVertical}
               fontSize={20}
               size="sm"
             />
             <IconButton
               aria-label={translations.border_outer}
-              background={
-                borderVariant === 'outer' ? bgColor : "none"
-              }
-              variant={
-                borderVariant === 'outer' ? "solid" : "ghost"
-              }
-              color={
-                borderVariant === 'outer'
-                  ? activeIconColor
-                  : iconColor
-              }
-              onClick={() => handleChangeVariant('outer')}
+              background={borderVariant === "outer" ? bgColor : "none"}
+              variant={borderVariant === "outer" ? "solid" : "ghost"}
+              color={borderVariant === "outer" ? activeIconColor : iconColor}
+              onClick={() => handleChangeVariant("outer")}
               icon={MdBorderOuter}
               fontSize={20}
               size="sm"
             />
             <IconButton
               aria-label={translations.border_left}
-              background={
-                borderVariant === 'left' ? bgColor : "none"
-              }
-              variant={
-                borderVariant === 'left' ? "solid" : "ghost"
-              }
-              color={
-                borderVariant === 'left'
-                  ? activeIconColor
-                  : iconColor
-              }
-              onClick={() => handleChangeVariant('left')}
+              background={borderVariant === "left" ? bgColor : "none"}
+              variant={borderVariant === "left" ? "solid" : "ghost"}
+              color={borderVariant === "left" ? activeIconColor : iconColor}
+              onClick={() => handleChangeVariant("left")}
               icon={MdBorderLeft}
               fontSize={20}
               size="sm"
             />
             <IconButton
               aria-label={translations.border_right}
-              background={
-                borderVariant === 'right' ? bgColor : "none"
-              }
-              variant={
-                borderVariant === 'right' ? "solid" : "ghost"
-              }
-              color={
-                borderVariant === 'right'
-                  ? activeIconColor
-                  : iconColor
-              }
-              onClick={() => handleChangeVariant('right')}
+              background={borderVariant === "right" ? bgColor : "none"}
+              variant={borderVariant === "right" ? "solid" : "ghost"}
+              color={borderVariant === "right" ? activeIconColor : iconColor}
+              onClick={() => handleChangeVariant("right")}
               icon={MdBorderRight}
               fontSize={20}
               size="sm"
             />
             <IconButton
               aria-label={translations.border_top}
-              background={
-                borderVariant === 'top' ? bgColor : "none"
-              }
-              variant={borderVariant === 'top' ? "solid" : "ghost"}
-              color={
-                borderVariant === 'top'
-                  ? activeIconColor
-                  : iconColor
-              }
-              onClick={() => handleChangeVariant('top')}
+              background={borderVariant === "top" ? bgColor : "none"}
+              variant={borderVariant === "top" ? "solid" : "ghost"}
+              color={borderVariant === "top" ? activeIconColor : iconColor}
+              onClick={() => handleChangeVariant("top")}
               icon={MdBorderTop}
               fontSize={20}
               size="sm"
             />
             <IconButton
               aria-label={translations.border_bottom}
-              background={
-                borderVariant === 'bottom' ? bgColor : "none"
-              }
-              variant={
-                borderVariant === 'bottom' ? "solid" : "ghost"
-              }
-              color={
-                borderVariant === 'bottom'
-                  ? activeIconColor
-                  : iconColor
-              }
-              onClick={() => handleChangeVariant('bottom')}
+              background={borderVariant === "bottom" ? bgColor : "none"}
+              variant={borderVariant === "bottom" ? "solid" : "ghost"}
+              color={borderVariant === "bottom" ? activeIconColor : iconColor}
+              onClick={() => handleChangeVariant("bottom")}
               icon={MdBorderBottom}
               fontSize={20}
               size="sm"
             />
             <IconButton
               aria-label={translations.border_none}
-              background={
-                borderVariant === 'none' ? bgColor : "none"
-              }
-              variant={
-                borderVariant === 'none' ? "solid" : "ghost"
-              }
-              color={
-                borderVariant === 'none'
-                  ? activeIconColor
-                  : iconColor
-              }
-              onClick={() => handleChangeVariant('none')}
+              background={borderVariant === "none" ? bgColor : "none"}
+              variant={borderVariant === "none" ? "solid" : "ghost"}
+              color={borderVariant === "none" ? activeIconColor : iconColor}
+              onClick={() => handleChangeVariant("none")}
               icon={MdBorderClear}
               fontSize={20}
               size="sm"
@@ -1588,22 +1512,14 @@ const BorderSelection: React.FC<BorderProps> = ({
                       <PopoverArrow />
                       <PopoverBody>
                         <Button
-                          background={
-                            borderStyle === 'thin' ? bgColor : "none"
-                          }
-                          variant={
-                            borderStyle === 'thin'
-                              ? "solid"
-                              : "ghost"
-                          }
+                          background={borderStyle === "thin" ? bgColor : "none"}
+                          variant={borderStyle === "thin" ? "solid" : "ghost"}
                           color={
-                            borderStyle === 'thin'
-                              ? activeIconColor
-                              : iconColor
+                            borderStyle === "thin" ? activeIconColor : iconColor
                           }
                           size="sm"
                           onClick={() => {
-                            handleChangeBorderStyle('thin');
+                            handleChangeBorderStyle("thin");
                             onClose?.();
                           }}
                         >
@@ -1626,23 +1542,17 @@ const BorderSelection: React.FC<BorderProps> = ({
                         </Button>
                         <Button
                           background={
-                            borderStyle === 'medium'
-                              ? bgColor
-                              : "none"
+                            borderStyle === "medium" ? bgColor : "none"
                           }
-                          variant={
-                            borderStyle === 'medium'
-                              ? "solid"
-                              : "ghost"
-                          }
+                          variant={borderStyle === "medium" ? "solid" : "ghost"}
                           color={
-                            borderStyle === 'medium'
+                            borderStyle === "medium"
                               ? activeIconColor
                               : iconColor
                           }
                           size="sm"
                           onClick={() => {
-                            handleChangeBorderStyle('medium');
+                            handleChangeBorderStyle("medium");
                             onClose?.();
                           }}
                         >
@@ -1665,23 +1575,17 @@ const BorderSelection: React.FC<BorderProps> = ({
                         </Button>
                         <Button
                           background={
-                            borderStyle === 'thick'
-                              ? bgColor
-                              : "none"
+                            borderStyle === "thick" ? bgColor : "none"
                           }
-                          variant={
-                            borderStyle === 'thick'
-                              ? "solid"
-                              : "ghost"
-                          }
+                          variant={borderStyle === "thick" ? "solid" : "ghost"}
                           color={
-                            borderStyle === 'thick'
+                            borderStyle === "thick"
                               ? activeIconColor
                               : iconColor
                           }
                           size="sm"
                           onClick={() => {
-                            handleChangeBorderStyle('thick');
+                            handleChangeBorderStyle("thick");
                             onClose?.();
                           }}
                         >
@@ -1704,23 +1608,17 @@ const BorderSelection: React.FC<BorderProps> = ({
                         </Button>
                         <Button
                           background={
-                            borderStyle === 'dashed'
-                              ? bgColor
-                              : "none"
+                            borderStyle === "dashed" ? bgColor : "none"
                           }
-                          variant={
-                            borderStyle === 'dashed'
-                              ? "solid"
-                              : "ghost"
-                          }
+                          variant={borderStyle === "dashed" ? "solid" : "ghost"}
                           color={
-                            borderStyle === 'dashed'
+                            borderStyle === "dashed"
                               ? activeIconColor
                               : iconColor
                           }
                           size="sm"
                           onClick={() => {
-                            handleChangeBorderStyle('dashed');
+                            handleChangeBorderStyle("dashed");
                             onClose?.();
                           }}
                         >
@@ -1744,23 +1642,17 @@ const BorderSelection: React.FC<BorderProps> = ({
                         </Button>
                         <Button
                           background={
-                            borderStyle === 'dotted'
-                              ? bgColor
-                              : "none"
+                            borderStyle === "dotted" ? bgColor : "none"
                           }
-                          variant={
-                            borderStyle === 'dotted'
-                              ? "solid"
-                              : "ghost"
-                          }
+                          variant={borderStyle === "dotted" ? "solid" : "ghost"}
                           color={
-                            borderStyle === 'dotted'
+                            borderStyle === "dotted"
                               ? activeIconColor
                               : iconColor
                           }
                           size="sm"
                           onClick={() => {
-                            handleChangeBorderStyle('dotted');
+                            handleChangeBorderStyle("dotted");
                             onClose?.();
                           }}
                         >

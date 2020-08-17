@@ -1,7 +1,7 @@
 import React from "react";
 import { domRenderer, cleanup } from "./../utils/test-utils";
 import Grid from "./Grid";
-import { theme } from '@chakra-ui/core'
+import { theme } from "@chakra-ui/core";
 
 describe("Grid", () => {
   afterEach(cleanup);
@@ -12,13 +12,13 @@ describe("Grid", () => {
           cells={{
             1: {
               1: {
-                text: 'hello'
-              }
-            }
+                text: "hello",
+              },
+            },
           }}
           activeCell={null}
           selections={[]}
-          selectedSheet={null}    
+          selectedSheet={null}
           theme={theme}
         />
       );
@@ -31,16 +31,16 @@ describe("Grid", () => {
         cells={{
           1: {
             1: {
-              text: 'hello'
-            }
-          }
+              text: "hello",
+            },
+          },
         }}
         activeCell={null}
         selections={[]}
         selectedSheet={null}
-        theme={theme}      
+        theme={theme}
       />
     );
     expect(asFragment()).toMatchSnapshot();
   });
-})
+});

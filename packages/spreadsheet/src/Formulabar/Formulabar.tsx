@@ -31,7 +31,7 @@ export type FormulaRef = {
 const Formulabar: React.FC<FormulabarProps & FormulaRef> = memo(
   forwardRef((props, forwardedRef) => {
     const {
-      value = '',
+      value = "",
       onChange,
       onKeyDown,
       onFocus,
@@ -85,7 +85,7 @@ const Formulabar: React.FC<FormulabarProps & FormulaRef> = memo(
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             onChange?.(e.target.value)
           }
-          aria-label='value-input'
+          aria-label="value-input"
           onBlur={onBlur}
           value={value}
           onKeyDown={onKeyDown}

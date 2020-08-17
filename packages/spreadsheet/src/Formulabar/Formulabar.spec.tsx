@@ -16,12 +16,11 @@ describe("FormulaBar", () => {
   });
 
   it("can trigger onchange", () => {
-    const onChange = jest.fn()
+    const onChange = jest.fn();
     const { getByLabelText } = domRenderer(<FormulaBar onChange={onChange} />);
-    const input = getByLabelText('value-input') as HTMLInputElement
-    fireEvent.change(input, { target: { value: 'hello' } })
-    expect(onChange).toBeCalled()
-    expect(onChange).toBeCalledWith('hello')
-
+    const input = getByLabelText("value-input") as HTMLInputElement;
+    fireEvent.change(input, { target: { value: "hello" } });
+    expect(onChange).toBeCalled();
+    expect(onChange).toBeCalledWith("hello");
   });
 });

@@ -10,8 +10,8 @@ describe("Editor", () => {
   const cell = { rowIndex: 1, columnIndex: 1 };
   const activeCell = { rowIndex: 1, columnIndex: 1 };
   const editorType = "text";
-  const value = 'hello world'
-  it("renders an editor", () => {    
+  const value = "hello world";
+  it("renders an editor", () => {
     const renderGrid = () =>
       domRenderer(
         <Editor
@@ -34,8 +34,7 @@ describe("Editor", () => {
         activeCell={activeCell}
         editorType={editorType}
       />
-
     );
     expect(asFragment()).toMatchSnapshot();
   });
-})
+});

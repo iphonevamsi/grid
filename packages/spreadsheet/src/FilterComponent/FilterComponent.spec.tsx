@@ -13,14 +13,12 @@ describe("FilterComponent", () => {
             x: 0,
             y: 0,
             width: 300,
-            height: 500
+            height: 500,
           }}
-          values={
-            ['A', 'b']
-          }
+          values={["A", "b"]}
           filter={{
-            operator: 'containsText',
-            values: ['H']
+            operator: "containsText",
+            values: ["H"],
           }}
           index={0}
           width={200}
@@ -37,14 +35,12 @@ describe("FilterComponent", () => {
           x: 0,
           y: 0,
           width: 300,
-          height: 500
+          height: 500,
         }}
-        values={
-          ['A', 'b']
-        }
+        values={["A", "b"]}
         filter={{
-          operator: 'containsText',
-          values: ['H']
+          operator: "containsText",
+          values: ["H"],
         }}
         index={0}
         width={200}
@@ -52,4 +48,4 @@ describe("FilterComponent", () => {
     );
     expect(asFragment()).toMatchSnapshot();
   });
-})
+});

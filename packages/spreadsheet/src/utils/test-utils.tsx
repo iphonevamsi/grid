@@ -14,17 +14,11 @@ const KonvaWrapper = ({ children }) => {
 };
 
 const konvaRenderer = (ui) => render(ui, { wrapper: KonvaWrapper });
-const domRenderer = ui => render(ui, { wrapper: ThemeWrapper })
+const domRenderer = (ui) => render(ui, { wrapper: ThemeWrapper });
 
 export * from "@testing-library/react";
 export { konvaRenderer, domRenderer };
 
 export const ThemeWrapper = ({ children }) => {
-  return (
-    <ThemeProvider theme={theme}>
-      {children}
-    </ThemeProvider>
-  )
-}
-
-
+  return <ThemeProvider theme={theme}>{children}</ThemeProvider>;
+};

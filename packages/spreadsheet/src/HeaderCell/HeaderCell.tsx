@@ -46,7 +46,7 @@ interface DraggableRectProps
 const DRAG_HANDLE_WIDTH = 5;
 const DraggableRect: React.FC<DraggableRectProps> = memo((props) => {
   const {
-    axis = 'x',
+    axis = "x",
     x = 0,
     y = 0,
     height = 0,
@@ -62,9 +62,7 @@ const DraggableRect: React.FC<DraggableRectProps> = memo((props) => {
     parentHeight,
     ...rest
   } = props;
-  const index = useMemo(() => (axis === 'x' ? columnIndex : rowIndex), [
-    axis,
-  ]);
+  const index = useMemo(() => (axis === "x" ? columnIndex : rowIndex), [axis]);
   const dragStartPos = useRef<number>();
   const dragStartDim = useRef<number>();
   return (
@@ -80,14 +78,14 @@ const DraggableRect: React.FC<DraggableRectProps> = memo((props) => {
         if (dragStartPos.current === void 0 || dragStartDim.current === void 0)
           return pos;
         const _x =
-          axis === 'y'
+          axis === "y"
             ? 0
             : Math.max(
                 dragStartPos.current - dragStartDim.current + DRAG_HANDLE_WIDTH,
                 pos.x
               );
         const _y =
-          axis === 'x'
+          axis === "x"
             ? 0
             : Math.max(
                 dragStartPos.current - dragStartDim.current + DRAG_HANDLE_WIDTH,
@@ -101,7 +99,7 @@ const DraggableRect: React.FC<DraggableRectProps> = memo((props) => {
       onDragMove={(e) => {
         const node = e.target;
         const dimension =
-          axis === 'x'
+          axis === "x"
             ? node.x() - parentX + DRAG_HANDLE_WIDTH
             : node.y() - parentY + DRAG_HANDLE_WIDTH;
 
@@ -112,8 +110,8 @@ const DraggableRect: React.FC<DraggableRectProps> = memo((props) => {
       }}
       onDragStart={(e) => {
         const clientRect = e.currentTarget.getClientRect();
-        dragStartPos.current = axis === 'x' ? clientRect.x : clientRect.y;
-        dragStartDim.current = axis === 'x' ? parentWidth : parentHeight;
+        dragStartPos.current = axis === "x" ? clientRect.x : clientRect.y;
+        dragStartDim.current = axis === "x" ? parentWidth : parentHeight;
       }}
       x={x}
       y={y}
@@ -167,8 +165,8 @@ const HeaderCell: React.FC<HeaderCellProps> = memo((props) => {
     : DARK_MODE_COLOR;
   const textColor = isSelected || !isLightMode ? "white" : "#333";
   const stroke = isLightMode ? HEADER_BORDER_COLOR : theme.colors.gray[600];
-  const axis = isRowHeader ? 'x' : 'y';
-  const cursor = axis === 'x' ? "e-resize" : "n-resize";
+  const axis = isRowHeader ? "x" : "y";
+  const cursor = axis === "x" ? "e-resize" : "n-resize";
   const handleMouseEnter = useCallback(() => {
     document.body.style.cursor = cursor;
     setShowResizer(true);

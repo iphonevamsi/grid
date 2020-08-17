@@ -392,7 +392,9 @@ const SheetGrid: React.FC<GridProps & RefAttributeGrid> = memo(
     }, [filterViews]);
 
     useEffect(() => {
-      onSheetChangeRef.current = onSheetChange ? debounce(onSheetChange, 100) : void 0;
+      onSheetChangeRef.current = onSheetChange
+        ? debounce(onSheetChange, 100)
+        : void 0;
       debounceScroll.current = onScroll ? debounce(onScroll, 500) : void 0;
 
       return () => {
@@ -770,7 +772,10 @@ const SheetGrid: React.FC<GridProps & RefAttributeGrid> = memo(
       getValue: getValueText,
       mouseDownInterceptor: handleMouseDownSelection,
       mouseMoveInterceptor: handleMouseMoveSelection,
-      canSelectionSpanMergedCells: (start: CellInterface, end: CellInterface) => {
+      canSelectionSpanMergedCells: (
+        start: CellInterface,
+        end: CellInterface
+      ) => {
         const { rowCount, columnCount } = internalRefs.current;
         if (
           start.rowIndex === selectionTopBound &&

@@ -23,15 +23,15 @@ describe("ContextMenu", () => {
   it("matches snapshot", () => {
     const { asFragment } = domRenderer(
       <ContextMenu
-          activeCell={{
-            rowIndex: 1,
-            columnIndex: 1,
-          }}
-          selections={[]}
-          left={0}
-          top={0}
-        />
+        activeCell={{
+          rowIndex: 1,
+          columnIndex: 1,
+        }}
+        selections={[]}
+        left={0}
+        top={0}
+      />
     );
     expect(asFragment()).toMatchSnapshot();
   });
-})
+});

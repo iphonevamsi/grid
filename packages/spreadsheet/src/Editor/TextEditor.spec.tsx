@@ -11,8 +11,8 @@ describe("TextEditor", () => {
   const cell = { rowIndex: 1, columnIndex: 1 };
   const activeCell = { rowIndex: 1, columnIndex: 1 };
   const editorType = "text";
-  const value = 'hello world'
-  it("renders an editor", () => {    
+  const value = "hello world";
+  it("renders an editor", () => {
     const renderGrid = () =>
       domRenderer(
         <TextEditor
@@ -20,9 +20,9 @@ describe("TextEditor", () => {
           fontFamily={DEFAULT_FONT_FAMILY}
           fontSize={DEFAULT_FONT_SIZE}
           scale={1}
-          color='black'
+          color="black"
           wrapping
-          horizontalAlign='left'
+          horizontalAlign="left"
         />
       );
     expect(renderGrid).not.toThrow();
@@ -31,15 +31,15 @@ describe("TextEditor", () => {
   it("matches snapshot", () => {
     const { asFragment } = domRenderer(
       <TextEditor
-          value={value}
-          fontFamily={DEFAULT_FONT_FAMILY}
-          fontSize={DEFAULT_FONT_SIZE}
-          scale={1}
-          color='black'
-          wrapping
-          horizontalAlign='left'
-        />
+        value={value}
+        fontFamily={DEFAULT_FONT_FAMILY}
+        fontSize={DEFAULT_FONT_SIZE}
+        scale={1}
+        color="black"
+        wrapping
+        horizontalAlign="left"
+      />
     );
     expect(asFragment()).toMatchSnapshot();
   });
-})
+});

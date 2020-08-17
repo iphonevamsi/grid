@@ -201,7 +201,7 @@ const TextEditor: React.FC<EditableProps & RefAttribute> = memo(
       try {
         document.getSelection()?.collapseToEnd();
       } catch (err) {
-        console.log('Failed to collapse selection', err)
+        console.log("Failed to collapse selection", err);
       }
     }, []);
     useEffect(() => {
