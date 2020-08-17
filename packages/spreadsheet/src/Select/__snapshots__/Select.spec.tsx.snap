@@ -1,0 +1,39 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Select matches snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="css-79elbk"
+  >
+    <div
+      class="css-70qvj9"
+    >
+      <input
+        style="width: 44px; height: 24px; padding-left: 4px; padding-right: 2px; border-color: #cbd5e0; background: rgb(255, 255, 255); color: rgb(26, 32, 44); border-style: solid; border-width: 1px; font-size: 12px;"
+        value=""
+      />
+      <button
+        aria-label="Open"
+        class="css-qvndex-IconButton"
+        type="button"
+      >
+        <svg
+          aria-hidden="true"
+          class="css-1im46kq"
+          focusable="false"
+          role="presentation"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"
+            fill="currentColor"
+          />
+        </svg>
+      </button>
+    </div>
+    <div
+      class="css-b0ps0v"
+    />
+  </div>
+</DocumentFragment>
+`;

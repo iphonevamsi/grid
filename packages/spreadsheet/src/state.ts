@@ -493,6 +493,7 @@ export const createStateReducer = ({
                   : fillBounds.left < sel.bounds.left
                   ? Direction.Left
                   : Direction.Right;
+
               if (direction === Direction.Down) {
                 const start = sel.bounds.bottom + 1;
                 const end = fillBounds.bottom;

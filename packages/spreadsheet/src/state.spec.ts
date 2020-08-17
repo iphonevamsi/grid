@@ -279,7 +279,7 @@ describe("state reducers", () => {
     // Skips locked cells
   });
 
-  it("can handle cell filling", () => {
+  it("can handle cell filling Direction - BOTTOM", () => {
     const state = {
       ...initialState,
       sheets: initialState.sheets.map((sheet) => {
@@ -328,6 +328,156 @@ describe("state reducers", () => {
     expect(newState.sheets[0].cells[6][2].text).toBe("Hello");
     expect(newState.sheets[0].cells[7][2].text).toBe("Hello");
     expect(newState.sheets[0].cells[8][2].text).toBe("Hello");
+  });
+
+  it("can handle cell filling - Direction UP", () => {
+    const state = {
+      ...initialState,
+      sheets: initialState.sheets.map((sheet) => {
+        return {
+          ...sheet,
+          cells: {
+            5: {
+              2: {
+                text: "Hello",
+              },
+            },
+          },
+        };
+      }),
+    };
+    const id = state.sheets[0].id;
+    const newState = reducer(state, {
+      type: ACTION_TYPE.UPDATE_FILL,
+      id,
+      activeCell: {
+        rowIndex: 5,
+        columnIndex: 2,
+      },
+      // Extended selection
+      fillSelection: {
+        bounds: {
+          top: 3,
+          bottom: 5,
+          left: 2,
+          right: 5,
+        },
+      },
+      // Original selection
+      selections: [
+        {
+          bounds: {
+            top: 5,
+            left: 2,
+            right: 5,
+            bottom: 5,
+          },
+        },
+      ],
+    });
+
+    expect(newState.sheets[0].cells[3][2].text).toBe("Hello");
+    expect(newState.sheets[0].cells[4][2].text).toBe("Hello");
+  });
+
+  it("can handle cell filling - Direction LEFT", () => {
+    const state = {
+      ...initialState,
+      sheets: initialState.sheets.map((sheet) => {
+        return {
+          ...sheet,
+          cells: {
+            5: {
+              5: {
+                text: "Hello",
+              },
+            },
+          },
+        };
+      }),
+    };
+    const id = state.sheets[0].id;
+    const newState = reducer(state, {
+      type: ACTION_TYPE.UPDATE_FILL,
+      id,
+      activeCell: {
+        rowIndex: 5,
+        columnIndex: 5,
+      },
+      // Extended selection
+      fillSelection: {
+        bounds: {
+          top: 5,
+          bottom: 5,
+          left: 2,
+          right: 5,
+        },
+      },
+      // Original selection
+      selections: [
+        {
+          bounds: {
+            top: 5,
+            left: 5,
+            right: 5,
+            bottom: 5,
+          },
+        },
+      ],
+    });
+
+    expect(newState.sheets[0].cells[5][2].text).toBe("Hello");
+    expect(newState.sheets[0].cells[5][3].text).toBe("Hello");
+  });
+
+  it("can handle cell filling - Direction RIGHT", () => {
+    const state = {
+      ...initialState,
+      sheets: initialState.sheets.map((sheet) => {
+        return {
+          ...sheet,
+          cells: {
+            5: {
+              5: {
+                text: "Hello",
+              },
+            },
+          },
+        };
+      }),
+    };
+    const id = state.sheets[0].id;
+    const newState = reducer(state, {
+      type: ACTION_TYPE.UPDATE_FILL,
+      id,
+      activeCell: {
+        rowIndex: 5,
+        columnIndex: 5,
+      },
+      // Extended selection
+      fillSelection: {
+        bounds: {
+          top: 5,
+          bottom: 5,
+          left: 5,
+          right: 10,
+        },
+      },
+      // Original selection
+      selections: [
+        {
+          bounds: {
+            top: 5,
+            left: 5,
+            right: 5,
+            bottom: 5,
+          },
+        },
+      ],
+    });
+
+    expect(newState.sheets[0].cells[5][6].text).toBe("Hello");
+    expect(newState.sheets[0].cells[5][7].text).toBe("Hello");
   });
 
   it('can delete sheets', () => {

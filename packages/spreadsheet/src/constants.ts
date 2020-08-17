@@ -33,7 +33,7 @@ export const EMPTY_ARRAY = [];
 export const HEADER_BORDER_COLOR = "#C0C0C0";
 export const CELL_BORDER_COLOR = "#E3E2E2";
 export const FORMAT_PERCENT = "0.00%";
-export const FORMAT_CURRENCY = "$0.00";
+export const FORMAT_CURRENCY = "0.00";
 export const FORMAT_DEFAULT_DECIMAL = "0.0";
 export const SYSTEM_FONT =
   "-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji";
@@ -601,7 +601,11 @@ export const DEFAULT_CHECKBOX_VALUES = ["TRUE", "FALSE"];
 
 export const getMinMax = (o: Object) => {
   const keys = Object.keys(o ?? {}).map(Number);
-  return [Math.min(0, ...keys), Math.max(0, ...keys)];
+  const len = keys.length
+  if (len === 0) {
+    return [0, 0]
+  }
+  return [Math.min(...keys), Math.max(...keys)];
 };
 
 /* Create custom validation */
