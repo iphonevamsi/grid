@@ -6,14 +6,14 @@ describe("Select", () => {
   afterEach(cleanup);
   const options = [
     {
-      label: 'A',
-      value: 0
+      label: "A",
+      value: 0,
     },
     {
-      label: 'B',
-      value: 1
-    }
-  ]
+      label: "B",
+      value: 1,
+    },
+  ];
   it("renders select dropdown", () => {
     const renderGrid = () => domRenderer(<Select options={options} />);
     expect(renderGrid).not.toThrow();
