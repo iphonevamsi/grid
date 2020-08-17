@@ -22,7 +22,7 @@ import {
   ReactEditor,
   RenderLeafProps,
 } from "slate-react";
-import { withHistory } from "slate-history";
+import { withHistory, HistoryEditor } from "slate-history";
 import {
   Direction,
   KeyCodes,
@@ -86,6 +86,7 @@ export type EditableRef = {
     sel: SelectionArea,
     mode: NewSelectionMode
   ) => void;
+  editor: Editor & ReactEditor & HistoryEditor
 };
 
 /**
@@ -188,6 +189,7 @@ const TextEditor: React.FC<EditableProps & RefAttribute> = memo(
               ReactEditor.focus(editor);
             });
           },
+          editor,
           updateSelection: handleUpdateSelection,
         };
       },
@@ -307,11 +309,11 @@ const TextEditor: React.FC<EditableProps & RefAttribute> = memo(
       [isFormulaMode, cursorToken]
     );
 
-    useEffect(() => {
+    useEffect(() => {      
       const normalizedValue = deserialize(value);
       if (!isFormulaMode) {
         setInputValue(normalizedValue);
-      }
+      }      
       /* If its the same value skip */
       if (normalizedValue === initialValue) {
         return;
