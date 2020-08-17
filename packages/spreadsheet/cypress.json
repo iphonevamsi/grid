@@ -1,0 +1,7 @@
+{
+  "baseUrl": "http://localhost:9003/iframe.html?id=spreadsheet--default",
+  "defaultCommandTimeout": 30000,
+  "viewportWidth": 1000,
+  "viewportHeight": 568,
+  "integrationFolder": "cypress"
+}

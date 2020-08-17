@@ -83,10 +83,10 @@ export type EditableRef = {
   focus: () => void;
   updateSelection?: (
     sheetName: SheetID | undefined,
-    sel: SelectionArea,
+    sel: SelectionArea | undefined,
     mode: NewSelectionMode
   ) => void;
-  editor: Editor & ReactEditor & HistoryEditor
+  editor: Editor & ReactEditor & HistoryEditor;
 };
 
 /**
@@ -309,11 +309,11 @@ const TextEditor: React.FC<EditableProps & RefAttribute> = memo(
       [isFormulaMode, cursorToken]
     );
 
-    useEffect(() => {      
+    useEffect(() => {
       const normalizedValue = deserialize(value);
       if (!isFormulaMode) {
         setInputValue(normalizedValue);
-      }      
+      }
       /* If its the same value skip */
       if (normalizedValue === initialValue) {
         return;

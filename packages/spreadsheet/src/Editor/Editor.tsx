@@ -13,7 +13,7 @@ import {
   SelectionArea,
   NewSelectionMode,
 } from "@rowsncolumns/grid";
-import TextEditor from "./TextEditor";
+import TextEditor, { EditableRef } from "./TextEditor";
 import { useColorMode } from "@chakra-ui/core";
 import {
   DARK_MODE_COLOR_LIGHT,
@@ -51,15 +51,6 @@ export interface CustomEditorProps extends EditorProps, ExtraEditorProps {
 
 export type RefAttribute = {
   ref?: React.Ref<EditableRef>;
-};
-
-export type EditableRef = {
-  focus: () => void;
-  updateSelection?: (
-    sheetName: SheetID | undefined,
-    sel: SelectionArea | undefined,
-    mode: NewSelectionMode
-  ) => void;
 };
 
 /**

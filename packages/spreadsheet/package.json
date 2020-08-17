@@ -10,6 +10,7 @@
     "prepublish": "yarn build",
     "prettier": "prettier src/**/*.{ts,tsx} --write",
     "storybook-spreadsheet": "start-storybook -p 9003 -s ./public",
+    "cypress": "cypress open",
     "test": "jest"
   },
   "publishConfig": {
@@ -43,5 +44,8 @@
     "tiny-invariant": "^1.1.0",
     "webfontloader": "^1.6.28"
   },
-  "gitHead": "272c80dcd474a9346b6927b356d37917cfcd7c84"
+  "gitHead": "272c80dcd474a9346b6927b356d37917cfcd7c84",
+  "devDependencies": {
+    "cypress": "^4.12.1"
+  }
 }
