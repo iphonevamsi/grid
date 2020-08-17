@@ -25,17 +25,19 @@ describe("Select", () => {
 
   it("can trigger onchange", () => {
     const onChange = jest.fn();
-    const { getByLabelText } = domRenderer(<Select options={options} onChange={onChange} />);
+    const { getByLabelText } = domRenderer(
+      <Select options={options} onChange={onChange} />
+    );
     const input = getByLabelText("select-input") as HTMLInputElement;
     act(() => {
-      fireEvent.focus(input)      
-    })
-    const list = getByLabelText('list')    
+      fireEvent.focus(input);
+    });
+    const list = getByLabelText("list");
     expect(list.childNodes.length).toBe(2);
     act(() => {
-      fireEvent.change(input, { target: { value: 'A'}})
-      fireEvent.click(list.firstChild)
-    })
-    expect(onChange).toBeCalled()
+      fireEvent.change(input, { target: { value: "A" } });
+      fireEvent.click(list.firstChild);
+    });
+    expect(onChange).toBeCalled();
   });
 });

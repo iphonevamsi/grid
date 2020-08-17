@@ -5,7 +5,7 @@ import Toolbar from "./Toolbar";
 describe("Toolbar", () => {
   afterEach(cleanup);
   it("renders select tooltip", () => {
-    const renderGrid = () => domRenderer(<Toolbar  />);
+    const renderGrid = () => domRenderer(<Toolbar />);
     expect(renderGrid).not.toThrow();
   });
   it("matches snapshot", () => {
