@@ -937,7 +937,7 @@ const SheetGrid: React.FC<GridProps & RefAttributeGrid> = memo(
         const width =
           getColumnWidth(columnIndex) +
           (columnHasFilter(columnIndex) ? FILTER_ICON_DIM : 0);
-        onResize?.(AXIS.X, columnIndex, width);
+        onResize?.('x', columnIndex, width);
       },
       [getValue, hiddenRows, frozenRows, hiddenColumns, scale]
     );
@@ -1059,7 +1059,7 @@ const SheetGrid: React.FC<GridProps & RefAttributeGrid> = memo(
               (getTextMetrics(value).height + DEFAULT_CELL_PADDING) / scale
             );
           if (height !== minRowHeight) {
-            onResize?.(AXIS.Y, rowIndex, height);
+            onResize?.('y', rowIndex, height);
           }
         }
 
