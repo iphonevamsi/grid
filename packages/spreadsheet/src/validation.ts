@@ -73,7 +73,7 @@ export const validate = async (
           break;
 
         case "lessThan":
-          valid = num > formulae?.[0];
+          valid = num < formulae?.[0];
           break;
 
         case "greaterThanOrEqual":

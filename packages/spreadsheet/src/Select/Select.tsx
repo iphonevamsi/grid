@@ -100,6 +100,7 @@ const Select: React.FC<SelectProps> = memo((props) => {
             }}
             onFocus={onFocus}
             onBlur={onBlur}
+            aria-label='select-input'
           />
         ) : (
           <Tooltip
@@ -148,6 +149,7 @@ const Select: React.FC<SelectProps> = memo((props) => {
         borderStyle="solid"
         borderWidth={1}
         display={isOpen ? "block" : "none"}
+        aria-label='list'
       >
         {isOpen &&
           (items as Item[]).map((item, index) => {

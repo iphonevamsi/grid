@@ -1,0 +1,200 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Workbook matches snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="css-17yogwq"
+  >
+    <div
+      class="css-oqtn58"
+    >
+      <div
+        class="rowsncolumns-grid"
+        style="position: relative; width: 0px; user-select: none;"
+      >
+        <div
+          class="rowsncolumns-grid-container"
+          tabindex="0"
+        >
+          <div>
+            <div
+              class="konvajs-content"
+              role="presentation"
+              style="position: relative; user-select: none; width: 0px; height: 0px;"
+            >
+              <canvas
+                height="0"
+                style="padding: 0px; margin: 0px; border: 0px; background: transparent; position: absolute; top: 0px; left: 0px; width: 0px; height: 0px; display: block;"
+                width="0"
+              />
+            </div>
+          </div>
+        </div>
+        <div
+          style="pointer-events: none;"
+        >
+          <div
+            style="position: absolute; left: 46px; top: 24px; right: 0px; bottom: 0px; overflow: hidden;"
+          >
+            <div
+              style="transform: translate(-46px, -24px);"
+            >
+              <div
+                style="position: absolute; top: 24px; left: 46px; height: 20px; width: 99px; background-color: transparent; opacity: 1; user-select: none; pointer-events: none;"
+              />
+              <div
+                style="position: absolute; left: 46px; top: 24px; width: 99px; height: 2px; border-width: 0px; border-color: #1a73e8; border-top-width: 2px; border-style: solid;"
+              />
+              <div
+                style="position: absolute; left: 145px; top: 24px; width: 2px; height: 20px; border-width: 0px; border-color: #1a73e8; border-right-width: 2px; border-style: solid;"
+              />
+              <div
+                style="position: absolute; left: 46px; top: 44px; width: 101px; height: 2px; border-width: 0px; border-color: #1a73e8; border-bottom-width: 2px; border-style: solid;"
+              />
+              <div
+                style="position: absolute; left: 46px; top: 24px; width: 2px; height: 20px; border-width: 0px; border-color: #1a73e8; border-left-width: 2px; border-style: solid;"
+              />
+              <div
+                style="position: absolute; left: 142px; top: 41px; width: 8px; height: 8px; border: 1px solid white; background: rgb(26, 115, 232); cursor: crosshair; pointer-events: all;"
+              />
+            </div>
+          </div>
+          <div
+            style="position: absolute; width: 54px; top: 24px; left: 0px; bottom: 0px; overflow: hidden;"
+          >
+            <div
+              style="transform: translate(0, -24px);"
+            >
+              <div
+                style="position: absolute; left: 142px; top: 41px; width: 8px; height: 8px; border: 1px solid white; background: rgb(26, 115, 232); cursor: crosshair; pointer-events: all;"
+              />
+            </div>
+          </div>
+          <div
+            style="position: absolute; height: 32px; left: 46px; right: 0px; top: 0px; overflow: hidden;"
+          >
+            <div
+              style="transform: translate(-46px, 0);"
+            >
+              <div
+                style="position: absolute; left: 142px; top: 41px; width: 8px; height: 8px; border: 1px solid white; background: rgb(26, 115, 232); cursor: crosshair; pointer-events: all;"
+              />
+            </div>
+          </div>
+          <div
+            style="position: absolute; height: 32px; width: 54px; left: 0px; top: 0px; overflow: hidden; pointer-events: none;"
+          >
+            <div
+              style="position: absolute; left: 142px; top: 41px; width: 8px; height: 8px; border: 1px solid white; background: rgb(26, 115, 232); cursor: crosshair; pointer-events: all;"
+            />
+          </div>
+        </div>
+        <div
+          class="rowsncolumns-grid-scrollbar rowsncolumns-grid-scrollbar-y"
+          style="height: 0px; overflow: scroll; position: absolute; right: 0px; top: 0px; width: 13px; will-change: transform;"
+          tabindex="-1"
+        >
+          <div
+            style="position: absolute; height: 49995px; width: 1px;"
+          />
+        </div>
+        <div
+          class="rowsncolumns-grid-scrollbar rowsncolumns-grid-scrollbar-x"
+          style="overflow: scroll; position: absolute; bottom: 0px; left: 0px; width: 0px; height: 13px; will-change: transform;"
+          tabindex="-1"
+        >
+          <div
+            style="position: absolute; width: 1396px; height: 1px;"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="css-k008qs"
+  >
+    <div
+      class="css-3fbcqq"
+    >
+      <div
+        class="css-1nug5w4"
+      >
+        <div
+          aria-controls="popover-2"
+          aria-expanded="false"
+          aria-haspopup="dialog"
+          class="css-0"
+        >
+          <button
+            aria-label="All sheets"
+            class="css-1lm5mrm-IconButton"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="css-thzv76"
+              fill="currentColor"
+              focusable="false"
+              height="1em"
+              stroke="currentColor"
+              stroke-width="0"
+              viewBox="0 0 24 24"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"
+              />
+            </svg>
+          </button>
+        </div>
+        <div
+          class="css-197w9ay"
+        >
+          <div
+            class="css-1rhyqv4"
+          >
+            <div
+              class="css-zyhllg"
+            />
+            <div
+              class="css-flwtc3-Button"
+              type="button"
+            >
+              Sheet1
+              <button
+                aria-controls="popover-3"
+                aria-expanded="false"
+                aria-haspopup="dialog"
+                aria-label="More"
+                class="css-1f0zx3c-IconButton"
+                type="button"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="css-thzv76"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 24 24"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M7 10l5 5 5-5z"
+                  />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="css-1w0q0cj"
+      />
+    </div>
+  </div>
+</DocumentFragment>
+`;

@@ -1,0 +1,34 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Tooltip matches snapshot 1`] = `
+<DocumentFragment>
+  <div
+    style="position: absolute; left: 0px; top: 0px; transform: translate(0px, 0px); max-width: 200px; min-width: 160px; background: white; box-shadow: 0 4px 8px 3px rgba(60,64,67,.15); padding: 12px; border-radius: 4px; font-size: 13px; border-left: 4px solid #1D72E8; user-select: none; word-break: break-word;"
+  />
+</DocumentFragment>
+`;
+
+exports[`Tooltip renders hyperlink 1`] = `
+<DocumentFragment>
+  <div
+    style="position: absolute; left: 0px; top: 0px; transform: translate(0px, 0px); max-width: 200px; min-width: 160px; background: white; box-shadow: 0 4px 8px 3px rgba(60,64,67,.15); padding: 12px; border-radius: 4px; font-size: 13px; border-left: 4px solid #1D72E8; user-select: none; word-break: break-word;"
+  >
+    <div
+      class="css-1mg6gu6"
+    >
+      <a
+        class="css-1enwuer"
+        href="http://google.com"
+        target="_blank"
+      >
+        Google
+      </a>
+    </div>
+    <div
+      class="css-2c7s1y"
+    >
+      http://google.com
+    </div>
+  </div>
+</DocumentFragment>
+`;

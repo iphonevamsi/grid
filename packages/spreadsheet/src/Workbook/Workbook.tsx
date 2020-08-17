@@ -48,7 +48,7 @@ export interface WorkbookProps
     activeCell: CellInterface,
     selections: SelectionArea[]
   ) => void;
-  onChangeSelectedSheet: (id: SheetID) => void;
+  onChangeSelectedSheet?: (id: SheetID) => void;
   onNewSheet?: () => void;
   onSheetChange?: (id: SheetID, props: any) => void;
   onScroll?: (id: SheetID, scrollState: ScrollCoords) => void;
@@ -61,7 +61,7 @@ export interface WorkbookProps
     index: number,
     dimension: number
   ) => void;
-  onActiveCellValueChange: (
+  onActiveCellValueChange?: (
     id: SheetID,
     activeCell: CellInterface | null,
     value: React.ReactText | undefined
@@ -105,7 +105,7 @@ export interface WorkbookProps
     cell: CellInterface | null,
     selections: SelectionArea[]
   ) => void;
-  onChangeFilter: (
+  onChangeFilter?: (
     id: SheetID,
     index: number,
     columnIndex: number,
@@ -118,8 +118,8 @@ export interface WorkbookProps
   onChangeTabColor?: (id: SheetID, color?: string) => void;
   StatusBar: React.ReactType;
   scale?: number;
-  isFormulaMode: boolean;
-  setFormulaMode: (value: boolean) => void;
+  isFormulaMode?: boolean;
+  setFormulaMode?: (value: boolean) => void;
   isFormulaInputActive?: boolean;
   supportedFormulas?: string[];
   onEditorKeyDown?: (e: React.KeyboardEvent<any>) => void;

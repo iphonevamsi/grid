@@ -35,6 +35,7 @@ describe('Helper functions', () => {
 describe('datatype', () => {
   it('can detect datatype', () => {
     expect(detectDataType('hello')).toBe(void 0)
+    expect(detectDataType('')).toBe(void 0)
   })
 
   it('can detect number', () => {
