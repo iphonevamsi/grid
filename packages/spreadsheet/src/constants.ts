@@ -302,20 +302,20 @@ export const dashArray = [2, 2];
 export const cellsInSelectionVariant = (
   selections: SelectionArea[],
   variant: BORDER_VARIANT | undefined,
-  borderStyle: BORDER_STYLE = BORDER_STYLE.THIN,
+  borderStyle: BORDER_STYLE = 'thin',
   color?: string,
   boundGetter?: (coords: CellInterface | null) => AreaProps | undefined
 ) => {
   const thickness =
-    borderStyle === BORDER_STYLE.MEDIUM
+    borderStyle === 'medium'
       ? 2
-      : borderStyle === BORDER_STYLE.THICK
+      : borderStyle === 'thick'
       ? 3
       : 1;
   const dash =
-    borderStyle === BORDER_STYLE.DASHED
+    borderStyle === 'dashed'
       ? dashArray
-      : borderStyle === BORDER_STYLE.DOTTED
+      : borderStyle === 'dotted'
       ? dotArray
       : [];
 
@@ -333,7 +333,7 @@ export const cellsInSelectionVariant = (
           : { rowIndex: j, columnIndex: k };
 
         switch (variant) {
-          case BORDER_VARIANT.OUTER:
+          case 'outer':
             if (j === bounds.top) {
               cells[rowIndex][columnIndex] = {
                 ...cells[rowIndex][columnIndex],
@@ -372,7 +372,7 @@ export const cellsInSelectionVariant = (
             }
             break;
 
-          case BORDER_VARIANT.ALL:
+          case 'all':
             cells[rowIndex][columnIndex] = {
               strokeTopColor: color,
               strokeTopWidth: thickness,
@@ -390,7 +390,7 @@ export const cellsInSelectionVariant = (
             };
             break;
 
-          case BORDER_VARIANT.INNER:
+          case 'inner':
             if (k !== bounds.left && k !== bounds.right) {
               cells[rowIndex][columnIndex] = {
                 ...cells[rowIndex][columnIndex],
@@ -451,7 +451,7 @@ export const cellsInSelectionVariant = (
             }
             break;
 
-          case BORDER_VARIANT.HORIZONTAL:
+          case 'horizontal':
             cells[rowIndex][columnIndex] = {
               strokeBottomColor: color,
               strokeBottomDash: dash,
@@ -463,7 +463,7 @@ export const cellsInSelectionVariant = (
             }
             break;
 
-          case BORDER_VARIANT.VERTICAL:
+          case 'vertical':
             cells[rowIndex][columnIndex] = {
               strokeRightColor: color,
               strokeRightDash: dash,
@@ -475,7 +475,7 @@ export const cellsInSelectionVariant = (
             }
             break;
 
-          case BORDER_VARIANT.LEFT:
+          case 'left':
             if (k === bounds.left) {
               cells[rowIndex][columnIndex] = {
                 ...cells[rowIndex][columnIndex],
@@ -487,7 +487,7 @@ export const cellsInSelectionVariant = (
             }
             break;
 
-          case BORDER_VARIANT.RIGHT:
+          case 'right':
             if (k === bounds.right) {
               cells[rowIndex][columnIndex] = {
                 ...cells[rowIndex][columnIndex],
@@ -499,7 +499,7 @@ export const cellsInSelectionVariant = (
             }
             break;
 
-          case BORDER_VARIANT.TOP:
+          case 'top':
             if (j === bounds.top) {
               cells[rowIndex][columnIndex] = {
                 ...cells[rowIndex][columnIndex],
@@ -511,7 +511,7 @@ export const cellsInSelectionVariant = (
             }
             break;
 
-          case BORDER_VARIANT.BOTTOM:
+          case 'bottom':
             if (j === bounds.bottom) {
               cells[rowIndex][columnIndex] = {
                 ...cells[rowIndex][columnIndex],

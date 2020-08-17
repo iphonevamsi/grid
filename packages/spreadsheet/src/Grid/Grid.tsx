@@ -79,7 +79,7 @@ const EMPTY_ARRAY: any = [];
 const EMPTY_OBJECT: any = {};
 
 export interface GridProps {
-  theme?: ThemeType;
+  theme: ThemeType;
   minColumnWidth?: number;
   minRowHeight?: number;
   rowCount?: number;
@@ -97,9 +97,9 @@ export interface GridProps {
   ) => void;
   activeCell: CellInterface | null;
   selections: SelectionArea[];
-  onSheetChange: (props: any) => void;
+  onSheetChange?: (props: any) => void;
   selectedSheet: SheetID;
-  onScroll: (state: ScrollCoords) => void;
+  onScroll?: (state: ScrollCoords) => void;
   scrollState?: ScrollCoords;
   onActiveCellChange?: (
     cell: CellInterface | null,
@@ -109,7 +109,7 @@ export interface GridProps {
     cell: CellInterface | null,
     selections: SelectionArea[]
   ) => void;
-  onActiveCellValueChange: (
+  onActiveCellValueChange?: (
     value: React.ReactText | undefined,
     activeCell: CellInterface | null
   ) => void;
@@ -156,7 +156,7 @@ export interface GridProps {
   selectionMode?: SELECTION_MODE;
   isLightMode?: boolean;
   filterViews?: FilterView[];
-  onChangeFilter: (
+  onChangeFilter?: (
     filterIndex: number,
     columnIndex: number,
     filter: FilterDefinition
@@ -195,8 +195,8 @@ export interface GridProps {
   onCopy?: (selections: SelectionArea[]) => void;
   selectionBackgroundColor?: string;
   selectionBorderColor?: string;
-  isFormulaMode: boolean;
-  setFormulaMode: (value: boolean) => void;
+  isFormulaMode?: boolean;
+  setFormulaMode?: (value: boolean) => void;
   isFormulaInputActive?: boolean;
   supportedFormulas?: string[];
   onEditorKeyDown?: (e: React.KeyboardEvent<any>) => void;
@@ -336,7 +336,7 @@ const SheetGrid: React.FC<GridProps & RefAttributeGrid> = memo(
       onCopy,
       selectionBackgroundColor = "rgb(14, 101, 235, 0.1)",
       selectionBorderColor = "#1a73e8",
-      isFormulaMode,
+      isFormulaMode = false,
       setFormulaMode,
       supportedFormulas = EMPTY_ARRAY,
       onEditorKeyDown,
@@ -392,8 +392,8 @@ const SheetGrid: React.FC<GridProps & RefAttributeGrid> = memo(
     }, [filterViews]);
 
     useEffect(() => {
-      onSheetChangeRef.current = debounce(onSheetChange, 100);
-      debounceScroll.current = debounce(onScroll, 500);
+      onSheetChangeRef.current = onSheetChange ? debounce(onSheetChange, 100) : void 0;
+      debounceScroll.current = onScroll ? debounce(onScroll, 500) : void 0;
 
       return () => {
         onSheetChangeRef.current = void 0;
@@ -770,7 +770,7 @@ const SheetGrid: React.FC<GridProps & RefAttributeGrid> = memo(
       getValue: getValueText,
       mouseDownInterceptor: handleMouseDownSelection,
       mouseMoveInterceptor: handleMouseMoveSelection,
-      canSelectionSpanMergedCells: (start, end) => {
+      canSelectionSpanMergedCells: (start: CellInterface, end: CellInterface) => {
         const { rowCount, columnCount } = internalRefs.current;
         if (
           start.rowIndex === selectionTopBound &&
@@ -1059,7 +1059,7 @@ const SheetGrid: React.FC<GridProps & RefAttributeGrid> = memo(
         }
 
         /* Switch off formula mode */
-        setFormulaMode(false);
+        setFormulaMode?.(false);
 
         /* Restore previous selections */
         if (isFormulaMode) {
@@ -1088,7 +1088,7 @@ const SheetGrid: React.FC<GridProps & RefAttributeGrid> = memo(
           }
 
           /* Switch off formula mode */
-          setFormulaMode(false);
+          setFormulaMode?.(false);
 
           /* Restore previous selections */
           restoreSelections();
@@ -1148,7 +1148,7 @@ const SheetGrid: React.FC<GridProps & RefAttributeGrid> = memo(
       (value: string, cell: CellInterface) => {
         onActiveCellValueChange?.(value, cell);
         const isFormula = isAFormula(value);
-        setFormulaMode(!!isFormula);
+        setFormulaMode?.(!!isFormula);
         if (isFormula) {
           const sel = getSelectionsFromInput(
             value,

@@ -15,7 +15,7 @@ import { MenuItem } from "./../styled";
 export interface ContextMenuComponentProps extends ContextMenuProps {
   activeCell: CellInterface | null;
   selections: SelectionArea[];
-  onRequestClose: () => void;
+  onRequestClose?: () => void;
   onInsertRow?: (
     cell: CellInterface | null,
     selections: SelectionArea[]

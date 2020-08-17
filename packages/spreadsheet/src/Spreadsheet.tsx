@@ -1580,7 +1580,7 @@ const Spreadsheet: React.FC<SpreadSheetProps & RefAttributeSheetGrid> = memo(
           undoable: false,
         });
 
-        axis === AXIS.X
+        axis === 'x'
           ? currentGrid.current?.resizeColumns?.([index])
           : currentGrid.current?.resizeRows?.([index]);
 

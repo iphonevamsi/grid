@@ -635,6 +635,7 @@ exports[`SpreadSheet matches snapshot 1`] = `
         fx
       </div>
       <input
+        aria-label="value-input"
         class="css-1lnav6c"
         value=""
       />

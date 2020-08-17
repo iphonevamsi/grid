@@ -1,0 +1,20 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FormulaBar matches snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="css-f7ejuk"
+  >
+    <div
+      class="css-113xb0u"
+    >
+      fx
+    </div>
+    <input
+      aria-label="value-input"
+      class="css-1lnav6c"
+      value=""
+    />
+  </div>
+</DocumentFragment>
+`;

@@ -20,8 +20,8 @@ interface FormulabarProps {
   onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   onFocus?: (e: React.FocusEvent<HTMLInputElement>) => void;
   onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
-  value: string;
-  isFormulaMode: boolean;
+  value?: string;
+  isFormulaMode?: boolean;
 }
 
 export type FormulaRef = {
@@ -31,7 +31,7 @@ export type FormulaRef = {
 const Formulabar: React.FC<FormulabarProps & FormulaRef> = memo(
   forwardRef((props, forwardedRef) => {
     const {
-      value,
+      value = '',
       onChange,
       onKeyDown,
       onFocus,
@@ -85,8 +85,9 @@ const Formulabar: React.FC<FormulabarProps & FormulaRef> = memo(
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             onChange?.(e.target.value)
           }
+          aria-label='value-input'
           onBlur={onBlur}
-          value={value ?? ""}
+          value={value}
           onKeyDown={onKeyDown}
           onFocus={onFocus}
           height={"100%"}

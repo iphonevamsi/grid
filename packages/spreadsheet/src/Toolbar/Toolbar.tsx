@@ -1272,7 +1272,7 @@ const BorderSelection: React.FC<BorderProps> = ({
   const [borderColor, setBorderColor] = useState<string | undefined>("#000000");
   const [borderVariant, setBorderVariant] = useState<BORDER_VARIANT>();
   const [borderStyle, setBorderStyle] = useState<BORDER_STYLE>(
-    BORDER_STYLE.THIN
+    'thin'
   );
   const theme = useTheme();
   const handleChangeColor = (value: string | undefined) => {
@@ -1327,15 +1327,15 @@ const BorderSelection: React.FC<BorderProps> = ({
             <IconButton
               aria-label={translations.border_all}
               background={
-                borderVariant === BORDER_VARIANT.ALL ? bgColor : "none"
+                borderVariant === 'all' ? bgColor : "none"
               }
-              variant={borderVariant === BORDER_VARIANT.ALL ? "solid" : "ghost"}
+              variant={borderVariant === 'all' ? "solid" : "ghost"}
               color={
-                borderVariant === BORDER_VARIANT.ALL
+                borderVariant === 'all'
                   ? activeIconColor
                   : iconColor
               }
-              onClick={() => handleChangeVariant(BORDER_VARIANT.ALL)}
+              onClick={() => handleChangeVariant('all')}
               icon={MdBorderAll}
               fontSize={20}
               size="sm"
@@ -1343,17 +1343,17 @@ const BorderSelection: React.FC<BorderProps> = ({
             <IconButton
               aria-label={translations.border_inner}
               background={
-                borderVariant === BORDER_VARIANT.INNER ? bgColor : "none"
+                borderVariant === 'inner' ? bgColor : "none"
               }
               variant={
-                borderVariant === BORDER_VARIANT.INNER ? "solid" : "ghost"
+                borderVariant === 'inner' ? "solid" : "ghost"
               }
               color={
-                borderVariant === BORDER_VARIANT.INNER
+                borderVariant === 'inner'
                   ? activeIconColor
                   : iconColor
               }
-              onClick={() => handleChangeVariant(BORDER_VARIANT.INNER)}
+              onClick={() => handleChangeVariant('inner')}
               icon={MdBorderInner}
               fontSize={20}
               size="sm"
@@ -1361,17 +1361,17 @@ const BorderSelection: React.FC<BorderProps> = ({
             <IconButton
               aria-label={translations.border_horizontal}
               background={
-                borderVariant === BORDER_VARIANT.HORIZONTAL ? bgColor : "none"
+                borderVariant === 'horizontal' ? bgColor : "none"
               }
               variant={
-                borderVariant === BORDER_VARIANT.HORIZONTAL ? "solid" : "ghost"
+                borderVariant === 'horizontal' ? "solid" : "ghost"
               }
               color={
-                borderVariant === BORDER_VARIANT.HORIZONTAL
+                borderVariant === 'horizontal'
                   ? activeIconColor
                   : iconColor
               }
-              onClick={() => handleChangeVariant(BORDER_VARIANT.HORIZONTAL)}
+              onClick={() => handleChangeVariant('horizontal')}
               icon={MdBorderHorizontal}
               fontSize={20}
               size="sm"
@@ -1379,17 +1379,17 @@ const BorderSelection: React.FC<BorderProps> = ({
             <IconButton
               aria-label={translations.border_vertical}
               background={
-                borderVariant === BORDER_VARIANT.VERTICAL ? bgColor : "none"
+                borderVariant === 'vertical' ? bgColor : "none"
               }
               variant={
-                borderVariant === BORDER_VARIANT.VERTICAL ? "solid" : "ghost"
+                borderVariant === 'vertical' ? "solid" : "ghost"
               }
               color={
-                borderVariant === BORDER_VARIANT.VERTICAL
+                borderVariant === 'vertical'
                   ? activeIconColor
                   : iconColor
               }
-              onClick={() => handleChangeVariant(BORDER_VARIANT.VERTICAL)}
+              onClick={() => handleChangeVariant('vertical')}
               icon={MdBorderVertical}
               fontSize={20}
               size="sm"
@@ -1397,17 +1397,17 @@ const BorderSelection: React.FC<BorderProps> = ({
             <IconButton
               aria-label={translations.border_outer}
               background={
-                borderVariant === BORDER_VARIANT.OUTER ? bgColor : "none"
+                borderVariant === 'outer' ? bgColor : "none"
               }
               variant={
-                borderVariant === BORDER_VARIANT.OUTER ? "solid" : "ghost"
+                borderVariant === 'outer' ? "solid" : "ghost"
               }
               color={
-                borderVariant === BORDER_VARIANT.OUTER
+                borderVariant === 'outer'
                   ? activeIconColor
                   : iconColor
               }
-              onClick={() => handleChangeVariant(BORDER_VARIANT.OUTER)}
+              onClick={() => handleChangeVariant('outer')}
               icon={MdBorderOuter}
               fontSize={20}
               size="sm"
@@ -1415,17 +1415,17 @@ const BorderSelection: React.FC<BorderProps> = ({
             <IconButton
               aria-label={translations.border_left}
               background={
-                borderVariant === BORDER_VARIANT.LEFT ? bgColor : "none"
+                borderVariant === 'left' ? bgColor : "none"
               }
               variant={
-                borderVariant === BORDER_VARIANT.LEFT ? "solid" : "ghost"
+                borderVariant === 'left' ? "solid" : "ghost"
               }
               color={
-                borderVariant === BORDER_VARIANT.LEFT
+                borderVariant === 'left'
                   ? activeIconColor
                   : iconColor
               }
-              onClick={() => handleChangeVariant(BORDER_VARIANT.LEFT)}
+              onClick={() => handleChangeVariant('left')}
               icon={MdBorderLeft}
               fontSize={20}
               size="sm"
@@ -1433,17 +1433,17 @@ const BorderSelection: React.FC<BorderProps> = ({
             <IconButton
               aria-label={translations.border_right}
               background={
-                borderVariant === BORDER_VARIANT.RIGHT ? bgColor : "none"
+                borderVariant === 'right' ? bgColor : "none"
               }
               variant={
-                borderVariant === BORDER_VARIANT.RIGHT ? "solid" : "ghost"
+                borderVariant === 'right' ? "solid" : "ghost"
               }
               color={
-                borderVariant === BORDER_VARIANT.RIGHT
+                borderVariant === 'right'
                   ? activeIconColor
                   : iconColor
               }
-              onClick={() => handleChangeVariant(BORDER_VARIANT.RIGHT)}
+              onClick={() => handleChangeVariant('right')}
               icon={MdBorderRight}
               fontSize={20}
               size="sm"
@@ -1451,15 +1451,15 @@ const BorderSelection: React.FC<BorderProps> = ({
             <IconButton
               aria-label={translations.border_top}
               background={
-                borderVariant === BORDER_VARIANT.TOP ? bgColor : "none"
+                borderVariant === 'top' ? bgColor : "none"
               }
-              variant={borderVariant === BORDER_VARIANT.TOP ? "solid" : "ghost"}
+              variant={borderVariant === 'top' ? "solid" : "ghost"}
               color={
-                borderVariant === BORDER_VARIANT.TOP
+                borderVariant === 'top'
                   ? activeIconColor
                   : iconColor
               }
-              onClick={() => handleChangeVariant(BORDER_VARIANT.TOP)}
+              onClick={() => handleChangeVariant('top')}
               icon={MdBorderTop}
               fontSize={20}
               size="sm"
@@ -1467,17 +1467,17 @@ const BorderSelection: React.FC<BorderProps> = ({
             <IconButton
               aria-label={translations.border_bottom}
               background={
-                borderVariant === BORDER_VARIANT.BOTTOM ? bgColor : "none"
+                borderVariant === 'bottom' ? bgColor : "none"
               }
               variant={
-                borderVariant === BORDER_VARIANT.BOTTOM ? "solid" : "ghost"
+                borderVariant === 'bottom' ? "solid" : "ghost"
               }
               color={
-                borderVariant === BORDER_VARIANT.BOTTOM
+                borderVariant === 'bottom'
                   ? activeIconColor
                   : iconColor
               }
-              onClick={() => handleChangeVariant(BORDER_VARIANT.BOTTOM)}
+              onClick={() => handleChangeVariant('bottom')}
               icon={MdBorderBottom}
               fontSize={20}
               size="sm"
@@ -1485,17 +1485,17 @@ const BorderSelection: React.FC<BorderProps> = ({
             <IconButton
               aria-label={translations.border_none}
               background={
-                borderVariant === BORDER_VARIANT.NONE ? bgColor : "none"
+                borderVariant === 'none' ? bgColor : "none"
               }
               variant={
-                borderVariant === BORDER_VARIANT.NONE ? "solid" : "ghost"
+                borderVariant === 'none' ? "solid" : "ghost"
               }
               color={
-                borderVariant === BORDER_VARIANT.NONE
+                borderVariant === 'none'
                   ? activeIconColor
                   : iconColor
               }
-              onClick={() => handleChangeVariant(BORDER_VARIANT.NONE)}
+              onClick={() => handleChangeVariant('none')}
               icon={MdBorderClear}
               fontSize={20}
               size="sm"
@@ -1589,21 +1589,21 @@ const BorderSelection: React.FC<BorderProps> = ({
                       <PopoverBody>
                         <Button
                           background={
-                            borderStyle === BORDER_STYLE.THIN ? bgColor : "none"
+                            borderStyle === 'thin' ? bgColor : "none"
                           }
                           variant={
-                            borderStyle === BORDER_STYLE.THIN
+                            borderStyle === 'thin'
                               ? "solid"
                               : "ghost"
                           }
                           color={
-                            borderStyle === BORDER_STYLE.THIN
+                            borderStyle === 'thin'
                               ? activeIconColor
                               : iconColor
                           }
                           size="sm"
                           onClick={() => {
-                            handleChangeBorderStyle(BORDER_STYLE.THIN);
+                            handleChangeBorderStyle('thin');
                             onClose?.();
                           }}
                         >
@@ -1626,23 +1626,23 @@ const BorderSelection: React.FC<BorderProps> = ({
                         </Button>
                         <Button
                           background={
-                            borderStyle === BORDER_STYLE.MEDIUM
+                            borderStyle === 'medium'
                               ? bgColor
                               : "none"
                           }
                           variant={
-                            borderStyle === BORDER_STYLE.MEDIUM
+                            borderStyle === 'medium'
                               ? "solid"
                               : "ghost"
                           }
                           color={
-                            borderStyle === BORDER_STYLE.MEDIUM
+                            borderStyle === 'medium'
                               ? activeIconColor
                               : iconColor
                           }
                           size="sm"
                           onClick={() => {
-                            handleChangeBorderStyle(BORDER_STYLE.MEDIUM);
+                            handleChangeBorderStyle('medium');
                             onClose?.();
                           }}
                         >
@@ -1665,23 +1665,23 @@ const BorderSelection: React.FC<BorderProps> = ({
                         </Button>
                         <Button
                           background={
-                            borderStyle === BORDER_STYLE.THICK
+                            borderStyle === 'thick'
                               ? bgColor
                               : "none"
                           }
                           variant={
-                            borderStyle === BORDER_STYLE.THICK
+                            borderStyle === 'thick'
                               ? "solid"
                               : "ghost"
                           }
                           color={
-                            borderStyle === BORDER_STYLE.THICK
+                            borderStyle === 'thick'
                               ? activeIconColor
                               : iconColor
                           }
                           size="sm"
                           onClick={() => {
-                            handleChangeBorderStyle(BORDER_STYLE.THICK);
+                            handleChangeBorderStyle('thick');
                             onClose?.();
                           }}
                         >
@@ -1704,23 +1704,23 @@ const BorderSelection: React.FC<BorderProps> = ({
                         </Button>
                         <Button
                           background={
-                            borderStyle === BORDER_STYLE.DASHED
+                            borderStyle === 'dashed'
                               ? bgColor
                               : "none"
                           }
                           variant={
-                            borderStyle === BORDER_STYLE.DASHED
+                            borderStyle === 'dashed'
                               ? "solid"
                               : "ghost"
                           }
                           color={
-                            borderStyle === BORDER_STYLE.DASHED
+                            borderStyle === 'dashed'
                               ? activeIconColor
                               : iconColor
                           }
                           size="sm"
                           onClick={() => {
-                            handleChangeBorderStyle(BORDER_STYLE.DASHED);
+                            handleChangeBorderStyle('dashed');
                             onClose?.();
                           }}
                         >
@@ -1744,23 +1744,23 @@ const BorderSelection: React.FC<BorderProps> = ({
                         </Button>
                         <Button
                           background={
-                            borderStyle === BORDER_STYLE.DOTTED
+                            borderStyle === 'dotted'
                               ? bgColor
                               : "none"
                           }
                           variant={
-                            borderStyle === BORDER_STYLE.DOTTED
+                            borderStyle === 'dotted'
                               ? "solid"
                               : "ghost"
                           }
                           color={
-                            borderStyle === BORDER_STYLE.DOTTED
+                            borderStyle === 'dotted'
                               ? activeIconColor
                               : iconColor
                           }
                           size="sm"
                           onClick={() => {
-                            handleChangeBorderStyle(BORDER_STYLE.DOTTED);
+                            handleChangeBorderStyle('dotted');
                             onClose?.();
                           }}
                         >

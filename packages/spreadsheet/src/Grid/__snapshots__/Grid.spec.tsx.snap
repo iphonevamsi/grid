@@ -1,0 +1,79 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Grid matches snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="css-oqtn58"
+  >
+    <div
+      class="rowsncolumns-grid"
+      style="position: relative; width: 800px; user-select: none;"
+    >
+      <div
+        class="rowsncolumns-grid-container"
+        tabindex="0"
+      >
+        <div>
+          <div
+            class="konvajs-content"
+            role="presentation"
+            style="position: relative; user-select: none; width: 800px; height: 600px;"
+          >
+            <canvas
+              height="600"
+              style="padding: 0px; margin: 0px; border: 0px; background: transparent; position: absolute; top: 0px; left: 0px; width: 800px; height: 600px; display: block;"
+              width="800"
+            />
+          </div>
+        </div>
+      </div>
+      <div
+        style="pointer-events: none;"
+      >
+        <div
+          style="position: absolute; left: 46px; top: 24px; right: 0px; bottom: 0px; overflow: hidden;"
+        >
+          <div
+            style="transform: translate(-46px, -24px);"
+          />
+        </div>
+        <div
+          style="position: absolute; width: 54px; top: 24px; left: 0px; bottom: 0px; overflow: hidden;"
+        >
+          <div
+            style="transform: translate(0, -24px);"
+          />
+        </div>
+        <div
+          style="position: absolute; height: 32px; left: 46px; right: 0px; top: 0px; overflow: hidden;"
+        >
+          <div
+            style="transform: translate(-46px, 0);"
+          />
+        </div>
+        <div
+          style="position: absolute; height: 32px; width: 54px; left: 0px; top: 0px; overflow: hidden; pointer-events: none;"
+        />
+      </div>
+      <div
+        class="rowsncolumns-grid-scrollbar rowsncolumns-grid-scrollbar-y"
+        style="height: 600px; overflow: scroll; position: absolute; right: 0px; top: 0px; width: 13px; will-change: transform;"
+        tabindex="-1"
+      >
+        <div
+          style="position: absolute; height: 49212px; width: 1px;"
+        />
+      </div>
+      <div
+        class="rowsncolumns-grid-scrollbar rowsncolumns-grid-scrollbar-x"
+        style="overflow: scroll; position: absolute; bottom: 0px; left: 0px; width: 800px; height: 13px; will-change: transform;"
+        tabindex="-1"
+      >
+        <div
+          style="position: absolute; width: 50446px; height: 1px;"
+        />
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;

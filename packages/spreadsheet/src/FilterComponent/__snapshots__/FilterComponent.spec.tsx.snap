@@ -1,0 +1,126 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FilterComponent matches snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="css-1jm5quw"
+  >
+    <div
+      class="css-hw9y9f"
+    >
+      <div
+        class="css-158s385"
+      >
+        <button
+          class="css-1gopdl6-Button"
+          type="button"
+        >
+          Select all
+        </button>
+        <button
+          class="css-sq4f40-Button"
+          type="button"
+        >
+          Clear
+        </button>
+        <div
+          class="css-770flb"
+        >
+          <div
+            class="css-btmwlx"
+          >
+            <svg
+              class="css-1xb1rov"
+              focusable="false"
+              role="presentation"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M23.384,21.619,16.855,15.09a9.284,9.284,0,1,0-1.768,1.768l6.529,6.529a1.266,1.266,0,0,0,1.768,0A1.251,1.251,0,0,0,23.384,21.619ZM2.75,9.5a6.75,6.75,0,1,1,6.75,6.75A6.758,6.758,0,0,1,2.75,9.5Z"
+                fill="currentColor"
+              />
+            </svg>
+          </div>
+          <input
+            class="css-15mnt7s"
+            type="text"
+            value=""
+          />
+        </div>
+        <div
+          class="css-1f3tcdl"
+        >
+          <div
+            style="position: relative;"
+          >
+            <div
+              style="transform: translate(0px, 0px);"
+            >
+              <div>
+                <div
+                  class="css-125uqq"
+                >
+                  <label
+                    class="css-18lkzlc"
+                  >
+                    <input
+                      aria-checked="false"
+                      class="css-1gy22ay"
+                      type="checkbox"
+                      value="b"
+                    />
+                    <div
+                      aria-hidden="true"
+                      class="css-1d4ijjx"
+                    >
+                      <svg
+                        class="css-1vhqk79"
+                        focusable="false"
+                        role="presentation"
+                        viewBox="0 0 14 14"
+                      >
+                        <g
+                          fill="currentColor"
+                        >
+                          <polygon
+                            points="5.5 11.9993304 14 3.49933039 12.5 2 5.5 8.99933039 1.5 4.9968652 0 6.49933039"
+                          />
+                        </g>
+                      </svg>
+                    </div>
+                    <div
+                      class="css-75rnni"
+                    >
+                      <div
+                        class="css-1qxtz39"
+                      >
+                        b
+                      </div>
+                    </div>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="css-1p885yg"
+        >
+          <button
+            class="css-x8sq2n-Button"
+            type="button"
+          >
+            Done
+          </button>
+          <button
+            class="css-wighrs-Button"
+            type="button"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;

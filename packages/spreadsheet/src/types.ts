@@ -158,23 +158,9 @@ export interface CellDataFormatting {
   format?: string;
 }
 
-export enum AXIS {
-  X = "x",
-  Y = "y",
-}
+export type AXIS = 'x' | 'y'
 
-export enum BORDER_VARIANT {
-  ALL = "all",
-  INNER = "inner",
-  HORIZONTAL = "horizontal",
-  VERTICAL = "vertical",
-  OUTER = "outer",
-  LEFT = "left",
-  RIGHT = "right",
-  BOTTOM = "bottom",
-  TOP = "top",
-  NONE = "none",
-}
+export type BORDER_VARIANT = "all" | "inner" | "horizontal" | "vertical" | "outer" | "left" | "right" | "bottom" | "top" | "none"
 
 export enum OPERATION_TYPE {
   CELL_ATTRIBUTE = "cell_attribute",
@@ -189,14 +175,7 @@ export enum RESOURCE_TYPE {
   SELECTION = "selection",
 }
 
-export enum BORDER_STYLE {
-  "THIN" = "thin",
-  "MEDIUM" = "medium",
-  "THICK" = "thick",
-  "DASHED" = "dashed",
-  "DOTTED" = "dotted",
-  "DOUBLE" = "double",
-}
+export type BORDER_STYLE = "thin" | "medium" | "thick" | "dashed" | "dotted" | "double"
 
 export type Formatter = (
   value: FormatInputValue,

@@ -1,16 +1,30 @@
 import React from "react";
 import { render } from "@testing-library/react";
 import { Stage, Layer } from "react-konva";
+import { ThemeProvider, theme } from "@chakra-ui/core";
 
 const KonvaWrapper = ({ children }) => {
   return (
     <Stage>
-      <Layer>{children}</Layer>
+      <ThemeWrapper>
+        <Layer>{children}</Layer>
+      </ThemeWrapper>
     </Stage>
   );
 };
 
 const konvaRenderer = (ui) => render(ui, { wrapper: KonvaWrapper });
+const domRenderer = ui => render(ui, { wrapper: ThemeWrapper })
 
 export * from "@testing-library/react";
-export { konvaRenderer };
+export { konvaRenderer, domRenderer };
+
+export const ThemeWrapper = ({ children }) => {
+  return (
+    <ThemeProvider theme={theme}>
+      {children}
+    </ThemeProvider>
+  )
+}
+
+

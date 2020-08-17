@@ -56,9 +56,9 @@ import { FONT_WEIGHT } from "../types";
 
 export interface EditableProps {
   value?: React.ReactText;
-  onChange: (value: string) => void;
-  onSubmit: (value: string, direction?: Direction) => void;
-  onCancel: (e: React.KeyboardEvent<HTMLDivElement>) => void;
+  onChange?: (value: string) => void;
+  onSubmit?: (value: string, direction?: Direction) => void;
+  onCancel?: (e: React.KeyboardEvent<HTMLDivElement>) => void;
   fontFamily: string;
   fontSize: number;
   bold?: boolean;
@@ -198,7 +198,11 @@ const TextEditor: React.FC<EditableProps & RefAttribute> = memo(
       ReactEditor.focus(editor);
       document.execCommand("selectAll", false, undefined);
       // collapse selection to the end
-      document.getSelection()?.collapseToEnd();
+      try {
+        document.getSelection()?.collapseToEnd();
+      } catch (err) {
+        console.log('Failed to collapse selection', err)
+      }
     }, []);
     useEffect(() => {
       if (autoFocus) {

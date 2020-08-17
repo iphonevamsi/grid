@@ -804,7 +804,7 @@ export const createStateReducer = ({
 
                     /* Check for formula range */
                     if (formulaRange) {
-                      const [right, bottom] = formulaRange;
+                      const [right, bottom] = formulaRange;                      
                       for (let a = 0; a < bottom; a++) {
                         for (let b = 0; b < right; b++) {
                           clearCellKeepFormatting(
@@ -830,24 +830,20 @@ export const createStateReducer = ({
             ) as Sheet;
             if (sheet && !sheet.locked) {
               const { activeCell, selections } = action;
-              if (selections.length) {
-                selections.forEach((sel) => {
-                  const { bounds } = sel;
-                  for (let i = bounds.top; i <= bounds.bottom; i++) {
-                    for (let j = bounds.left; j <= bounds.right; j++) {
-                      if (sheet.cells?.[i]?.[j]?.locked) {
-                        continue;
-                      }
-                      delete sheet.cells?.[i]?.[j];
+              const sel = selections.length
+                ? selections
+                : [{ bounds: getCellBounds(activeCell) }];
+              for (let i = 0; i < sel.length; i++) {
+                const { bounds } = sel[i];
+                if (!bounds) continue;
+                for (let j = bounds.top; j <= bounds.bottom; j++) {
+                  for (let k = bounds.left; k <= bounds.right; k++) {
+                    if (sheet.cells?.[j]?.[k]?.locked) {
+                      continue;
                     }
+                    delete sheet.cells?.[j]?.[k];
                   }
-                });
-              } else if (activeCell) {
-                const { rowIndex, columnIndex } = activeCell;
-                if (sheet.cells?.[rowIndex]?.[columnIndex]?.locked) {
-                  return;
                 }
-                delete sheet.cells?.[rowIndex]?.[columnIndex];
               }
             }
             break;
@@ -860,39 +856,28 @@ export const createStateReducer = ({
             ) as Sheet;
             if (sheet && !sheet.locked) {
               const { activeCell, selections } = sheet;
-              if (selections.length) {
-                selections.forEach((sel) => {
-                  const { bounds } = sel;
-                  for (let i = bounds.top; i <= bounds.bottom; i++) {
-                    if (sheet.cells[i] === void 0) continue;
-                    for (let j = bounds.left; j <= bounds.right; j++) {
-                      if (
-                        sheet.cells[i][j] === void 0 ||
-                        sheet.cells[i][j]?.locked
-                      ) {
-                        continue;
-                      }
-                      Object.values(FORMATTING_TYPE).forEach((key) => {
-                        delete sheet.cells[i]?.[j]?.[key];
-                      });
-                      Object.values(STROKE_FORMATTING).forEach((key) => {
-                        delete sheet.cells[i]?.[j]?.[key];
-                      });
+              const sel = selections.length
+                ? selections
+                : [{ bounds: getCellBounds(activeCell) }];
+              for (let i = 0; i < sel.length; i++) {
+                const { bounds } = sel[i];
+                if (!bounds) continue;
+                for (let j = bounds.top; j <= bounds.bottom; j++) {
+                  if (sheet.cells[j] === void 0) continue;
+                  for (let k = bounds.left; k <= bounds.right; k++) {
+                    if (
+                      sheet.cells[j][k] === void 0 ||
+                      sheet.cells[j][k]?.locked
+                    ) {
+                      continue;
                     }
+                    Object.values(FORMATTING_TYPE).forEach((key) => {
+                      delete sheet.cells[j]?.[k]?.[key];
+                    });
+                    Object.values(STROKE_FORMATTING).forEach((key) => {
+                      delete sheet.cells[j]?.[k]?.[key];
+                    });
                   }
-                });
-              } else if (activeCell) {
-                const { rowIndex, columnIndex } = activeCell;
-                if (sheet.cells?.[rowIndex]?.[columnIndex]?.locked) {
-                  return;
-                }
-                if (sheet.cells?.[rowIndex]?.[columnIndex]) {
-                  Object.values(FORMATTING_TYPE).forEach((key) => {
-                    delete sheet.cells[rowIndex]?.[columnIndex]?.[key];
-                  });
-                  Object.values(STROKE_FORMATTING).forEach((key) => {
-                    delete sheet.cells[rowIndex]?.[columnIndex]?.[key];
-                  });
                 }
               }
             }
@@ -905,7 +890,7 @@ export const createStateReducer = ({
             ) as Sheet;
             if (sheet && !sheet.locked) {
               const { axis, index, dimension } = action;
-              if (axis === AXIS.X) {
+              if (axis === 'x') {
                 sheet.columnSizes = sheet.columnSizes ?? {};
                 sheet.columnSizes[index] = dimension;
               } else {
@@ -992,7 +977,7 @@ export const createStateReducer = ({
               );
               for (const row in boundedCells) {
                 for (const col in boundedCells[row]) {
-                  if (variant === BORDER_VARIANT.NONE) {
+                  if (variant === 'none') {
                     // Delete all stroke formatting rules
                     Object.values(STROKE_FORMATTING).forEach((key) => {
                       delete sheet.cells[row]?.[col]?.[key];
@@ -1034,7 +1019,8 @@ export const createStateReducer = ({
                 ];
               } else {
                 sheet.filterViews = sheet.filterViews ?? [];
-                if (!sheet.filterViews[filterViewIndex].filters) {
+                if (!sheet.filterViews[filterViewIndex]?.filters) {
+                  sheet.filterViews[filterViewIndex] = sheet.filterViews[filterViewIndex] ?? {}
                   sheet.filterViews[filterViewIndex].filters = {
                     [columnIndex]: filter,
                   };
@@ -1231,6 +1217,8 @@ export const createStateReducer = ({
             ) as Sheet;
             if (sheet && !sheet.locked) {
               const { value, cell } = action;
+              sheet.cells[cell.rowIndex] = sheet.cells[cell.rowIndex] ?? {}
+              sheet.cells[cell.rowIndex][cell.columnIndex]  = sheet.cells[cell.rowIndex][cell.columnIndex] ?? {}
               sheet.cells[cell.rowIndex][cell.columnIndex].loading = value;
             }
             break;
@@ -1243,9 +1231,11 @@ export const createStateReducer = ({
             );
             if (index !== -1) {
               const newSelectedSheet =
-                visibleSheets[index === 0 ? 1 : Math.max(0, index - 1)].id;
-              draft.selectedSheet = newSelectedSheet;
-              visibleSheets[index].hidden = true;
+                visibleSheets[index === 0 ? 1 : Math.max(0, index - 1)]?.id;
+              if (newSelectedSheet !== void 0) {
+                draft.selectedSheet = newSelectedSheet;
+                visibleSheets[index].hidden = true;
+              }
             }
             break;
           }
