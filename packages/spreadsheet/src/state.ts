@@ -382,6 +382,7 @@ export const createStateReducer = ({
               const hasFormulaChanged = currentCell.text !== value;
               currentCell.text = value;
               currentCell.datatype = datatype;
+              currentCell.valid = true;
               delete currentCell.parentCell;
               delete currentCell.resultType;
               delete currentCell.result;
@@ -805,7 +806,7 @@ export const createStateReducer = ({
 
                     /* Check for formula range */
                     if (formulaRange) {
-                      const [right, bottom] = formulaRange;                      
+                      const [right, bottom] = formulaRange;
                       for (let a = 0; a < bottom; a++) {
                         for (let b = 0; b < right; b++) {
                           clearCellKeepFormatting(
@@ -891,7 +892,7 @@ export const createStateReducer = ({
             ) as Sheet;
             if (sheet && !sheet.locked) {
               const { axis, index, dimension } = action;
-              if (axis === 'x') {
+              if (axis === "x") {
                 sheet.columnSizes = sheet.columnSizes ?? {};
                 sheet.columnSizes[index] = dimension;
               } else {
@@ -978,7 +979,7 @@ export const createStateReducer = ({
               );
               for (const row in boundedCells) {
                 for (const col in boundedCells[row]) {
-                  if (variant === 'none') {
+                  if (variant === "none") {
                     // Delete all stroke formatting rules
                     Object.values(STROKE_FORMATTING).forEach((key) => {
                       delete sheet.cells[row]?.[col]?.[key];
@@ -1021,7 +1022,8 @@ export const createStateReducer = ({
               } else {
                 sheet.filterViews = sheet.filterViews ?? [];
                 if (!sheet.filterViews[filterViewIndex]?.filters) {
-                  sheet.filterViews[filterViewIndex] = sheet.filterViews[filterViewIndex] ?? {}
+                  sheet.filterViews[filterViewIndex] =
+                    sheet.filterViews[filterViewIndex] ?? {};
                   sheet.filterViews[filterViewIndex].filters = {
                     [columnIndex]: filter,
                   };
@@ -1218,8 +1220,9 @@ export const createStateReducer = ({
             ) as Sheet;
             if (sheet && !sheet.locked) {
               const { value, cell } = action;
-              sheet.cells[cell.rowIndex] = sheet.cells[cell.rowIndex] ?? {}
-              sheet.cells[cell.rowIndex][cell.columnIndex]  = sheet.cells[cell.rowIndex][cell.columnIndex] ?? {}
+              sheet.cells[cell.rowIndex] = sheet.cells[cell.rowIndex] ?? {};
+              sheet.cells[cell.rowIndex][cell.columnIndex] =
+                sheet.cells[cell.rowIndex][cell.columnIndex] ?? {};
               sheet.cells[cell.rowIndex][cell.columnIndex].loading = value;
             }
             break;
