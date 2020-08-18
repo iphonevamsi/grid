@@ -10,7 +10,10 @@
     "prepublish": "yarn build",
     "prettier": "prettier src/**/*.{ts,tsx} --write",
     "storybook-spreadsheet": "start-storybook -p 9003 -s ./public",
-    "cypress": "cypress open",
+    "storybook-spreadsheet:ci": "start-storybook -p 9003 -s ./public --ci",
+    "test:ci": "start-server-and-test storybook-spreadsheet:ci http://localhost:9003 cypress:run",
+    "cypress:run": "cypress run",
+    "cypress:open": "cypress open",
     "test": "jest"
   },
   "publishConfig": {
@@ -46,6 +49,9 @@
   },
   "gitHead": "272c80dcd474a9346b6927b356d37917cfcd7c84",
   "devDependencies": {
-    "cypress": "^4.12.1"
+    "cypress": "^4.12.1",
+    "cypress-plugin-snapshots": "^1.4.4",
+    "js-base64": "2.5.2",
+    "start-server-and-test": "^1.11.3"
   }
 }

@@ -2,6 +2,18 @@
   "baseUrl": "http://localhost:9003/iframe.html?id=spreadsheet--default",
   "defaultCommandTimeout": 30000,
   "viewportWidth": 1000,
-  "viewportHeight": 568,
-  "integrationFolder": "cypress"
+  "viewportHeight": 800,
+  "integrationFolder": "cypress",
+  "ignoreTestFiles": [
+    "**/__snapshots__/*",
+    "**/__image_snapshots__/*"
+  ],
+  "video": false,
+  "env": {
+    "cypress-plugin-snapshots": {
+      "imageConfig": {
+        "threshold": 0.01
+      }
+    }
+  }
 }

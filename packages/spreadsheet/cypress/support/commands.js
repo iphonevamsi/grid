@@ -25,10 +25,12 @@
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 
 Cypress.Commands.add("typeInSlate", { prevSubject: true }, (subject, text) => {
-  return cy.wrap(subject).then((subject) => {
+  return cy.wrap(subject).then(subject => {
     subject[0].dispatchEvent(
       new InputEvent("beforeinput", { inputType: "insertText", data: text })
     );
     return subject;
   });
 });
+
+// import "cypress-plugin-snapshots/commands";

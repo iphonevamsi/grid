@@ -3,11 +3,25 @@ context("Actions", () => {
     cy.visit("http://localhost:9003/iframe.html?id=spreadsheet--default");
   });
 
-  it("visits the app", () => {
-    cy.get(".rowsncolumns-grid-container")
-      .trigger("mousemove", { clientX: 100, clientY: 100 })
-      .dblclick();
+  it("can enter values in a cell", () => {
+    cy.get(document);
+    cy.get(".rowsncolumns-grid-container").dblclick(60, 60);
 
-    cy.get('[data-gramm="false"]').typeInSlate("hello").type("{enter}");
+    cy.get("[contenteditable]")
+      .typeInSlate("hello")
+      .type("{enter}");
+
+    // cy.get("body").toMatchImageSnapshot();
+  });
+
+  it("can evaluate formulas", () => {
+    cy.get(document);
+    cy.get(".rowsncolumns-grid-container").dblclick(60, 60);
+
+    cy.get("[contenteditable]")
+      .typeInSlate("=SUM(2,2)")
+      .type("{enter}");
+
+    // cy.get("body").toMatchImageSnapshot();
   });
 });
