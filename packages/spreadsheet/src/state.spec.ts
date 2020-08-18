@@ -2,7 +2,7 @@ import {
   createStateReducer,
   ACTION_TYPE,
   ActionTypes,
-  clearCellKeepFormatting,
+  clearCellKeepFormatting
 } from "./state";
 import { initialState, StateInterface, CellConfig } from "./Spreadsheet";
 import { createNewSheet } from ".";
@@ -22,7 +22,7 @@ describe("state reducers", () => {
     top: 1,
     left: 1,
     right: 1,
-    bottom: 1,
+    bottom: 1
   });
   beforeEach(() => {
     reducer = createStateReducer({ addUndoPatch: undoCallback, getCellBounds });
@@ -31,7 +31,7 @@ describe("state reducers", () => {
   it("can clear preserve cell formatting when a cell is deleted", () => {
     const cellConfig: CellConfig = {
       text: "hello world",
-      bold: true,
+      bold: true
     };
     clearCellKeepFormatting(cellConfig);
     expect(cellConfig.bold).toBe(true);
@@ -45,7 +45,7 @@ describe("state reducers", () => {
   it("can change sheet", () => {
     const newState = reducer(initialState, {
       type: ACTION_TYPE.SELECT_SHEET,
-      id: "sheet_id",
+      id: "sheet_id"
     });
 
     expect(newState.selectedSheet).toBe("sheet_id");
@@ -60,24 +60,24 @@ describe("state reducers", () => {
           id: 1,
           cells: {},
           activeCell: null,
-          selections: [],
+          selections: []
         },
         {
           name: "2",
           id: 2,
           cells: {},
           activeCell: null,
-          selections: [],
-        },
+          selections: []
+        }
       ],
-      selectedSheet: 1,
+      selectedSheet: 1
     };
     let newState = reducer(state, {
-      type: ACTION_TYPE.SELECT_NEXT_SHEET,
+      type: ACTION_TYPE.SELECT_NEXT_SHEET
     });
     expect(newState.selectedSheet).toBe(2);
     newState = reducer(newState, {
-      type: ACTION_TYPE.SELECT_PREV_SHEET,
+      type: ACTION_TYPE.SELECT_PREV_SHEET
     });
     expect(newState.selectedSheet).toBe(1);
   });
@@ -87,10 +87,10 @@ describe("state reducers", () => {
     const newState = reducer(initialState, {
       type: ACTION_TYPE.CHANGE_SHEET_NAME,
       id,
-      name: "Hello world",
+      name: "Hello world"
     });
 
-    expect(newState.sheets.find((sheet) => sheet.id === id)?.name).toBe(
+    expect(newState.sheets.find(sheet => sheet.id === id)?.name).toBe(
       "Hello world"
     );
   });
@@ -98,7 +98,7 @@ describe("state reducers", () => {
   it("can add new sheet", () => {
     const newState = reducer(initialState, {
       type: ACTION_TYPE.NEW_SHEET,
-      sheet: createNewSheet({ count: 2 }),
+      sheet: createNewSheet({ count: 2 })
     });
 
     expect(newState.sheets.length).toBe(2);
@@ -108,12 +108,12 @@ describe("state reducers", () => {
   it("can add new sheet at a index", () => {
     const state = {
       ...initialState,
-      sheets: [...initialState.sheets, createNewSheet({ count: 1 })],
+      sheets: [...initialState.sheets, createNewSheet({ count: 1 })]
     };
     const newState = reducer(initialState, {
       type: ACTION_TYPE.NEW_SHEET,
       sheet: createNewSheet({ count: 2 }),
-      index: 0,
+      index: 0
     });
 
     expect(newState.sheets.length).toBe(2);
@@ -126,13 +126,13 @@ describe("state reducers", () => {
       id: initialState.sheets[0].id,
       cell: { rowIndex: 1, columnIndex: 1 },
       value: "Hello",
-      datatype: "string",
+      datatype: "string"
     });
 
     expect(newState.sheets[0].cells[1]).toBeDefined();
     expect(newState.sheets[0].cells[1][1].text).toBe("Hello");
     expect(newState.sheets[0].cells[1][1].datatype).toBe("string");
-    expect(newState.sheets[0].cells[1][1].valid).toBeTruthy();
+    expect(newState.sheets[0].cells[1][1].valid).toBeUndefined();
   });
 
   it("cant change a cell if its locked", () => {
@@ -148,19 +148,19 @@ describe("state reducers", () => {
             1: {
               1: {
                 text: "hello world",
-                locked: true,
-              },
-            },
-          },
-        },
-      ],
+                locked: true
+              }
+            }
+          }
+        }
+      ]
     };
     const newState = reducer(state, {
       type: ACTION_TYPE.CHANGE_SHEET_CELL,
       id: state.sheets[0].id,
       cell: { rowIndex: 1, columnIndex: 1 },
       value: "Hello",
-      datatype: "string",
+      datatype: "string"
     });
 
     expect(newState.sheets[0].cells[1]).toBeDefined();
@@ -177,21 +177,21 @@ describe("state reducers", () => {
             text: "=A1:B2",
             datatype: "formula",
             resultType: "array",
-            formulaRange: [2, 2], // [spans 2 cells horizontally, span 2 cells vertically]
+            formulaRange: [2, 2] // [spans 2 cells horizontally, span 2 cells vertically]
           },
           2: {
             text: "2",
             result: 2,
             resultType: "number",
-            parentCell: "A1",
-          },
-        },
-      },
+            parentCell: "A1"
+          }
+        }
+      }
     };
     /* 1: Calculation update a group of cells */
     const newState = reducer(initialState, {
       type: ACTION_TYPE.UPDATE_CELLS,
-      changes,
+      changes
     });
     expect(newState.sheets[0].cells[1][1].text).toBe("=A1:B2");
     expect(newState.sheets[0].cells[1][1].formulaRange).toEqual([2, 2]);
@@ -202,7 +202,7 @@ describe("state reducers", () => {
       id: newState.sheets[0].id,
       cell: { rowIndex: 1, columnIndex: 1 },
       value: "Hello",
-      datatype: "string",
+      datatype: "string"
     });
 
     expect(stateAfterUpdate.sheets[0].cells[1][1].text).toBe("Hello");
@@ -219,15 +219,15 @@ describe("state reducers", () => {
           1: {
             text: '=HYPERLINK("Google", www.google.com)',
             datatype: "formula",
-            resultType: "hyperlink",
-          },
-        },
-      },
+            resultType: "hyperlink"
+          }
+        }
+      }
     };
     /* 1: Calculation update a group of cells */
     const newState = reducer(initialState, {
       type: ACTION_TYPE.UPDATE_CELLS,
-      changes,
+      changes
     });
     expect(newState.sheets[0].cells[1][1].resultType).toEqual("hyperlink");
   });
@@ -244,12 +244,12 @@ describe("state reducers", () => {
           cells: {
             1: {
               1: {
-                locked: true,
-              },
-            },
-          },
-        },
-      ],
+                locked: true
+              }
+            }
+          }
+        }
+      ]
     };
     /* 1: Calculation update a group of cells */
     const newState = reducer(state, {
@@ -258,11 +258,11 @@ describe("state reducers", () => {
         Sheet1: {
           1: {
             1: {
-              result: 10,
-            },
-          },
-        },
-      },
+              result: 10
+            }
+          }
+        }
+      }
     });
     expect(newState.sheets[0].cells[1][1].text).toBeUndefined();
   });
@@ -274,7 +274,7 @@ describe("state reducers", () => {
       id,
       cell: { rowIndex: 1, columnIndex: 1 },
       valid: false,
-      prompt: "Please enter your name",
+      prompt: "Please enter your name"
     });
 
     expect(newState.sheets[0].cells[1][1].valid).toBeFalsy();
@@ -288,18 +288,18 @@ describe("state reducers", () => {
   it("can handle cell filling Direction - BOTTOM", () => {
     const state = {
       ...initialState,
-      sheets: initialState.sheets.map((sheet) => {
+      sheets: initialState.sheets.map(sheet => {
         return {
           ...sheet,
           cells: {
             5: {
               2: {
-                text: "Hello",
-              },
-            },
-          },
+                text: "Hello"
+              }
+            }
+          }
         };
-      }),
+      })
     };
     const id = state.sheets[0].id;
     const newState = reducer(state, {
@@ -307,7 +307,7 @@ describe("state reducers", () => {
       id,
       activeCell: {
         rowIndex: 5,
-        columnIndex: 2,
+        columnIndex: 2
       },
       // Extended selection
       fillSelection: {
@@ -315,8 +315,8 @@ describe("state reducers", () => {
           top: 5,
           bottom: 8,
           left: 2,
-          right: 5,
-        },
+          right: 5
+        }
       },
       // Original selection
       selections: [
@@ -325,10 +325,10 @@ describe("state reducers", () => {
             top: 5,
             left: 2,
             right: 5,
-            bottom: 5,
-          },
-        },
-      ],
+            bottom: 5
+          }
+        }
+      ]
     });
 
     expect(newState.sheets[0].cells[6][2].text).toBe("Hello");
@@ -339,18 +339,18 @@ describe("state reducers", () => {
   it("can handle cell filling - Direction UP", () => {
     const state = {
       ...initialState,
-      sheets: initialState.sheets.map((sheet) => {
+      sheets: initialState.sheets.map(sheet => {
         return {
           ...sheet,
           cells: {
             5: {
               2: {
-                text: "Hello",
-              },
-            },
-          },
+                text: "Hello"
+              }
+            }
+          }
         };
-      }),
+      })
     };
     const id = state.sheets[0].id;
     const newState = reducer(state, {
@@ -358,7 +358,7 @@ describe("state reducers", () => {
       id,
       activeCell: {
         rowIndex: 5,
-        columnIndex: 2,
+        columnIndex: 2
       },
       // Extended selection
       fillSelection: {
@@ -366,8 +366,8 @@ describe("state reducers", () => {
           top: 3,
           bottom: 5,
           left: 2,
-          right: 5,
-        },
+          right: 5
+        }
       },
       // Original selection
       selections: [
@@ -376,10 +376,10 @@ describe("state reducers", () => {
             top: 5,
             left: 2,
             right: 5,
-            bottom: 5,
-          },
-        },
-      ],
+            bottom: 5
+          }
+        }
+      ]
     });
 
     expect(newState.sheets[0].cells[3][2].text).toBe("Hello");
@@ -389,18 +389,18 @@ describe("state reducers", () => {
   it("can handle cell filling - Direction LEFT", () => {
     const state = {
       ...initialState,
-      sheets: initialState.sheets.map((sheet) => {
+      sheets: initialState.sheets.map(sheet => {
         return {
           ...sheet,
           cells: {
             5: {
               5: {
-                text: "Hello",
-              },
-            },
-          },
+                text: "Hello"
+              }
+            }
+          }
         };
-      }),
+      })
     };
     const id = state.sheets[0].id;
     const newState = reducer(state, {
@@ -408,7 +408,7 @@ describe("state reducers", () => {
       id,
       activeCell: {
         rowIndex: 5,
-        columnIndex: 5,
+        columnIndex: 5
       },
       // Extended selection
       fillSelection: {
@@ -416,8 +416,8 @@ describe("state reducers", () => {
           top: 5,
           bottom: 5,
           left: 2,
-          right: 5,
-        },
+          right: 5
+        }
       },
       // Original selection
       selections: [
@@ -426,10 +426,10 @@ describe("state reducers", () => {
             top: 5,
             left: 5,
             right: 5,
-            bottom: 5,
-          },
-        },
-      ],
+            bottom: 5
+          }
+        }
+      ]
     });
 
     expect(newState.sheets[0].cells[5][2].text).toBe("Hello");
@@ -439,18 +439,18 @@ describe("state reducers", () => {
   it("can handle cell filling - Direction RIGHT", () => {
     const state = {
       ...initialState,
-      sheets: initialState.sheets.map((sheet) => {
+      sheets: initialState.sheets.map(sheet => {
         return {
           ...sheet,
           cells: {
             5: {
               5: {
-                text: "Hello",
-              },
-            },
-          },
+                text: "Hello"
+              }
+            }
+          }
         };
-      }),
+      })
     };
     const id = state.sheets[0].id;
     const newState = reducer(state, {
@@ -458,7 +458,7 @@ describe("state reducers", () => {
       id,
       activeCell: {
         rowIndex: 5,
-        columnIndex: 5,
+        columnIndex: 5
       },
       // Extended selection
       fillSelection: {
@@ -466,8 +466,8 @@ describe("state reducers", () => {
           top: 5,
           bottom: 5,
           left: 5,
-          right: 10,
-        },
+          right: 10
+        }
       },
       // Original selection
       selections: [
@@ -476,10 +476,10 @@ describe("state reducers", () => {
             top: 5,
             left: 5,
             right: 5,
-            bottom: 5,
-          },
-        },
-      ],
+            bottom: 5
+          }
+        }
+      ]
     });
 
     expect(newState.sheets[0].cells[5][6].text).toBe("Hello");
@@ -489,7 +489,7 @@ describe("state reducers", () => {
   it("can delete sheets", () => {
     let newState = reducer(initialState, {
       type: ACTION_TYPE.DELETE_SHEET,
-      id: initialState.sheets[0].id,
+      id: initialState.sheets[0].id
     });
 
     expect(newState.sheets.length).toBe(0);
@@ -497,11 +497,11 @@ describe("state reducers", () => {
     // Skips locked sheet
     let lockedState = {
       ...initialState,
-      sheets: initialState.sheets.map((sheet) => ({ ...sheet, locked: true })),
+      sheets: initialState.sheets.map(sheet => ({ ...sheet, locked: true }))
     };
     newState = reducer(lockedState, {
       type: ACTION_TYPE.DELETE_SHEET,
-      id: initialState.sheets[0].id,
+      id: initialState.sheets[0].id
     });
     expect(newState.sheets.length).toBe(1);
   });
@@ -516,20 +516,20 @@ describe("state reducers", () => {
           id: 1,
           cells: {},
           activeCell: null,
-          selections: [],
+          selections: []
         },
         {
           name: "Sheet2",
           id: 2,
           cells: {},
           activeCell: null,
-          selections: [],
-        },
-      ],
+          selections: []
+        }
+      ]
     };
     let newState = reducer(state, {
       type: ACTION_TYPE.DELETE_SHEET,
-      id: 2,
+      id: 2
     });
 
     expect(newState.selectedSheet).toBe(1);
@@ -546,9 +546,9 @@ describe("state reducers", () => {
             1: {
               1: {
                 text: "1",
-                plaintext: true,
-              },
-            },
+                plaintext: true
+              }
+            }
           },
           activeCell: null,
           selections: [
@@ -557,16 +557,16 @@ describe("state reducers", () => {
                 top: 1,
                 left: 1,
                 right: 1,
-                bottom: 1,
-              },
-            },
-          ],
-        },
-      ],
+                bottom: 1
+              }
+            }
+          ]
+        }
+      ]
     };
     let newState = reducer(state, {
       type: ACTION_TYPE.FORMATTING_CHANGE_AUTO,
-      id: 1,
+      id: 1
     });
 
     expect(newState.sheets[0].cells[1][1].plaintext).toBeUndefined();
@@ -582,18 +582,18 @@ describe("state reducers", () => {
             1: {
               1: {
                 text: "1",
-                plaintext: true,
-              },
-            },
+                plaintext: true
+              }
+            }
           },
           activeCell: { rowIndex: 1, columnIndex: 1 },
-          selections: [],
-        },
-      ],
+          selections: []
+        }
+      ]
     };
     newState = reducer(stateWithActivecell, {
       type: ACTION_TYPE.FORMATTING_CHANGE_AUTO,
-      id: 1,
+      id: 1
     });
 
     expect(newState.sheets[0].cells[1][1].plaintext).toBeUndefined();
@@ -609,9 +609,9 @@ describe("state reducers", () => {
           cells: {
             1: {
               1: {
-                text: "1",
-              },
-            },
+                text: "1"
+              }
+            }
           },
           activeCell: null,
           selections: [
@@ -620,16 +620,16 @@ describe("state reducers", () => {
                 top: 1,
                 left: 1,
                 right: 1,
-                bottom: 1,
-              },
-            },
-          ],
-        },
-      ],
+                bottom: 1
+              }
+            }
+          ]
+        }
+      ]
     };
     let newState = reducer(state, {
       type: ACTION_TYPE.FORMATTING_CHANGE_PLAIN,
-      id: 1,
+      id: 1
     });
 
     expect(newState.sheets[0].cells[1][1].plaintext).toBeTruthy();
@@ -644,18 +644,18 @@ describe("state reducers", () => {
           cells: {
             1: {
               1: {
-                text: "1",
-              },
-            },
+                text: "1"
+              }
+            }
           },
           activeCell: { rowIndex: 1, columnIndex: 1 },
-          selections: [],
-        },
-      ],
+          selections: []
+        }
+      ]
     };
     newState = reducer(stateWithActivecell, {
       type: ACTION_TYPE.FORMATTING_CHANGE_PLAIN,
-      id: 1,
+      id: 1
     });
 
     expect(newState.sheets[0].cells[1][1].plaintext).toBeTruthy();
@@ -673,24 +673,24 @@ describe("state reducers", () => {
               1: {
                 text: "1",
                 locked: true,
-                plaintext: true,
-              },
-            },
+                plaintext: true
+              }
+            }
           },
           activeCell: { rowIndex: 1, columnIndex: 1 },
-          selections: [],
-        },
-      ],
+          selections: []
+        }
+      ]
     };
     let newState = reducer(state, {
       type: ACTION_TYPE.FORMATTING_CHANGE_AUTO,
-      id: 1,
+      id: 1
     });
     expect(newState.sheets[0].cells[1][1].plaintext).toBeTruthy();
 
     newState = reducer(state, {
       type: ACTION_TYPE.FORMATTING_CHANGE_PLAIN,
-      id: 1,
+      id: 1
     });
     expect(newState.sheets[0].cells[1][1].plaintext).toBeTruthy();
 
@@ -698,7 +698,7 @@ describe("state reducers", () => {
       type: ACTION_TYPE.FORMATTING_CHANGE,
       id: 1,
       key: "bold",
-      value: true,
+      value: true
     });
 
     expect(newState.sheets[0].cells[1][1].bold).toBeUndefined();
@@ -707,7 +707,7 @@ describe("state reducers", () => {
       type: ACTION_TYPE.DELETE_CELLS,
       id: 1,
       activeCell: { rowIndex: 1, columnIndex: 1 },
-      selections: [],
+      selections: []
     });
 
     expect(newState.sheets[0].cells[1][1].text).toBe("1");
@@ -716,7 +716,7 @@ describe("state reducers", () => {
       type: ACTION_TYPE.REMOVE_CELLS,
       id: 1,
       activeCell: { rowIndex: 1, columnIndex: 1 },
-      selections: [],
+      selections: []
     });
 
     expect(newState.sheets[0].cells[1][1].text).toBe("1");
@@ -732,20 +732,20 @@ describe("state reducers", () => {
           cells: {
             1: {
               1: {
-                text: "1",
-              },
-            },
+                text: "1"
+              }
+            }
           },
           activeCell: { rowIndex: 1, columnIndex: 1 },
-          selections: [],
-        },
-      ],
+          selections: []
+        }
+      ]
     };
     let newState = reducer(state, {
       type: ACTION_TYPE.FORMATTING_CHANGE,
       id: 1,
       key: "bold",
-      value: true,
+      value: true
     });
     expect(newState.sheets[0].cells[1][1].bold).toBeTruthy();
 
@@ -758,9 +758,9 @@ describe("state reducers", () => {
           cells: {
             1: {
               1: {
-                text: "1",
-              },
-            },
+                text: "1"
+              }
+            }
           },
           activeCell: null,
           selections: [
@@ -769,18 +769,18 @@ describe("state reducers", () => {
                 top: 1,
                 left: 1,
                 right: 1,
-                bottom: 1,
-              },
-            },
-          ],
-        },
-      ],
+                bottom: 1
+              }
+            }
+          ]
+        }
+      ]
     };
     newState = reducer(stateWithSelection, {
       type: ACTION_TYPE.FORMATTING_CHANGE,
       id: 1,
       key: "bold",
-      value: true,
+      value: true
     });
     expect(newState.sheets[0].cells[1][1].bold).toBeTruthy();
   });
@@ -796,20 +796,20 @@ describe("state reducers", () => {
             1: {
               1: {
                 text: "1",
-                plaintext: true,
-              },
-            },
+                plaintext: true
+              }
+            }
           },
           activeCell: { rowIndex: 1, columnIndex: 1 },
-          selections: [],
-        },
-      ],
+          selections: []
+        }
+      ]
     };
     let newState = reducer(state, {
       type: ACTION_TYPE.FORMATTING_CHANGE,
       id: 1,
       key: "format",
-      value: "##.00",
+      value: "##.00"
     });
     expect(newState.sheets[0].cells[1][1].plaintext).toBeUndefined();
   });
@@ -825,23 +825,23 @@ describe("state reducers", () => {
             1: {
               1: {
                 text: "1",
-                plaintext: true,
-              },
-            },
+                plaintext: true
+              }
+            }
           },
           activeCell: { rowIndex: 1, columnIndex: 1 },
-          selections: [],
-        },
-      ],
+          selections: []
+        }
+      ]
     };
     let newState = reducer(state, {
       type: ACTION_TYPE.DELETE_CELLS,
       id: 1,
       activeCell: {
         rowIndex: 1,
-        columnIndex: 1,
+        columnIndex: 1
       },
-      selections: [],
+      selections: []
     });
     expect(newState.sheets[0].cells[1][1].text).toBeUndefined();
   });
@@ -857,31 +857,31 @@ describe("state reducers", () => {
             1: {
               1: {
                 text: "=SUM(A2,A3)",
-                formulaRange: [2, 2],
+                formulaRange: [2, 2]
               },
               2: {
-                text: "100",
-              },
+                text: "100"
+              }
             },
             2: {
               1: {
-                text: "100",
-              },
-            },
+                text: "100"
+              }
+            }
           },
           activeCell: { rowIndex: 1, columnIndex: 1 },
-          selections: [],
-        },
-      ],
+          selections: []
+        }
+      ]
     };
     let newState = reducer(state, {
       type: ACTION_TYPE.DELETE_CELLS,
       id: 1,
       activeCell: {
         rowIndex: 1,
-        columnIndex: 1,
+        columnIndex: 1
       },
-      selections: [],
+      selections: []
     });
     expect(newState.sheets[0].cells[1][2].text).toBeUndefined();
   });
@@ -896,23 +896,23 @@ describe("state reducers", () => {
           cells: {
             1: {
               1: {
-                text: "1",
-              },
-            },
+                text: "1"
+              }
+            }
           },
           activeCell: { rowIndex: 1, columnIndex: 1 },
-          selections: [],
-        },
-      ],
+          selections: []
+        }
+      ]
     };
     let newState = reducer(state, {
       type: ACTION_TYPE.REMOVE_CELLS,
       id: 1,
       activeCell: {
         rowIndex: 1,
-        columnIndex: 1,
+        columnIndex: 1
       },
-      selections: [],
+      selections: []
     });
     expect(newState.sheets[0].cells[1][1]).toBeUndefined();
 
@@ -925,14 +925,14 @@ describe("state reducers", () => {
           cells: {
             1: {
               1: {
-                text: "1",
-              },
-            },
+                text: "1"
+              }
+            }
           },
           activeCell: null,
-          selections: [],
-        },
-      ],
+          selections: []
+        }
+      ]
     };
 
     newState = reducer(stateWithSelection, {
@@ -945,10 +945,10 @@ describe("state reducers", () => {
             top: 1,
             left: 1,
             right: 1,
-            bottom: 1,
-          },
-        },
-      ],
+            bottom: 1
+          }
+        }
+      ]
     });
     expect(newState.sheets[0].cells[1][1]).toBeUndefined();
   });
@@ -965,21 +965,21 @@ describe("state reducers", () => {
               1: {
                 text: "1",
                 bold: true,
-                fill: "blue",
-              },
-            },
+                fill: "blue"
+              }
+            }
           },
           activeCell: {
             rowIndex: 1,
-            columnIndex: 1,
+            columnIndex: 1
           },
-          selections: [],
-        },
-      ],
+          selections: []
+        }
+      ]
     };
     let newState = reducer(state, {
       type: ACTION_TYPE.CLEAR_FORMATTING,
-      id: 1,
+      id: 1
     });
     expect(newState.sheets[0].cells[1][1].bold).toBeUndefined();
   });
@@ -996,23 +996,23 @@ describe("state reducers", () => {
               1: {
                 text: "1",
                 bold: true,
-                fill: "blue",
-              },
-            },
+                fill: "blue"
+              }
+            }
           },
           activeCell: null,
           selections: [],
           columnSizes: {},
-          rowSizes: {},
-        },
-      ],
+          rowSizes: {}
+        }
+      ]
     };
     let newState = reducer(state, {
       type: ACTION_TYPE.RESIZE,
       id: 1,
       axis: "x",
       index: 1,
-      dimension: 10,
+      dimension: 10
     });
 
     expect(newState.sheets[0].columnSizes?.[1]).toBe(10);
@@ -1022,7 +1022,7 @@ describe("state reducers", () => {
       id: 1,
       axis: "y",
       index: 1,
-      dimension: 10,
+      dimension: 10
     });
 
     expect(newState.sheets[0].rowSizes?.[1]).toBe(10);
@@ -1040,9 +1040,9 @@ describe("state reducers", () => {
               1: {
                 text: "1",
                 bold: true,
-                fill: "blue",
-              },
-            },
+                fill: "blue"
+              }
+            }
           },
           activeCell: null,
           selections: [
@@ -1051,17 +1051,17 @@ describe("state reducers", () => {
                 top: 1,
                 left: 1,
                 right: 2,
-                bottom: 2,
-              },
-            },
-          ],
-        },
-      ],
+                bottom: 2
+              }
+            }
+          ]
+        }
+      ]
     };
 
     let newState = reducer(state, {
       type: ACTION_TYPE.MERGE_CELLS,
-      id: 1,
+      id: 1
     });
 
     expect(newState.sheets[0].mergedCells?.length).toBe(1);
@@ -1069,7 +1069,7 @@ describe("state reducers", () => {
     // Can unmerge cells
     newState = reducer(newState, {
       type: ACTION_TYPE.MERGE_CELLS,
-      id: 1,
+      id: 1
     });
 
     expect(newState.sheets[0].mergedCells?.length).toBe(0);
@@ -1084,22 +1084,22 @@ describe("state reducers", () => {
           id: 1,
           cells: {},
           activeCell: null,
-          selections: [],
-        },
-      ],
+          selections: []
+        }
+      ]
     };
 
     let newState = reducer(state, {
       type: ACTION_TYPE.FROZEN_ROW_CHANGE,
       id: 1,
-      count: 2,
+      count: 2
     });
     expect(newState.sheets[0].frozenRows).toBe(2);
 
     newState = reducer(state, {
       type: ACTION_TYPE.FROZEN_COLUMN_CHANGE,
       id: 1,
-      count: 2,
+      count: 2
     });
     expect(newState.sheets[0].frozenColumns).toBe(2);
   });
@@ -1114,21 +1114,21 @@ describe("state reducers", () => {
           cells: {
             1: {
               1: {
-                text: "1",
-              },
-            },
+                text: "1"
+              }
+            }
           },
           activeCell: { rowIndex: 1, columnIndex: 1 },
-          selections: [],
-        },
-      ],
+          selections: []
+        }
+      ]
     };
     const newState = reducer(state, {
       type: ACTION_TYPE.SET_BORDER,
       id: 1,
       color: "blue",
       variant: "all",
-      borderStyle: "thin",
+      borderStyle: "thin"
     });
 
     expect(newState.sheets[0].cells[1][1].strokeTopWidth).toBe(1);
@@ -1143,17 +1143,17 @@ describe("state reducers", () => {
           id: 1,
           cells: {},
           activeCell: { rowIndex: 1, columnIndex: 1 },
-          selections: [],
-        },
-      ],
+          selections: []
+        }
+      ]
     };
     const newState = reducer(state, {
       type: ACTION_TYPE.UPDATE_SCROLL,
       id: 1,
       scrollState: {
         scrollLeft: 1,
-        scrollTop: 1,
-      },
+        scrollTop: 1
+      }
     });
 
     expect(newState.sheets[0].scrollState?.scrollTop).toBe(1);
@@ -1169,9 +1169,9 @@ describe("state reducers", () => {
           id: 1,
           cells: {},
           activeCell: { rowIndex: 1, columnIndex: 1 },
-          selections: [],
-        },
-      ],
+          selections: []
+        }
+      ]
     };
     const newState = reducer(state, {
       type: ACTION_TYPE.CHANGE_FILTER,
@@ -1180,8 +1180,8 @@ describe("state reducers", () => {
       filterViewIndex: 0,
       filter: {
         operator: "containsText",
-        values: ["s"],
-      },
+        values: ["s"]
+      }
     });
 
     expect(newState.sheets[0].filterViews?.length).toBe(1);
@@ -1203,24 +1203,24 @@ describe("state reducers", () => {
                 top: 1,
                 left: 1,
                 right: 10,
-                bottom: 10,
+                bottom: 10
               },
               filters: {
                 2: {
                   operator: "containsText",
-                  values: ["s"],
-                },
-              },
-            },
-          ],
-        },
-      ],
+                  values: ["s"]
+                }
+              }
+            }
+          ]
+        }
+      ]
     };
     const newState = reducer(state, {
       type: ACTION_TYPE.CHANGE_FILTER,
       id: 1,
       columnIndex: 2,
-      filterViewIndex: 0,
+      filterViewIndex: 0
     });
 
     expect(newState.sheets[0].filterViews?.[0]?.filters?.[2]).toBe(undefined);
@@ -1242,18 +1242,18 @@ describe("state reducers", () => {
                 top: 1,
                 left: 1,
                 right: 10,
-                bottom: 10,
+                bottom: 10
               },
               filters: {
                 2: {
                   operator: "containsText",
-                  values: ["s"],
-                },
-              },
-            },
-          ],
-        },
-      ],
+                  values: ["s"]
+                }
+              }
+            }
+          ]
+        }
+      ]
     };
     const newState = reducer(state, {
       type: ACTION_TYPE.CHANGE_FILTER,
@@ -1262,8 +1262,8 @@ describe("state reducers", () => {
       filterViewIndex: 0,
       filter: {
         operator: "containsText",
-        values: ["d"],
-      },
+        values: ["d"]
+      }
     });
 
     expect(newState.sheets[0].filterViews?.[0]?.filters?.[3]).toBeDefined();
@@ -1279,14 +1279,14 @@ describe("state reducers", () => {
           cells: {
             1: {
               1: {
-                text: "hello",
-              },
-            },
+                text: "hello"
+              }
+            }
           },
           activeCell: { rowIndex: 1, columnIndex: 1 },
-          selections: [],
-        },
-      ],
+          selections: []
+        }
+      ]
     };
 
     let newState = reducer(state, {
@@ -1294,8 +1294,8 @@ describe("state reducers", () => {
       id: 1,
       activeCell: {
         rowIndex: 1,
-        columnIndex: 1,
-      },
+        columnIndex: 1
+      }
     });
 
     expect(newState.sheets[0].cells[1]?.[1]).toBeUndefined();
@@ -1311,14 +1311,14 @@ describe("state reducers", () => {
           cells: {
             1: {
               1: {
-                text: "hello",
-              },
-            },
+                text: "hello"
+              }
+            }
           },
           activeCell: { rowIndex: 1, columnIndex: 1 },
-          selections: [],
-        },
-      ],
+          selections: []
+        }
+      ]
     };
 
     let newState = reducer(state, {
@@ -1326,8 +1326,8 @@ describe("state reducers", () => {
       id: 1,
       activeCell: {
         rowIndex: 1,
-        columnIndex: 1,
-      },
+        columnIndex: 1
+      }
     });
 
     expect(newState.sheets[0].cells[1]?.[1]).toBeUndefined();
@@ -1343,14 +1343,14 @@ describe("state reducers", () => {
           cells: {
             1: {
               1: {
-                text: "hello",
-              },
-            },
+                text: "hello"
+              }
+            }
           },
           activeCell: { rowIndex: 1, columnIndex: 1 },
-          selections: [],
-        },
-      ],
+          selections: []
+        }
+      ]
     };
 
     let newState = reducer(state, {
@@ -1358,8 +1358,8 @@ describe("state reducers", () => {
       id: 1,
       activeCell: {
         rowIndex: 1,
-        columnIndex: 1,
-      },
+        columnIndex: 1
+      }
     });
 
     expect(newState.sheets[0].cells[1]?.[1]).toBeDefined();
@@ -1376,14 +1376,14 @@ describe("state reducers", () => {
           cells: {
             1: {
               1: {
-                text: "hello",
-              },
-            },
+                text: "hello"
+              }
+            }
           },
           activeCell: { rowIndex: 1, columnIndex: 1 },
-          selections: [],
-        },
-      ],
+          selections: []
+        }
+      ]
     };
 
     let newState = reducer(state, {
@@ -1391,8 +1391,8 @@ describe("state reducers", () => {
       id: 1,
       activeCell: {
         rowIndex: 1,
-        columnIndex: 1,
-      },
+        columnIndex: 1
+      }
     });
 
     expect(newState.sheets[0].cells[1]?.[1]).toBeDefined();
@@ -1408,13 +1408,13 @@ describe("state reducers", () => {
           id: 1,
           cells: {},
           activeCell: { rowIndex: 1, columnIndex: 1 },
-          selections: [],
-        },
-      ],
+          selections: []
+        }
+      ]
     };
     let newState = reducer(state, {
       type: ACTION_TYPE.COPY,
-      id: 1,
+      id: 1
     });
 
     expect(newState.currentActiveCell).toBe(newState.sheets[0].activeCell);
@@ -1429,18 +1429,18 @@ describe("state reducers", () => {
           id: 1,
           cells: {},
           activeCell: { rowIndex: 1, columnIndex: 1 },
-          selections: [],
-        },
-      ],
+          selections: []
+        }
+      ]
     };
     let newState = reducer(state, {
       type: ACTION_TYPE.SET_LOADING,
       id: 1,
       cell: {
         rowIndex: 1,
-        columnIndex: 1,
+        columnIndex: 1
       },
-      value: true,
+      value: true
     });
 
     expect(newState.sheets[0].cells[1][1].loading).toBeTruthy();
@@ -1455,13 +1455,13 @@ describe("state reducers", () => {
           id: 1,
           cells: {},
           activeCell: { rowIndex: 1, columnIndex: 1 },
-          selections: [],
-        },
-      ],
+          selections: []
+        }
+      ]
     };
     let newState = reducer(state, {
       type: ACTION_TYPE.HIDE_SHEET,
-      id: 1,
+      id: 1
     });
     // Cannot hide the only visible sheet
     expect(newState.sheets[0].hidden).toBeUndefined();
@@ -1474,21 +1474,21 @@ describe("state reducers", () => {
           id: 1,
           cells: {},
           activeCell: { rowIndex: 1, columnIndex: 1 },
-          selections: [],
+          selections: []
         },
         {
           id: 2,
           name: "Sheet2",
           activeCell: null,
           selections: [],
-          cells: {},
-        },
-      ],
+          cells: {}
+        }
+      ]
     };
 
     newState = reducer(stateWithMultipleSheets, {
       type: ACTION_TYPE.HIDE_SHEET,
-      id: 2,
+      id: 2
     });
 
     expect(newState.sheets[1].hidden).toBeTruthy();
@@ -1503,7 +1503,7 @@ describe("state reducers", () => {
           id: 1,
           cells: {},
           activeCell: { rowIndex: 1, columnIndex: 1 },
-          selections: [],
+          selections: []
         },
         {
           id: 2,
@@ -1511,14 +1511,14 @@ describe("state reducers", () => {
           name: "Sheet2",
           activeCell: null,
           selections: [],
-          cells: {},
-        },
-      ],
+          cells: {}
+        }
+      ]
     };
 
     let newState = reducer(stateWithMultipleSheets, {
       type: ACTION_TYPE.SHOW_SHEET,
-      id: 2,
+      id: 2
     });
 
     expect(newState.sheets[1].hidden).toBeFalsy();
@@ -1533,21 +1533,21 @@ describe("state reducers", () => {
           id: 1,
           cells: {},
           activeCell: { rowIndex: 1, columnIndex: 1 },
-          selections: [],
+          selections: []
         },
         {
           id: 2,
           name: "Sheet2",
           activeCell: null,
           selections: [],
-          cells: {},
-        },
-      ],
+          cells: {}
+        }
+      ]
     };
 
     let newState = reducer(stateWithMultipleSheets, {
       type: ACTION_TYPE.PROTECT_SHEET,
-      id: 2,
+      id: 2
     });
 
     expect(newState.sheets[1].locked).toBeTruthy();
@@ -1562,7 +1562,7 @@ describe("state reducers", () => {
           id: 1,
           cells: {},
           activeCell: { rowIndex: 1, columnIndex: 1 },
-          selections: [],
+          selections: []
         },
         {
           id: 2,
@@ -1570,14 +1570,14 @@ describe("state reducers", () => {
           name: "Sheet2",
           activeCell: null,
           selections: [],
-          cells: {},
-        },
-      ],
+          cells: {}
+        }
+      ]
     };
 
     let newState = reducer(stateWithMultipleSheets, {
       type: ACTION_TYPE.UNPROTECT_SHEET,
-      id: 2,
+      id: 2
     });
 
     expect(newState.sheets[1].locked).toBeFalsy();
@@ -1592,22 +1592,22 @@ describe("state reducers", () => {
           id: 1,
           cells: {},
           activeCell: { rowIndex: 1, columnIndex: 1 },
-          selections: [],
+          selections: []
         },
         {
           id: 2,
           name: "Sheet2",
           activeCell: null,
           selections: [],
-          cells: {},
-        },
-      ],
+          cells: {}
+        }
+      ]
     };
 
     let newState = reducer(stateWithMultipleSheets, {
       type: ACTION_TYPE.CHANGE_TAB_COLOR,
       id: 2,
-      color: "green",
+      color: "green"
     });
 
     expect(newState.sheets[1].tabColor).toBe("green");
