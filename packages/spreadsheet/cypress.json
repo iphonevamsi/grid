@@ -15,5 +15,6 @@
         "threshold": 0.01
       }
     }
-  }
+  },
+  "experimentalComponentTesting": true
 }

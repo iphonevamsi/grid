@@ -51,6 +51,7 @@
   "devDependencies": {
     "cypress": "^4.12.1",
     "cypress-plugin-snapshots": "^1.4.4",
+    "cypress-react-unit-test": "^4.11.2",
     "js-base64": "2.5.2",
     "start-server-and-test": "^1.11.3"
   }
