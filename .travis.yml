@@ -11,4 +11,4 @@ before_script:
 script:
   - yarn build
   - yarn test 
-  - yarn workspaces @rowsncolumns/spreadsheet run test:ci
+  - yarn workspace @rowsncolumns/spreadsheet run test:ci
