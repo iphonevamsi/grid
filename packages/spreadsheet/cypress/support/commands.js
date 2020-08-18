@@ -33,4 +33,4 @@ Cypress.Commands.add("typeInSlate", { prevSubject: true }, (subject, text) => {
   });
 });
 
-// import "cypress-plugin-snapshots/commands";
+import "cypress-plugin-snapshots/commands";

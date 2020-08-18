@@ -12,7 +12,7 @@
     "storybook-spreadsheet": "start-storybook -p 9003 -s ./public",
     "storybook-spreadsheet:ci": "start-storybook -p 9003 -s ./public --ci",
     "test:ci": "start-server-and-test storybook-spreadsheet:ci http://localhost:9003 cypress:run",
-    "cypress:run": "cypress run",
+    "cypress:run": "cypress run --spec 'cypress/integrations/**/*.js'",
     "cypress:open": "cypress open",
     "test": "jest"
   },

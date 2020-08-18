@@ -11,7 +11,7 @@ context("Actions", () => {
       .typeInSlate("hello")
       .type("{enter}");
 
-    // cy.get("body").toMatchImageSnapshot();
+    cy.get("body").toMatchImageSnapshot();
   });
 
   it("can evaluate formulas", () => {
@@ -22,6 +22,6 @@ context("Actions", () => {
       .typeInSlate("=SUM(2,2)")
       .type("{enter}");
 
-    // cy.get("body").toMatchImageSnapshot();
+    cy.get("body").toMatchImageSnapshot();
   });
 });
