@@ -9,9 +9,7 @@ context("Actions", () => {
       .get("[data-gramm='false']")
       .typeInSlate("hello")
       .wait(100)
-      .type("{enter}")
-      .get("body")
-      .toMatchImageSnapshot();
+      .type("{enter}");
   });
 
   it("can evaluate formulas", () => {
@@ -20,8 +18,6 @@ context("Actions", () => {
       .get("[data-gramm='false']")
       .typeInSlate("=SUM(2,2)")
       .wait(100)
-      .type("{enter}")
-      .get("body")
-      .toMatchImageSnapshot();
+      .type("{enter}");
   });
 });
