@@ -4,24 +4,24 @@ context("Actions", () => {
   });
 
   it("can enter values in a cell", () => {
-    cy.get(document);
-    cy.get(".rowsncolumns-grid-container").dblclick(60, 60);
-
-    cy.get("[contenteditable]")
+    cy.get(".rowsncolumns-grid-container")
+      .dblclick(60, 60)
+      .get("[data-gramm='false']")
       .typeInSlate("hello")
-      .type("{enter}");
-
-    cy.get("body").toMatchImageSnapshot();
+      .wait(100)
+      .type("{enter}")
+      .get("body")
+      .toMatchImageSnapshot();
   });
 
   it("can evaluate formulas", () => {
-    cy.get(document);
-    cy.get(".rowsncolumns-grid-container").dblclick(60, 60);
-
-    cy.get("[contenteditable]")
+    cy.get(".rowsncolumns-grid-container")
+      .dblclick(60, 60)
+      .get("[data-gramm='false']")
       .typeInSlate("=SUM(2,2)")
-      .type("{enter}");
-
-    cy.get("body").toMatchImageSnapshot();
+      .wait(100)
+      .type("{enter}")
+      .get("body")
+      .toMatchImageSnapshot();
   });
 });
