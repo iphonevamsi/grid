@@ -15,8 +15,8 @@ export default {
 };
 
 export const TreeTable: React.FC = () => {
-  const width = number("width", 900);
-  const height = number("height", 600);
+  const width = 900;
+  const height = 600;
   const frozenRows = 2;
   const frozenColumns = 1;
   const cellStrokeColor = "#ccc";
