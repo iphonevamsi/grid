@@ -1,14 +1,12 @@
 import React, { useRef, useEffect, useCallback, useMemo } from "react";
-import CalcEngine, {
-  CellConfigGetter as CalcCellConfigGetter,
-} from "@rowsncolumns/calc";
+import CalcEngine from "@rowsncolumns/calc";
 import { CellInterface, castToString } from "@rowsncolumns/grid";
 import {
   SheetID,
   CellsBySheet,
   CellConfig,
   FormulaMap,
-  CellConfigBySheetNameGetter,
+  CellConfigBySheetName,
 } from "./../Spreadsheet";
 import { formulas as defaultFormulas } from "../formulas";
 
@@ -19,9 +17,7 @@ export interface SheetConfig {
 
 export interface UseCalcOptions {
   formulas?: FormulaMap;
-  getCellConfig: React.MutableRefObject<
-    CellConfigBySheetNameGetter | undefined
-  >;
+  getCellConfig: CellConfigBySheetName;
   getSheetRange: (name: SheetID) => SheetConfig;
 }
 
@@ -31,6 +27,13 @@ const useCalc = ({
   getSheetRange,
 }: UseCalcOptions) => {
   const engine = useRef<CalcEngine>();
+  const getCellConfigRef = useRef<CellConfigBySheetName>()
+
+  /* Keep ref in sync */
+  useEffect(() => {
+    getCellConfigRef.current = getCellConfig
+  })
+
   useEffect(() => {
     engine.current = new CalcEngine({
       functions: {
@@ -39,7 +42,7 @@ const useCalc = ({
       },
       getSheetRange,
     });
-  }, []);
+  }, []);  
 
   useEffect(() => {
     if (!engine.current) {
@@ -55,36 +58,37 @@ const useCalc = ({
       cell: CellInterface
     ): Promise<CellsBySheet | undefined> | undefined => {
       const sheetId = castToString(sheet);
-      if (!sheetId || !getCellConfig.current) return;
+      if (!sheetId || !getCellConfigRef.current) return;
       return engine.current?.calculate(
         castToString(value) || "",
         sheetId,
         cell,
-        getCellConfig.current as CalcCellConfigGetter
+        getCellConfigRef.current
       );
     },
-    []
+    [ ]
   );
 
   const onCalculateBatch = useCallback((changes: CellsBySheet):
     | Promise<CellsBySheet | undefined>
     | undefined => {
-    if (!getCellConfig?.current) return;
+
+    if (!getCellConfigRef.current) return;
     return engine.current?.calculateBatch(
       changes as Partial<CellConfig>,
-      getCellConfig.current as CalcCellConfigGetter
+      getCellConfigRef.current
     );
-  }, []);
+  }, [ ]);
 
   const initializeEngine = useCallback((changes: CellsBySheet):
     | Promise<CellsBySheet | undefined>
     | undefined => {
-    if (!getCellConfig?.current) return;
+    if (!getCellConfigRef.current) return;
     return engine.current?.initialize(
       changes as Partial<CellConfig>,
-      getCellConfig.current as CalcCellConfigGetter
+      getCellConfigRef.current
     );
-  }, []);
+  }, [ ]);
 
   const supportedFormulas: string[] = useMemo(() => {
     return engine.current?.parser.formulaParser.supportedFunctions() ?? [];

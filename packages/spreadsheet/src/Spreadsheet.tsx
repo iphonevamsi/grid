@@ -388,7 +388,7 @@ export type CellConfigGetter = (
   cell: CellInterface | null
 ) => CellConfig | undefined;
 
-export type CellConfigBySheetNameGetter = (
+export type CellConfigBySheetName = (
   name: string,
   cell: CellInterface | null
 ) => CellConfig | undefined;
@@ -591,7 +591,7 @@ const Spreadsheet: React.FC<SpreadSheetProps & RefAttributeSheetGrid> = memo(
     const { current: isControlled } = useRef<boolean>(sheetsProp !== void 0);
     /* Add it to ref to prevent closures */
     const getCellConfigRef = useRef<CellConfigGetter>();
-    const getCellConfigBySheetNameRef = useRef<CellConfigBySheetNameGetter>();
+    const getCellConfigBySheetNameRef = useRef<CellConfigBySheetName>();
     const getSheetRef = useRef<(id: SheetID) => Sheet | undefined>();
     const [isFormulaMode, setFormulaMode] = useState(false);
     const [valueState, setValueState] = useState<StateInterface>(() => {
@@ -818,7 +818,7 @@ const Spreadsheet: React.FC<SpreadSheetProps & RefAttributeSheetGrid> = memo(
 
     const { initializeEngine, onCalculateBatch, supportedFormulas } = useCalc({
       formulas,
-      getCellConfig: getCellConfigBySheetNameRef,
+      getCellConfig: getCellConfigBySheetNameRef.current,
       getSheetRange
     });
 

@@ -406,6 +406,7 @@ class CalcEngine {
             cell,
             getValue
           );
+
           merge(values, results);
         }
       }

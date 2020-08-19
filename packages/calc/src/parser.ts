@@ -210,6 +210,7 @@ class FormulaParser {
       error = err.toString();
       resultType = "error";
     }
+        
     return removeUndefined({
       result,
       resultType,
