@@ -206,11 +206,12 @@ const TextEditor: React.FC<EditableProps & RefAttribute> = memo(
         console.log("Failed to collapse selection", err);
       }
     }, []);
+
     useEffect(() => {
       if (autoFocus) {
         requestAnimationFrame(moveToEnd);
       }
-    }, []);
+    }, []);    
 
     const {
       highlightedIndex,
@@ -318,6 +319,7 @@ const TextEditor: React.FC<EditableProps & RefAttribute> = memo(
       if (normalizedValue === initialValue) {
         return;
       }
+
       onChange?.(normalizedValue);
     }, [value]);
 
@@ -338,6 +340,115 @@ const TextEditor: React.FC<EditableProps & RefAttribute> = memo(
     const dropdownBgColor = isLight
       ? theme.colors.white
       : theme.colors.gray[700];
+
+    /**
+     * Editor onChange
+     */
+    const handleChange = useCallback((value) => {
+      setValue(value);
+      const isFormula = isAFormula(deserialize(value));      
+      if (isFormula) {
+        const start = getCurrentCursorOffset(editor);
+        if (!start) {
+          return;
+        }
+        const from = Editor.before(editor, start, { unit: "line" });
+        const end =
+          Editor.after(editor, start, { unit: "line" }) || start;
+        if (!from) {
+          return;
+        }
+        const range = Editor.range(editor, from, end);
+        const line = Editor.string(editor, range);
+        const tokens = normalizeTokens(line);
+        const fnToken = functionSuggestion(tokens, editor);
+        const curToken = getCurrentToken(tokens, editor);
+        const showFnSuggestions = !!fnToken;
+        const showCellSuggestion = showCellSuggestions(editor, tokens);
+        const isCell = isCurrentPositionACell(editor, tokens);
+        const isTokenAtEdgeofCell =
+          curToken?.endColumn === start.offset;
+        
+        if (showFnSuggestions) {
+          setSuggestionToken(fnToken);
+          setInputValue(cleanFunctionToken(fnToken?.image ?? ""));
+        } else {
+          setSuggestionToken(void 0);
+          setInputValue("");
+        }
+
+        setTarget(curToken);
+
+        onFormulaChange?.({
+          showCellSuggestion:
+            !!showCellSuggestion || (!!isCell && isTokenAtEdgeofCell),
+          newSelectionMode: showCellSuggestion ? "append" : "modify",
+        });
+
+        setCursorSuggestionToken(
+          showCellSuggestion ? getCurrentCursorOffset(editor) : void 0
+        );
+      }
+    }, [])
+
+    /**
+     * Editor keydown
+     */
+    const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLDivElement>) => {
+      const isShiftKey = e.nativeEvent.shiftKey;
+      const isMetaKey = e.nativeEvent.metaKey || e.nativeEvent.ctrlKey;
+      const isFromSelection = highlightedIndex !== null && items.length > 0;
+      const text = isFromSelection
+        ? (items[highlightedIndex as number] as string)
+        : deserialize(value);
+
+      // Enter key
+      if (e.which === KeyCodes.Enter) {
+        if (isFormulaMode && isFromSelection) {
+          setInputValue("");
+          e.preventDefault();
+        } else {
+          /* Add a new line when Cmd/Ctrl key is pressed */
+          if (isMetaKey) {
+            editor.insertBreak();
+            return;
+          }
+          onSubmit?.(
+            text,
+            isShiftKey ? Direction.Up : Direction.Down
+          );
+
+          e.preventDefault();
+
+          return;
+        }
+      }
+
+      if (e.which === KeyCodes.Escape) {
+        onCancel && onCancel(e);
+      }
+
+      if (e.which === KeyCodes.Tab) {
+        /* Trap focus inside the grid */
+        e.preventDefault();
+
+        if (isFormulaMode && isFromSelection) {
+          setInputValue("");
+        } else {
+          onSubmit &&
+            onSubmit(
+              text,
+              isShiftKey ? Direction.Left : Direction.Right
+            );
+          return;
+        }
+      }
+      /* Global handler */
+      onKeyDown?.(e);
+
+      /* Pass callback to shiftdown hook */
+      onShiftDownKeyDown(e);
+    }, [ value, onKeyDown, onSubmit, onShiftDownKeyDown, items, isFormulaMode, highlightedIndex, isOpen ])
 
     return (
       <>
@@ -370,112 +481,12 @@ const TextEditor: React.FC<EditableProps & RefAttribute> = memo(
           <Slate
             editor={editor}
             value={value}
-            onChange={(value) => {
-              setValue(value);
-              const isFormula = isAFormula(deserialize(value));
-              if (isFormula) {
-                const start = getCurrentCursorOffset(editor);
-                if (!start) {
-                  return;
-                }
-                const from = Editor.before(editor, start, { unit: "line" });
-                const end =
-                  Editor.after(editor, start, { unit: "line" }) || start;
-                if (!from) {
-                  return;
-                }
-                const range = Editor.range(editor, from, end);
-                const line = Editor.string(editor, range);
-                const tokens = normalizeTokens(line);
-                const fnToken = functionSuggestion(tokens, editor);
-                const curToken = getCurrentToken(tokens, editor);
-                const showFnSuggestions = !!fnToken;
-                const showCellSuggestion = showCellSuggestions(editor, tokens);
-                const isCell = isCurrentPositionACell(editor, tokens);
-                const isTokenAtEdgeofCell =
-                  curToken?.endColumn === start.offset;
-                if (showFnSuggestions) {
-                  setSuggestionToken(fnToken);
-                  setInputValue(cleanFunctionToken(fnToken?.image ?? ""));
-                } else {
-                  setSuggestionToken(void 0);
-                  setInputValue("");
-                }
-
-                setTarget(curToken);
-
-                onFormulaChange?.({
-                  showCellSuggestion:
-                    !!showCellSuggestion || (!!isCell && isTokenAtEdgeofCell),
-                  newSelectionMode: showCellSuggestion ? "append" : "modify",
-                });
-
-                setCursorSuggestionToken(
-                  showCellSuggestion ? getCurrentCursorOffset(editor) : void 0
-                );
-              }
-            }}
+            onChange={handleChange}
           >
             <Editable
               decorate={decorate}
               renderLeaf={(props) => <Leaf {...props} />}
-              onKeyDown={(e: React.KeyboardEvent<HTMLDivElement>) => {
-                const isShiftKey = e.nativeEvent.shiftKey;
-                const isMetaKey =
-                  e.nativeEvent.metaKey || e.nativeEvent.ctrlKey;
-                const isFromSelection =
-                  highlightedIndex !== null && items.length > 0;
-                const text = isFromSelection
-                  ? (items[highlightedIndex as number] as string)
-                  : deserialize(value);
-
-                // Enter key
-                if (e.which === KeyCodes.Enter) {
-                  if (isFormulaMode && isFromSelection) {
-                    setInputValue("");
-                    e.preventDefault();
-                  } else {
-                    /* Add a new line when Cmd/Ctrl key is pressed */
-                    if (isMetaKey) {
-                      editor.insertBreak();
-                      return;
-                    }
-                    onSubmit?.(
-                      text,
-                      isShiftKey ? Direction.Up : Direction.Down
-                    );
-
-                    e.preventDefault();
-
-                    return;
-                  }
-                }
-
-                if (e.which === KeyCodes.Escape) {
-                  onCancel && onCancel(e);
-                }
-
-                if (e.which === KeyCodes.Tab) {
-                  /* Trap focus inside the grid */
-                  e.preventDefault();
-
-                  if (isFormulaMode && isFromSelection) {
-                    setInputValue("");
-                  } else {
-                    onSubmit &&
-                      onSubmit(
-                        text,
-                        isShiftKey ? Direction.Left : Direction.Right
-                      );
-                    return;
-                  }
-                }
-                /* Global handler */
-                onKeyDown?.(e);
-
-                /* Pass callback to shiftdown hook */
-                onShiftDownKeyDown(e);
-              }}
+              onKeyDown={handleKeyDown}
             />
           </Slate>
         </div>

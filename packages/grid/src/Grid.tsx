@@ -491,7 +491,7 @@ const Grid: React.FC<GridProps & RefAttribute> = memo(
       stageProps,
       wrapper = (children: React.ReactNode): React.ReactNode => children,
       cellAreas = EMPTY_ARRAY,
-      showFillHandle = true,
+      showFillHandle = false,
       fillSelection,
       overscanCount = 1,
       fillHandleProps,

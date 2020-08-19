@@ -20,6 +20,24 @@ describe("Grid", () => {
           selections={[]}
           selectedSheet={null}
           theme={theme}
+          hiddenRows={[2]}
+          hiddenColumns={[2]}
+          filterViews={[
+            {
+              bounds: {
+                top: 1,
+                left: 1,
+                right: 10,
+                bottom: 1,
+              },
+              filters: {
+                2: {
+                  operator: 'containsText',
+                  values: ['A']
+                }
+              }
+            }
+          ]}
         />
       );
     expect(renderGrid).not.toThrow();
