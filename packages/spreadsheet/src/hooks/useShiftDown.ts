@@ -130,7 +130,7 @@ const useShiftDown = (props: ShiftDownProps): ShiftDownResults => {
           return next;
         });
         e?.preventDefault?.();
-      } else if (keyCode === KeyCodes.Down) {        
+      } else if (keyCode === KeyCodes.Down) {
         setHighlightedIndex((prev) => {
           const next = prev === null ? 0 : prev + 1;
           if (next > filteredItems.length - 1) return 0;

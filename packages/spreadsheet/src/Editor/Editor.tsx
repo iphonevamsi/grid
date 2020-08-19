@@ -53,7 +53,6 @@ export type RefAttribute = {
   ref?: React.Ref<EditableRef>;
 };
 
-
 /**
  * Default cell editor
  * @param props

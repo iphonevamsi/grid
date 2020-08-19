@@ -32,11 +32,11 @@ describe("Grid", () => {
               },
               filters: {
                 2: {
-                  operator: 'containsText',
-                  values: ['A']
-                }
-              }
-            }
+                  operator: "containsText",
+                  values: ["A"],
+                },
+              },
+            },
           ]}
         />
       );
