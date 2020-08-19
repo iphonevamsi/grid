@@ -48,6 +48,7 @@ import {
   showCellSuggestions,
   isCurrentPositionACell,
   cleanFunctionToken,
+  isTokenACell,
 } from "./../formulas/helpers";
 import { Token } from "fast-formula-parser/grammar/lexing";
 import { FormulaChangeProps } from "../Grid/Grid";
@@ -169,12 +170,15 @@ const TextEditor: React.FC<EditableProps & RefAttribute> = memo(
             reverse: true,
           });
         }
+        if (mode === "append" && isTokenACell(target)) {
+          Transforms.insertNodes(editor, [{ text: "," }]);
+        }
         if (address) {
           Transforms.insertNodes(editor, [{ text: address }]);
           ReactEditor.focus(editor);
         }
       },
-      [target]
+      [target, cursorToken]
     );
 
     /**
@@ -193,7 +197,7 @@ const TextEditor: React.FC<EditableProps & RefAttribute> = memo(
           updateSelection: handleUpdateSelection,
         };
       },
-      [target]
+      [target, cursorToken]
     );
     const editor = useMemo(() => withHistory(withReact(createEditor())), []);
     const moveToEnd = useCallback(() => {

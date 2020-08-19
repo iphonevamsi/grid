@@ -1554,12 +1554,24 @@ const SheetGrid: React.FC<GridProps & RefAttributeGrid> = memo(
 
     const handleMouseDown = useCallback(
       (e: React.MouseEvent<HTMLDivElement>) => {
+        const isMetaKey = e.nativeEvent.ctrlKey || e.nativeEvent.metaKey;
+        /**
+         * Enable append selection mode for formula
+         */
+        if (isFormulaMode && isMetaKey) {
+          setFormulaState((prev) => {
+            return {
+              ...prev,
+              newSelectionMode: "append",
+            };
+          });
+        }
         eventRefs.current.selectionProps.onMouseDown(e);
         eventRefs.current.editableProps.onMouseDown(e);
         hideContextMenu();
         hideFilter();
       },
-      [getValue, selectedSheet, activeCell, selections]
+      [getValue, selectedSheet, activeCell, selections, isFormulaMode]
     );
 
     const handleKeyDown = useCallback(
