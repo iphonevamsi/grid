@@ -19,3 +19,11 @@ import "./commands";
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
 require("cypress-react-unit-test/support");
+
+Cypress.on('uncaught:exception', (err, runnable) => {
+  // returning false here prevents Cypress from
+  // failing the test
+
+  // Prevent resize observer events
+  return false
+})

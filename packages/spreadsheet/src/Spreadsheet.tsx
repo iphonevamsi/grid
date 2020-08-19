@@ -375,6 +375,10 @@ export interface SpreadSheetProps {
    * Background color of grid
    */
   gridBackgroundColor?: string;
+  /**
+   * called when calculation is successfull
+   */
+  onCalculateSuccess?: (changes: CellsBySheet) => void
 }
 
 export type FormulaMap = Record<string, (...args: any[]) => any>;
@@ -573,7 +577,8 @@ const Spreadsheet: React.FC<SpreadSheetProps & RefAttributeSheetGrid> = memo(
       onClearFormatting,
       disableFormula,
       gridLineColor,
-      gridBackgroundColor
+      gridBackgroundColor,
+      onCalculateSuccess
     } = props;
 
     /* Last active cells: for undo, redo */
@@ -1073,7 +1078,10 @@ const Spreadsheet: React.FC<SpreadSheetProps & RefAttributeSheetGrid> = memo(
             type: ACTION_TYPE.UPDATE_CELLS,
             changes: values
           });
-        }
+
+          /* Callback */
+          onCalculateSuccess?.(values)
+        }        
       },
       []
     );

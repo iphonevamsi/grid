@@ -37,6 +37,19 @@ export interface ParseResults {
 
 const basePosition: CellPosition = { row: 1, col: 1, sheet: "Sheet1" };
 
+/**
+ * Remove undefined entries from calculation results
+ * @param Object
+ */
+export const removeUndefined = (o: ParseResults) => {
+  for (const key in o) {
+    if (o[key as keyof ParseResults] === void 0) {
+      delete o[key as keyof ParseResults]
+    }
+  }
+  return o
+}
+
 export interface CellInterface {
   rowIndex: number;
   columnIndex: number;
@@ -197,7 +210,7 @@ class FormulaParser {
       error = err.toString();
       resultType = "error";
     }
-    return {
+    return removeUndefined({
       result,
       resultType,
       hyperlink,
@@ -205,7 +218,7 @@ class FormulaParser {
       underline,
       error,
       errorMessage,
-    };
+    });
   };
   getDependencies = (
     text: string,
