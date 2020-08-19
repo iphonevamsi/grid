@@ -5,8 +5,7 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "start": "parcel index.html",
-    "build": "parcel build index.html --out-dir public"
+    "start": "parcel index.html"
   },
   "dependencies": {
     "@rowsncolumns/grid": "^6.0.9",
