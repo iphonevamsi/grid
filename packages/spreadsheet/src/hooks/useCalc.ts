@@ -30,9 +30,7 @@ const useCalc = ({
   const getCellConfigRef = useRef<CellConfigBySheetName>();
 
   /* Keep ref in sync */
-  useEffect(() => {
-    getCellConfigRef.current = getCellConfig;
-  });
+  getCellConfigRef.current = getCellConfig;
 
   useEffect(() => {
     engine.current = new CalcEngine({
