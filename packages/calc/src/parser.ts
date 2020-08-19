@@ -44,11 +44,11 @@ const basePosition: CellPosition = { row: 1, col: 1, sheet: "Sheet1" };
 export const removeUndefined = (o: ParseResults) => {
   for (const key in o) {
     if (o[key as keyof ParseResults] === void 0) {
-      delete o[key as keyof ParseResults]
+      delete o[key as keyof ParseResults];
     }
   }
-  return o
-}
+  return o;
+};
 
 export interface CellInterface {
   rowIndex: number;
@@ -210,7 +210,7 @@ class FormulaParser {
       error = err.toString();
       resultType = "error";
     }
-        
+
     return removeUndefined({
       result,
       resultType,

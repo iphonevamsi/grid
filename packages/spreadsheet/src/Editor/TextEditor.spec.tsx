@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { domRenderer, cleanup, act, fireEvent } from "./../utils/test-utils";
 import TextEditor, { EditableRef } from "./TextEditor";
 import { DEFAULT_FONT_FAMILY, DEFAULT_FONT_SIZE } from "../constants";
-import { Transforms } from 'slate'
-import { ReactEditor } from 'slate-react'
+import { Transforms } from "slate";
+import { ReactEditor } from "slate-react";
 
 global.document.execCommand = jest.fn();
 
@@ -46,9 +46,9 @@ describe("TextEditor", () => {
   });
 
   it("calls onChange", async () => {
-    const onChange = jest.fn()
-    let element
-    let editorRef = React.createRef<EditableRef>()
+    const onChange = jest.fn();
+    let element;
+    let editorRef = React.createRef<EditableRef>();
     const App = () => {
       return (
         <>
@@ -64,18 +64,15 @@ describe("TextEditor", () => {
             onChange={onChange}
           />
         </>
-      )
-    }
-    act(() => {
-      element = domRenderer(
-        <App />
       );
-    })
+    };
+    act(() => {
+      element = domRenderer(<App />);
+    });
     await act(async () => {
-      ReactEditor.focus(editorRef.current.editor)
-      Transforms.insertNodes(editorRef.current.editor, [{ text: '=SUM(2,2)' }])
-    })
+      ReactEditor.focus(editorRef.current.editor);
+      Transforms.insertNodes(editorRef.current.editor, [{ text: "=SUM(2,2)" }]);
+    });
     expect(onChange).toHaveBeenCalled();
-
   });
 });

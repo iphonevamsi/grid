@@ -27,12 +27,12 @@ const useCalc = ({
   getSheetRange,
 }: UseCalcOptions) => {
   const engine = useRef<CalcEngine>();
-  const getCellConfigRef = useRef<CellConfigBySheetName>()
+  const getCellConfigRef = useRef<CellConfigBySheetName>();
 
   /* Keep ref in sync */
   useEffect(() => {
-    getCellConfigRef.current = getCellConfig
-  })
+    getCellConfigRef.current = getCellConfig;
+  });
 
   useEffect(() => {
     engine.current = new CalcEngine({
@@ -42,7 +42,7 @@ const useCalc = ({
       },
       getSheetRange,
     });
-  }, []);  
+  }, []);
 
   useEffect(() => {
     if (!engine.current) {
@@ -66,19 +66,18 @@ const useCalc = ({
         getCellConfigRef.current
       );
     },
-    [ ]
+    []
   );
 
   const onCalculateBatch = useCallback((changes: CellsBySheet):
     | Promise<CellsBySheet | undefined>
     | undefined => {
-
     if (!getCellConfigRef.current) return;
     return engine.current?.calculateBatch(
       changes as Partial<CellConfig>,
       getCellConfigRef.current
     );
-  }, [ ]);
+  }, []);
 
   const initializeEngine = useCallback((changes: CellsBySheet):
     | Promise<CellsBySheet | undefined>
@@ -88,7 +87,7 @@ const useCalc = ({
       changes as Partial<CellConfig>,
       getCellConfigRef.current
     );
-  }, [ ]);
+  }, []);
 
   const supportedFormulas: string[] = useMemo(() => {
     return engine.current?.parser.formulaParser.supportedFunctions() ?? [];
