@@ -129,14 +129,14 @@ const useShiftDown = (props: ShiftDownProps): ShiftDownResults => {
           if (next < 0) return filteredItems.length - 1;
           return next;
         });
-        e?.preventDefault();
+        e?.preventDefault?.();
       } else if (keyCode === KeyCodes.Down) {
         setHighlightedIndex((prev) => {
           const next = prev === null ? 0 : prev + 1;
           if (next > filteredItems.length - 1) return 0;
           return next;
         });
-        e?.preventDefault();
+        e?.preventDefault?.();
       }
       if (keyCode === KeyCodes.Escape) {
         closeMenu();

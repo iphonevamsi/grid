@@ -1,7 +1,13 @@
 import FastFormulaParser from "fast-formula-parser";
 import { DepParser } from "fast-formula-parser/grammar/dependency/hooks";
 import FormulaError from "fast-formula-parser/formulas/error";
-import { detectDataType, DATATYPES, castToString, isNull } from "./helpers";
+import {
+  detectDataType,
+  DATATYPES,
+  castToString,
+  isNull,
+  createPosition,
+} from "./helpers";
 import { CellsBySheet } from "./calc";
 import merge from "lodash.merge";
 import { CellConfig, CellConfigGetter } from "./types";

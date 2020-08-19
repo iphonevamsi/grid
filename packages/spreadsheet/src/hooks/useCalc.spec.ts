@@ -54,7 +54,13 @@ describe("useSelection", () => {
   it("can do batch calcultion", async () => {
     const { result } = renderHook(() =>
       useCalc({
-        getCellConfig: () => {
+        getCellConfig: (name, cell) => {
+          if (name === "Sheet3") {
+            return {
+              text: "=SUM(4,4)",
+              datatype: "formula",
+            };
+          }
           return {
             text: "=SUM(2,2)",
             datatype: "formula",
@@ -86,6 +92,31 @@ describe("useSelection", () => {
     };
     const results = await result.current.onCalculateBatch(changes);
     expect(results["Sheet1"][1][1].result).toBe(4);
-    expect(results["Sheet3"][1][2].result).toBe(4);
+    expect(results["Sheet3"][1][2].result).toBe(8);
+  });
+
+  it("can resolve dependencies of a cell", () => {
+    const { result } = renderHook(() =>
+      useCalc({
+        getCellConfig: (name, cell) => {
+          return {
+            text: "=SUM(2,2)",
+            datatype: "formula",
+          };
+        },
+        getSheetRange: (name) => {
+          return {
+            rowCount: 100,
+            columnCount: 100,
+          };
+        },
+      })
+    );
+    const dependencies = [
+      { col: 1, row: 1, sheet: "Sheet1" },
+      { col: 1, row: 2, sheet: "Sheet1" },
+    ];
+
+    expect(result.current.getDepedencies("SUM(A1,A2)")).toEqual(dependencies);
   });
 });
