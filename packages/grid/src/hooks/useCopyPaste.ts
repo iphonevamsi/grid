@@ -121,10 +121,14 @@ const useCopyPaste = ({
         const row = [];
         const cell = [];
         for (let j = left; j <= right; j++) {
-          const config = selectionRef.current.getValue({
+          const coords = {
             rowIndex: i,
             columnIndex: j,
-          });
+          };
+          const config = {
+            ...selectionRef.current.getValue(coords),
+            sourceCell: coords,
+          };
           const value = getText(config);
           cell.push(config);
           row.push(value);

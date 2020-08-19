@@ -274,6 +274,39 @@ export const fillFormula = (
   return detokenize(newTokens);
 };
 
+/**
+ * Convert formula to relative values based on source cell
+ * @param formula
+ * @param sourceCell
+ * @param activeCell
+ */
+export const formulaToRelativeReference = (
+  formula: React.ReactText | undefined,
+  sourceCell: CellInterface,
+  activeCell: CellInterface
+) => {
+  if (formula === void 0) {
+    return formula;
+  }
+  const { tokens } = tokenize(formula as string);
+  let newTokens = [];
+  for (let i = 0; i < tokens.length; i++) {
+    const token = tokens[i];
+    if (token.tokenType.name === tokenVocabulary.Cell.name) {
+      const cell = addressToCell(token.image);
+      if (cell) {
+        const rowDelta = sourceCell.rowIndex - cell.rowIndex;
+        const columnDelta = sourceCell.columnIndex - cell.columnIndex;
+        cell.rowIndex = activeCell.rowIndex - rowDelta;
+        cell.columnIndex = activeCell.columnIndex - columnDelta;
+        token.image = cellToAddress(cell) as string;
+      }
+    }
+    newTokens.push(token);
+  }
+  return detokenize(newTokens);
+};
+
 export const cleanFunctionToken = (text: string) => {
   return text.replace(new RegExp(/\(|\)/, "gi"), "");
 };

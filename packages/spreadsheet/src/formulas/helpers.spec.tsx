@@ -7,6 +7,7 @@ import {
   functionSuggestion,
   showCellSuggestions,
   fillFormula,
+  formulaToRelativeReference,
 } from "./helpers";
 import React, { useState } from "react";
 import { render } from "@testing-library/react";
@@ -283,5 +284,27 @@ describe("fillFormula", () => {
     expect(fillFormula("=SUM(Sheet1!B1,2)", -1, Direction.Left)).toBe(
       "=SUM(Sheet1!A1,2)"
     );
+  });
+});
+
+describe("formulaToRelativeReference", () => {
+  it("can update formulas based on source cell", () => {
+    expect(
+      formulaToRelativeReference(
+        "=A1",
+        { rowIndex: 1, columnIndex: 2 },
+        { rowIndex: 2, columnIndex: 2 }
+      )
+    ).toBe("=A2");
+  });
+
+  it("can update multiple formulas based on source cell", () => {
+    expect(
+      formulaToRelativeReference(
+        "=A1 + SUM(A1:A3)",
+        { rowIndex: 1, columnIndex: 2 },
+        { rowIndex: 2, columnIndex: 2 }
+      )
+    ).toBe("=A2 + SUM(A2:A4)");
   });
 });
