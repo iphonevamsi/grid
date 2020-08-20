@@ -82,6 +82,44 @@ describe("state reducers", () => {
     expect(newState.selectedSheet).toBe(1);
   });
 
+  it("can update activecell and selections of a sheet", () => {
+    const state = {
+      ...initialState,
+      sheets: [
+        {
+          name: "1",
+          id: 1,
+          cells: {},
+          activeCell: null,
+          selections: [],
+        },
+      ],
+      selectedSheet: 1,
+    };
+    let newState = reducer(state, {
+      type: ACTION_TYPE.SHEET_SELECTION_CHANGE,
+      id: 1,
+      activeCell: { rowIndex: 2, columnIndex: 1 },
+      selections: [],
+    });
+    expect(newState.sheets[0].activeCell).toStrictEqual({
+      rowIndex: 2,
+      columnIndex: 1,
+    });
+
+    // Does not update sheet if id is invalid
+    newState = reducer(newState, {
+      type: ACTION_TYPE.SHEET_SELECTION_CHANGE,
+      id: 10,
+      activeCell: { rowIndex: 2, columnIndex: 1 },
+      selections: [],
+    });
+    expect(newState.sheets[0].activeCell).toStrictEqual({
+      rowIndex: 2,
+      columnIndex: 1,
+    });
+  });
+
   it("can change sheet name", () => {
     const id = initialState.sheets[0].id;
     const newState = reducer(initialState, {
@@ -302,7 +340,7 @@ describe("state reducers", () => {
       }),
     };
     const id = state.sheets[0].id;
-    const newState = reducer(state, {
+    let newState = reducer(state, {
       type: ACTION_TYPE.UPDATE_FILL,
       id,
       activeCell: {
@@ -1664,6 +1702,86 @@ describe("state reducers", () => {
             },
           },
         },
+      });
+
+      expect(newState.sheets[0].cells[1]).toBeUndefined();
+    });
+
+    it("will not trigger validation for locked cells", () => {
+      let state: StateInterface = {
+        ...initialState,
+        sheets: [
+          {
+            name: "Sheet 1",
+            id: 1,
+            cells: {},
+            activeCell: { rowIndex: 1, columnIndex: 1 },
+            selections: [],
+            locked: true,
+          },
+          {
+            name: "Sheet 2",
+            id: 2,
+            cells: {
+              1: {
+                1: {
+                  locked: true,
+                  valid: false,
+                },
+              },
+            },
+            activeCell: { rowIndex: 1, columnIndex: 1 },
+            selections: [],
+            locked: false,
+          },
+        ],
+      };
+
+      let newState = reducer(state, {
+        type: ACTION_TYPE.VALIDATION_SUCCESS,
+        id: 1,
+        valid: true,
+        cell: {
+          rowIndex: 1,
+          columnIndex: 1,
+        },
+        prompt: "Please enter",
+      });
+
+      expect(newState.sheets[0].cells[1]).toBeFalsy();
+
+      newState = reducer(state, {
+        type: ACTION_TYPE.VALIDATION_SUCCESS,
+        id: 2,
+        valid: true,
+        cell: {
+          rowIndex: 1,
+          columnIndex: 1,
+        },
+        prompt: "Please enter",
+      });
+
+      expect(newState.sheets[1].cells[1][1].valid).toBeFalsy();
+    });
+
+    it("will not change formatting if sheet is locked", () => {
+      let state = {
+        ...initialState,
+        sheets: [
+          {
+            name: "Sheet 1",
+            id: 1,
+            cells: {},
+            activeCell: { rowIndex: 1, columnIndex: 1 },
+            selections: [],
+            locked: true,
+          },
+        ],
+      };
+
+      let newState = reducer(state, {
+        type: ACTION_TYPE.FORMATTING_CHANGE_PLAIN,
+        id: 2,
       });
 
       expect(newState.sheets[0].cells[1]).toBeUndefined();
