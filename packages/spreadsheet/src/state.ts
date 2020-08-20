@@ -433,7 +433,6 @@ export const createStateReducer = ({
                       if (value === void 0) {
                         delete sheet.cells[rowIndex][columnIndex]?.[key];
                       } else {
-                        /* Exclude formatting values if it has been changed by user */
                         if (
                           Object.values(FORMATTING_TYPE).includes(
                             key as FORMATTING_TYPE
@@ -514,7 +513,7 @@ export const createStateReducer = ({
                       ...sheet.cells?.[curSelRowIndex]?.[j],
                     };
                     // Skip locked cell
-                    if (sheet.cells[i][i]?.locked) {
+                    if (sheet.cells[i][j]?.locked) {
                       continue;
                     }
                     sheet.cells[i][j] = cellConfig;
@@ -582,7 +581,7 @@ export const createStateReducer = ({
                       ...sheet.cells?.[i]?.[curSelColumnIndex],
                     };
                     // Skip locked cell
-                    if (sheet.cells[i][i]?.locked) {
+                    if (sheet.cells[i][j]?.locked) {
                       continue;
                     }
                     sheet.cells[i][j] = cellConfig;
@@ -616,7 +615,7 @@ export const createStateReducer = ({
                       ...sheet.cells?.[i]?.[curSelColumnIndex],
                     };
                     // Skip locked cell
-                    if (sheet.cells[i][i]?.locked) {
+                    if (sheet.cells[i][j]?.locked) {
                       continue;
                     }
                     sheet.cells[i][j] = cellConfig;

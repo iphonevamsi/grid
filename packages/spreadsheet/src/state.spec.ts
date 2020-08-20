@@ -9,6 +9,7 @@ import { createNewSheet } from ".";
 import { CellsBySheet } from "@rowsncolumns/calc/dist/calc";
 import { SelectionArea, CellInterface } from "@rowsncolumns/grid";
 import { AXIS } from "./types";
+import { act } from "@testing-library/react";
 
 type StateReducer = (
   state: StateInterface,
@@ -251,6 +252,35 @@ describe("state reducers", () => {
 
   it("can batch updates cells", () => {
     const sheetName = "Sheet1";
+    let state = {
+      ...initialState,
+      sheets: [
+        {
+          name: sheetName,
+          id: 1,
+          cells: {
+            1: {
+              1: {
+                text: "1",
+                result: 4,
+                color: "red",
+              },
+            },
+          },
+          activeCell: null,
+          selections: [
+            {
+              bounds: {
+                top: 1,
+                left: 1,
+                right: 1,
+                bottom: 1,
+              },
+            },
+          ],
+        },
+      ],
+    };
     const changes: CellsBySheet = {
       [sheetName]: {
         1: {
@@ -258,16 +288,20 @@ describe("state reducers", () => {
             text: '=HYPERLINK("Google", www.google.com)',
             datatype: "formula",
             resultType: "hyperlink",
+            result: void 0,
+            color: "blue",
           },
         },
       },
     };
     /* 1: Calculation update a group of cells */
-    const newState = reducer(initialState, {
+    const newState = reducer(state, {
       type: ACTION_TYPE.UPDATE_CELLS,
       changes,
     });
     expect(newState.sheets[0].cells[1][1].resultType).toEqual("hyperlink");
+    expect(newState.sheets[0].cells[1][1].result).toBeUndefined();
+    expect(newState.sheets[0].cells[1][1].color).toBe("red");
   });
 
   it("batch update skips locked cells ", () => {
@@ -324,7 +358,7 @@ describe("state reducers", () => {
   });
 
   it("can handle cell filling Direction - BOTTOM", () => {
-    const state = {
+    const state: StateInterface = {
       ...initialState,
       sheets: initialState.sheets.map((sheet) => {
         return {
@@ -332,7 +366,8 @@ describe("state reducers", () => {
           cells: {
             5: {
               2: {
-                text: "Hello",
+                text: "=SUM(A1,A2)",
+                datatype: "formula",
               },
             },
           },
@@ -369,13 +404,13 @@ describe("state reducers", () => {
       ],
     });
 
-    expect(newState.sheets[0].cells[6][2].text).toBe("Hello");
-    expect(newState.sheets[0].cells[7][2].text).toBe("Hello");
-    expect(newState.sheets[0].cells[8][2].text).toBe("Hello");
+    expect(newState.sheets[0].cells[6][2].text).toBe("=SUM(A2,A3)");
+    expect(newState.sheets[0].cells[7][2].text).toBe("=SUM(A3,A4)");
+    expect(newState.sheets[0].cells[8][2].text).toBe("=SUM(A4,A5)");
   });
 
   it("can handle cell filling - Direction UP", () => {
-    const state = {
+    const state: StateInterface = {
       ...initialState,
       sheets: initialState.sheets.map((sheet) => {
         return {
@@ -383,7 +418,8 @@ describe("state reducers", () => {
           cells: {
             5: {
               2: {
-                text: "Hello",
+                text: "=SUM(A4, A5)",
+                datatype: "formula",
               },
             },
           },
@@ -420,12 +456,12 @@ describe("state reducers", () => {
       ],
     });
 
-    expect(newState.sheets[0].cells[3][2].text).toBe("Hello");
-    expect(newState.sheets[0].cells[4][2].text).toBe("Hello");
+    expect(newState.sheets[0].cells[3][2].text).toBe("=SUM(A2, A3)");
+    expect(newState.sheets[0].cells[4][2].text).toBe("=SUM(A3, A4)");
   });
 
   it("can handle cell filling - Direction LEFT", () => {
-    const state = {
+    const state: StateInterface = {
       ...initialState,
       sheets: initialState.sheets.map((sheet) => {
         return {
@@ -433,7 +469,8 @@ describe("state reducers", () => {
           cells: {
             5: {
               5: {
-                text: "Hello",
+                text: "=SUM(F10, F11)",
+                datatype: "formula",
               },
             },
           },
@@ -470,12 +507,12 @@ describe("state reducers", () => {
       ],
     });
 
-    expect(newState.sheets[0].cells[5][2].text).toBe("Hello");
-    expect(newState.sheets[0].cells[5][3].text).toBe("Hello");
+    expect(newState.sheets[0].cells[5][2].text).toBe("=SUM(C10, C11)");
+    expect(newState.sheets[0].cells[5][3].text).toBe("=SUM(D10, D11)");
   });
 
   it("can handle cell filling - Direction RIGHT", () => {
-    const state = {
+    const state: StateInterface = {
       ...initialState,
       sheets: initialState.sheets.map((sheet) => {
         return {
@@ -483,7 +520,8 @@ describe("state reducers", () => {
           cells: {
             5: {
               5: {
-                text: "Hello",
+                text: "=SUM(F10, F11)",
+                datatype: "formula",
               },
             },
           },
@@ -520,8 +558,8 @@ describe("state reducers", () => {
       ],
     });
 
-    expect(newState.sheets[0].cells[5][6].text).toBe("Hello");
-    expect(newState.sheets[0].cells[5][7].text).toBe("Hello");
+    expect(newState.sheets[0].cells[5][6].text).toBe("=SUM(G10, G11)");
+    expect(newState.sheets[0].cells[5][7].text).toBe("=SUM(H10, H11)");
   });
 
   it("can delete sheets", () => {
@@ -1047,6 +1085,32 @@ describe("state reducers", () => {
       id: 2,
     });
     expect(newState).toEqual(state);
+
+    // Skips if activeCell is null
+    const stateWithNoActiveCell = {
+      ...state,
+      sheets: state.sheets.map((sheet) => ({ ...sheet, activeCell: null })),
+    };
+    newState = reducer(stateWithNoActiveCell, {
+      type: ACTION_TYPE.CLEAR_FORMATTING,
+      id: 1,
+    });
+    expect(newState).toEqual(stateWithNoActiveCell);
+
+    // Skips if cell does not exists
+    const stateWithInvalidCells = {
+      ...state,
+      sheets: state.sheets.map((sheet) => ({
+        ...sheet,
+        activeCell: null,
+        selections: [{ bounds: { top: 3, left: 1, right: 3, bottom: 3 } }],
+      })),
+    };
+    newState = reducer(stateWithInvalidCells, {
+      type: ACTION_TYPE.CLEAR_FORMATTING,
+      id: 1,
+    });
+    expect(newState).toEqual(stateWithInvalidCells);
   });
 
   it("can resize rows and columns", () => {
@@ -2156,6 +2220,77 @@ describe("state reducers", () => {
     expect(newState.sheets[0].cells[3]?.[2].text).toBe("foo");
   });
 
+  it("undo/redo gets called", () => {
+    let state = {
+      ...initialState,
+      sheets: [
+        {
+          name: "Sheet 1",
+          id: 1,
+          cells: {},
+          activeCell: { rowIndex: 1, columnIndex: 1 },
+          selections: [],
+          locked: true,
+        },
+      ],
+    };
+
+    act(() => {
+      let newState = reducer(state, {
+        type: ACTION_TYPE.CHANGE_SHEET_NAME,
+        id: 2,
+        name: "Sheet 2",
+      });
+    });
+
+    expect(undoCallback).toBeCalled();
+
+    // Undo callback will be called if undoable is false
+    const callback = jest.fn();
+    const noUndoReducer = createStateReducer({
+      addUndoPatch: callback,
+      getCellBounds,
+    });
+    act(() => {
+      let newState = noUndoReducer(state, {
+        type: ACTION_TYPE.CHANGE_SHEET_NAME,
+        id: 2,
+        undoable: false,
+        name: "Sheet 2",
+      });
+    });
+
+    expect(callback).not.toHaveBeenCalled();
+  });
+
+  it("can apply patches", () => {
+    let state = {
+      ...initialState,
+      sheets: [
+        {
+          name: "Sheet 1",
+          id: 1,
+          cells: {},
+          activeCell: { rowIndex: 1, columnIndex: 1 },
+          selections: [],
+          locked: true,
+        },
+      ],
+    };
+    let newState = reducer(state, {
+      type: ACTION_TYPE.APPLY_PATCHES,
+      patches: [
+        {
+          op: "replace",
+          path: ["sheets", 0, "name"],
+          value: "Sheet1",
+        },
+      ],
+    });
+
+    expect(newState.sheets[0].name).toBe("Sheet1");
+  });
+
   describe("Locked sheets and cells", () => {
     it("will not change sheet name if locked", () => {
       let state = {
@@ -2290,6 +2425,98 @@ describe("state reducers", () => {
       });
 
       expect(newState.sheets[0].cells[1]).toBeUndefined();
+    });
+
+    it("will not clear formatting if cell is locked", () => {
+      let state = {
+        ...initialState,
+        sheets: [
+          {
+            name: "Sheet 1",
+            id: 1,
+            cells: {
+              1: {
+                1: {
+                  locked: true,
+                  bold: true,
+                },
+              },
+            },
+            activeCell: { rowIndex: 1, columnIndex: 1 },
+            selections: [],
+          },
+        ],
+      };
+
+      let newState = reducer(state, {
+        type: ACTION_TYPE.CLEAR_FORMATTING,
+        id: 1,
+      });
+
+      expect(newState).toEqual(state);
+    });
+
+    it("skip locked sheet when cells are removed", () => {
+      let state = {
+        ...initialState,
+        sheets: [
+          {
+            name: "Sheet1",
+            id: 1,
+            locked: true,
+            cells: {
+              1: {
+                1: {
+                  text: "1",
+                },
+              },
+            },
+            activeCell: { rowIndex: 1, columnIndex: 1 },
+            selections: [],
+          },
+        ],
+      };
+      let newState = reducer(state, {
+        type: ACTION_TYPE.REMOVE_CELLS,
+        id: 1,
+        activeCell: {
+          rowIndex: 1,
+          columnIndex: 1,
+        },
+        selections: [],
+      });
+      expect(newState).toEqual(state);
+    });
+
+    it("skip locked cells when cell changes", () => {
+      let state = {
+        ...initialState,
+        sheets: [
+          {
+            name: "Sheet1",
+            id: 1,
+            locked: true,
+            cells: {
+              1: {
+                1: {
+                  text: "1",
+                },
+              },
+            },
+            activeCell: { rowIndex: 1, columnIndex: 1 },
+            selections: [],
+          },
+        ],
+      };
+      const newState = reducer(state, {
+        type: ACTION_TYPE.CHANGE_SHEET_CELL,
+        id: initialState.sheets[0].id,
+        cell: { rowIndex: 1, columnIndex: 1 },
+        value: "Hello",
+        datatype: "string",
+      });
+
+      expect(newState).toEqual(state);
     });
   });
 });

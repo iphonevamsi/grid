@@ -105,7 +105,7 @@ export const cellToAddress = (cell: CellInterface | null): string | null => {
   if (cell.columnIndex === 0) {
     return null;
   }
-  return `${number2Alpha(cell.columnIndex - 1)}${cell.rowIndex}`;
+  return `${number2Alpha(cell.columnIndex - 1)}${Math.max(0, cell.rowIndex)}`;
 };
 
 /**

@@ -23,6 +23,8 @@ export interface CellConfig {
   parentCell?: string;
   error?: string;
   errorMessage?: string;
+  color?: string;
+  underline?: boolean;
 }
 
 export type CellConfigGetter = (
