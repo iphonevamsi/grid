@@ -37,6 +37,7 @@ import {
   DATATYPES,
 } from "./types";
 import { formulaToRelativeReference } from "./formulas/helpers";
+import { FormulaError } from "./formulas";
 
 /* Enabled patches in immer */
 enablePatches();
@@ -267,8 +268,8 @@ export type ActionTypes =
       id: SheetID;
       rows: (string | null | CellConfig)[][];
       activeCell: CellInterface;
-      selection?: SelectionArea;
-      newSelection?: SelectionArea[];
+      cutSelection?: SelectionArea;
+      selections?: SelectionArea[];
       undoable?: boolean;
     }
   | {
@@ -385,6 +386,7 @@ export const createStateReducer = ({
               delete currentCell.parentCell;
               delete currentCell.resultType;
               delete currentCell.result;
+              delete currentCell.error;
               delete currentCell.valid;
 
               /* Check for formula range */
@@ -848,7 +850,7 @@ export const createStateReducer = ({
               const { activeCell, selections } = sheet;
               const sel = selections.length
                 ? selections
-                : [{ bounds: getCellBounds(activeCell) }];
+                : [{ bounds: activeCell && getCellBounds(activeCell) }];
               for (let i = 0; i < sel.length; i++) {
                 const { bounds } = sel[i];
                 if (!bounds) continue;
@@ -899,7 +901,7 @@ export const createStateReducer = ({
               const { selections, activeCell } = sheet;
               const { bounds } = selections.length
                 ? selections[selections.length - 1]
-                : { bounds: getCellBounds(activeCell) };
+                : { bounds: activeCell && getCellBounds(activeCell) };
               if (!bounds) return;
               if (
                 (bounds.top === bounds.bottom &&
@@ -1132,7 +1134,7 @@ export const createStateReducer = ({
               (sheet) => sheet.id === action.id
             ) as Sheet;
             if (sheet && !sheet.locked) {
-              const { rows, activeCell, selection, newSelection } = action;
+              const { rows, activeCell, selections, cutSelection } = action;
               const { rowIndex, columnIndex } = activeCell;
               const { cells } = sheet;
               for (let i = 0; i < rows.length; i++) {
@@ -1162,11 +1164,17 @@ export const createStateReducer = ({
                     // const { parentCell, ...config } = text as CellConfig;
                     cells[r][c] = cellConfig as CellConfig;
                     if (cellConfig.datatype === "formula") {
-                      cells[r][c].text = formulaToRelativeReference(
+                      const relativeFormula = formulaToRelativeReference(
                         cellConfig.text,
                         cellConfig.sourceCell as CellInterface,
                         coords
                       );
+                      if (relativeFormula === void 0) {
+                        cells[r][c].text = void 0;
+                        cells[r][c].error = new FormulaError("#REF!").error;
+                      } else {
+                        cells[r][c].text = relativeFormula;
+                      }
                     }
                   } else {
                     cells[r][c].text =
@@ -1176,8 +1184,8 @@ export const createStateReducer = ({
                 }
               }
               /* Remove cut selections */
-              if (selection) {
-                const { bounds } = selection;
+              if (cutSelection) {
+                const { bounds } = cutSelection;
                 for (let i = bounds.top; i <= bounds.bottom; i++) {
                   for (let j = bounds.left; j <= bounds.right; j++) {
                     if (sheet.cells?.[i]?.[j]?.locked) {
@@ -1188,13 +1196,13 @@ export const createStateReducer = ({
                 }
               }
               /* Update sheet selections */
-              if (newSelection !== void 0) {
-                sheet.selections = newSelection;
+              if (selections !== void 0) {
+                sheet.selections = selections;
               }
 
               /* Keep reference of active cell, so we can focus back */
               draft.currentActiveCell = activeCell;
-              draft.currentSelections = newSelection;
+              draft.currentSelections = selections;
             }
             break;
           }

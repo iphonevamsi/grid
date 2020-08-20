@@ -240,7 +240,7 @@ export const formulaToRelativeReference = (
   formula: React.ReactText | undefined,
   sourceCell: CellInterface,
   destinationCell: CellInterface
-) => {
+): string | undefined => {
   if (formula === void 0) {
     return formula;
   }
@@ -255,7 +255,11 @@ export const formulaToRelativeReference = (
         const columnDelta = sourceCell.columnIndex - cell.columnIndex;
         cell.rowIndex = destinationCell.rowIndex - rowDelta;
         cell.columnIndex = destinationCell.columnIndex - columnDelta;
-        token.image = cellToAddress(cell) as string;
+        const address = cellToAddress(cell);
+        if (address === null) {
+          return void 0;
+        }
+        token.image = address;
       }
     }
     newTokens.push(token);

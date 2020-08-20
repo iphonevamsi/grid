@@ -2,6 +2,7 @@ import React from "react";
 import { render } from "@testing-library/react";
 import { Stage, Layer } from "react-konva";
 import { ThemeProvider, theme } from "@chakra-ui/core";
+import Konva from "konva";
 
 const KonvaWrapper = ({ children }) => {
   return (

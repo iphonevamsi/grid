@@ -1013,6 +1013,26 @@ describe("state reducers", () => {
           },
           selections: [],
         },
+        {
+          name: "Sheet2",
+          id: 2,
+          cells: {
+            1: {
+              1: {
+                text: "1",
+                bold: true,
+                fill: "blue",
+                locked: true,
+              },
+            },
+          },
+          activeCell: {
+            rowIndex: 1,
+            columnIndex: 1,
+          },
+          selections: [],
+          locked: true,
+        },
       ],
     };
     let newState = reducer(state, {
@@ -1020,6 +1040,13 @@ describe("state reducers", () => {
       id: 1,
     });
     expect(newState.sheets[0].cells[1][1].bold).toBeUndefined();
+
+    // Skip locked sheet
+    newState = reducer(state, {
+      type: ACTION_TYPE.CLEAR_FORMATTING,
+      id: 2,
+    });
+    expect(newState).toEqual(state);
   });
 
   it("can resize rows and columns", () => {
@@ -1064,6 +1091,17 @@ describe("state reducers", () => {
     });
 
     expect(newState.sheets[0].rowSizes?.[1]).toBe(10);
+
+    // Sheet does not exist
+    newState = reducer(state, {
+      type: ACTION_TYPE.RESIZE,
+      id: 10,
+      axis: "y",
+      index: 1,
+      dimension: 10,
+    });
+
+    expect(newState).toEqual(state);
   });
 
   it("can merge cells", () => {
@@ -1105,12 +1143,75 @@ describe("state reducers", () => {
     expect(newState.sheets[0].mergedCells?.length).toBe(1);
 
     // Can unmerge cells
-    newState = reducer(newState, {
+    let unmergedState = reducer(newState, {
       type: ACTION_TYPE.MERGE_CELLS,
       id: 1,
     });
 
-    expect(newState.sheets[0].mergedCells?.length).toBe(0);
+    expect(unmergedState.sheets[0].mergedCells?.length).toBe(0);
+
+    // Sheet does not exist
+    newState = reducer(state, {
+      type: ACTION_TYPE.MERGE_CELLS,
+      id: 10,
+    });
+
+    expect(newState).toEqual(state);
+  });
+
+  it("prevent merging single cells", () => {
+    let state = {
+      ...initialState,
+      sheets: [
+        {
+          name: "Sheet1",
+          id: 1,
+          cells: {
+            1: {
+              1: {
+                text: "foo",
+              },
+            },
+          },
+          activeCell: null,
+          selections: [
+            {
+              bounds: {
+                top: 1,
+                left: 1,
+                right: 1,
+                bottom: 1,
+              },
+            },
+          ],
+        },
+      ],
+    };
+
+    let newState = reducer(state, {
+      type: ACTION_TYPE.MERGE_CELLS,
+      id: 1,
+    });
+
+    expect(newState).toEqual(state);
+
+    // Handle undefined bounds
+    const stateWithNoActiveCell = {
+      ...state,
+      sheets: state.sheets.map((sheet) => {
+        return {
+          ...sheet,
+          activeCell: null,
+          selections: [],
+        };
+      }),
+    };
+    newState = reducer(stateWithNoActiveCell, {
+      type: ACTION_TYPE.MERGE_CELLS,
+      id: 1,
+    });
+
+    expect(newState).toEqual(stateWithNoActiveCell);
   });
 
   it("can update frozen rows and columns", () => {
@@ -1134,12 +1235,30 @@ describe("state reducers", () => {
     });
     expect(newState.sheets[0].frozenRows).toBe(2);
 
+    // Sheet does not exist
+    newState = reducer(state, {
+      type: ACTION_TYPE.FROZEN_ROW_CHANGE,
+      id: 10,
+      count: 2,
+    });
+
+    expect(newState).toEqual(state);
+
     newState = reducer(state, {
       type: ACTION_TYPE.FROZEN_COLUMN_CHANGE,
       id: 1,
       count: 2,
     });
     expect(newState.sheets[0].frozenColumns).toBe(2);
+
+    // Sheet does not exist
+    newState = reducer(state, {
+      type: ACTION_TYPE.FROZEN_COLUMN_CHANGE,
+      id: 10,
+      count: 2,
+    });
+
+    expect(newState).toEqual(state);
   });
 
   it("can update border styles", () => {
@@ -1161,7 +1280,7 @@ describe("state reducers", () => {
         },
       ],
     };
-    const newState = reducer(state, {
+    let newState = reducer(state, {
       type: ACTION_TYPE.SET_BORDER,
       id: 1,
       color: "blue",
@@ -1170,6 +1289,48 @@ describe("state reducers", () => {
     });
 
     expect(newState.sheets[0].cells[1][1].strokeTopWidth).toBe(1);
+
+    // Sheet does not exist
+    newState = reducer(state, {
+      type: ACTION_TYPE.SET_BORDER,
+      id: 10,
+      color: "blue",
+      variant: "all",
+      borderStyle: "thin",
+    });
+
+    expect(newState).toEqual(state);
+  });
+
+  it("can reset border styles", () => {
+    let state = {
+      ...initialState,
+      sheets: [
+        {
+          name: "Sheet1",
+          id: 1,
+          cells: {
+            1: {
+              1: {
+                text: "1",
+                strokeTopWidth: 1,
+              },
+            },
+          },
+          activeCell: { rowIndex: 1, columnIndex: 1 },
+          selections: [],
+        },
+      ],
+    };
+    let newState = reducer(state, {
+      type: ACTION_TYPE.SET_BORDER,
+      id: 1,
+      color: "blue",
+      variant: "none",
+      borderStyle: "thin",
+    });
+
+    expect(newState.sheets[0].cells[1][1].strokeTopWidth).toBe(undefined);
   });
 
   it("can update scroll position", () => {
@@ -1185,7 +1346,7 @@ describe("state reducers", () => {
         },
       ],
     };
-    const newState = reducer(state, {
+    let newState = reducer(state, {
       type: ACTION_TYPE.UPDATE_SCROLL,
       id: 1,
       scrollState: {
@@ -1196,6 +1357,18 @@ describe("state reducers", () => {
 
     expect(newState.sheets[0].scrollState?.scrollTop).toBe(1);
     expect(newState.sheets[0].scrollState?.scrollLeft).toBe(1);
+
+    // Sheet does not exist
+    newState = reducer(state, {
+      type: ACTION_TYPE.UPDATE_SCROLL,
+      id: 10,
+      scrollState: {
+        scrollLeft: 1,
+        scrollTop: 1,
+      },
+    });
+
+    expect(newState).toEqual(state);
   });
 
   it("can update change filters", () => {
@@ -1211,7 +1384,7 @@ describe("state reducers", () => {
         },
       ],
     };
-    const newState = reducer(state, {
+    let newState = reducer(state, {
       type: ACTION_TYPE.CHANGE_FILTER,
       id: 1,
       columnIndex: 1,
@@ -1223,6 +1396,20 @@ describe("state reducers", () => {
     });
 
     expect(newState.sheets[0].filterViews?.length).toBe(1);
+
+    // Sheet does not exist
+    newState = reducer(state, {
+      type: ACTION_TYPE.CHANGE_FILTER,
+      id: 10,
+      columnIndex: 1,
+      filterViewIndex: 0,
+      filter: {
+        operator: "containsText",
+        values: ["s"],
+      },
+    });
+
+    expect(newState).toEqual(state);
   });
 
   it("can delete existing filters", () => {
@@ -1337,6 +1524,18 @@ describe("state reducers", () => {
     });
 
     expect(newState.sheets[0].cells[1]?.[1]).toBeUndefined();
+
+    // Sheet does not exist
+    newState = reducer(state, {
+      type: ACTION_TYPE.DELETE_COLUMN,
+      id: 10,
+      activeCell: {
+        rowIndex: 1,
+        columnIndex: 1,
+      },
+    });
+
+    expect(newState).toEqual(state);
   });
 
   it("can update delete row", () => {
@@ -1369,6 +1568,17 @@ describe("state reducers", () => {
     });
 
     expect(newState.sheets[0].cells[1]?.[1]).toBeUndefined();
+
+    // Sheet does not exist
+    newState = reducer(state, {
+      type: ACTION_TYPE.DELETE_ROW,
+      id: 10,
+      activeCell: {
+        rowIndex: 1,
+        columnIndex: 1,
+      },
+    });
+    expect(newState).toEqual(state);
   });
 
   it("can insert column", () => {
@@ -1402,6 +1612,18 @@ describe("state reducers", () => {
 
     expect(newState.sheets[0].cells[1]?.[1]).toBeDefined();
     expect(newState.sheets[0].cells[1][2].text).toBe("hello");
+
+    // Sheet does not exist
+    newState = reducer(state, {
+      type: ACTION_TYPE.INSERT_COLUMN,
+      id: 10,
+      activeCell: {
+        rowIndex: 1,
+        columnIndex: 1,
+      },
+    });
+
+    expect(newState).toEqual(state);
   });
 
   it("can insert row", () => {
@@ -1435,6 +1657,18 @@ describe("state reducers", () => {
 
     expect(newState.sheets[0].cells[1]?.[1]).toBeDefined();
     expect(newState.sheets[0].cells[2][1].text).toBe("hello");
+
+    // Sheet does not exist
+    newState = reducer(state, {
+      type: ACTION_TYPE.INSERT_ROW,
+      id: 10,
+      activeCell: {
+        rowIndex: 1,
+        columnIndex: 1,
+      },
+    });
+
+    expect(newState).toEqual(state);
   });
 
   it("can set selections, activecell on copy", () => {
@@ -1456,6 +1690,13 @@ describe("state reducers", () => {
     });
 
     expect(newState.currentActiveCell).toBe(newState.sheets[0].activeCell);
+
+    newState = reducer(state, {
+      type: ACTION_TYPE.COPY,
+      id: 10,
+    });
+
+    expect(newState).toEqual(state);
   });
 
   it("can set loading for cell awaiting formula calculations", () => {
@@ -1482,6 +1723,19 @@ describe("state reducers", () => {
     });
 
     expect(newState.sheets[0].cells[1][1].loading).toBeTruthy();
+
+    // Sheet does not exists
+    newState = reducer(state, {
+      type: ACTION_TYPE.SET_LOADING,
+      id: 10,
+      cell: {
+        rowIndex: 1,
+        columnIndex: 1,
+      },
+      value: true,
+    });
+
+    expect(newState).toEqual(state);
   });
 
   it("can set hide sheet", () => {
@@ -1530,6 +1784,14 @@ describe("state reducers", () => {
     });
 
     expect(newState.sheets[1].hidden).toBeTruthy();
+
+    // Sheet does not exists
+    newState = reducer(stateWithMultipleSheets, {
+      type: ACTION_TYPE.HIDE_SHEET,
+      id: 20,
+    });
+
+    expect(newState).toEqual(stateWithMultipleSheets);
   });
 
   it("can set show  sheet", () => {
@@ -1560,6 +1822,13 @@ describe("state reducers", () => {
     });
 
     expect(newState.sheets[1].hidden).toBeFalsy();
+
+    newState = reducer(stateWithMultipleSheets, {
+      type: ACTION_TYPE.SHOW_SHEET,
+      id: 20,
+    });
+
+    expect(newState).toEqual(stateWithMultipleSheets);
   });
 
   it("can set protect sheet", () => {
@@ -1589,6 +1858,13 @@ describe("state reducers", () => {
     });
 
     expect(newState.sheets[1].locked).toBeTruthy();
+
+    newState = reducer(stateWithMultipleSheets, {
+      type: ACTION_TYPE.PROTECT_SHEET,
+      id: 20,
+    });
+
+    expect(newState).toEqual(stateWithMultipleSheets);
   });
 
   it("can set unprotect sheet", () => {
@@ -1619,6 +1895,14 @@ describe("state reducers", () => {
     });
 
     expect(newState.sheets[1].locked).toBeFalsy();
+
+    // Does not do modify state if sheet does not exist
+    newState = reducer(stateWithMultipleSheets, {
+      type: ACTION_TYPE.UNPROTECT_SHEET,
+      id: 20,
+    });
+
+    expect(newState).toEqual(stateWithMultipleSheets);
   });
 
   it("can set unprotect sheet", () => {
@@ -1649,6 +1933,227 @@ describe("state reducers", () => {
     });
 
     expect(newState.sheets[1].tabColor).toBe("green");
+
+    newState = reducer(stateWithMultipleSheets, {
+      type: ACTION_TYPE.CHANGE_TAB_COLOR,
+      id: 20,
+      color: "green",
+    });
+
+    expect(newState).toEqual(stateWithMultipleSheets);
+  });
+
+  it("can paste", () => {
+    const state = {
+      ...initialState,
+      sheets: [
+        {
+          name: "Sheet1",
+          id: 1,
+          cells: {
+            1: {
+              1: {
+                text: "Hello",
+              },
+            },
+            3: {
+              1: {
+                locked: true,
+              },
+            },
+          },
+          activeCell: { rowIndex: 1, columnIndex: 1 },
+          selections: [],
+        },
+      ],
+    };
+    // Invalid sheet
+    let newState = reducer(state, {
+      type: ACTION_TYPE.PASTE,
+      id: 10,
+      rows: [],
+      activeCell: { rowIndex: 1, columnIndex: 1 },
+      selections: [],
+    });
+
+    expect(newState).toEqual(state);
+
+    newState = reducer(state, {
+      type: ACTION_TYPE.PASTE,
+      id: 1,
+      rows: [
+        [
+          {
+            text: "hello world",
+          },
+        ],
+      ],
+      activeCell: { rowIndex: 2, columnIndex: 1 },
+      selections: [],
+    });
+
+    expect(newState.sheets[0].cells[2][1].text).toBe("hello world");
+
+    // Skips locked cells
+    newState = reducer(state, {
+      type: ACTION_TYPE.PASTE,
+      id: 1,
+      rows: [
+        [
+          {
+            text: "hello",
+          },
+        ],
+      ],
+      activeCell: { rowIndex: 3, columnIndex: 1 },
+      selections: [],
+    });
+
+    expect(newState.sheets[0].cells[3][1].text).toBeUndefined();
+
+    // Skips empty cells
+    newState = reducer(state, {
+      type: ACTION_TYPE.PASTE,
+      id: 1,
+      rows: [[null]],
+      activeCell: { rowIndex: 1, columnIndex: 1 },
+      selections: [],
+    });
+
+    expect(newState.sheets[0].cells[1][1].text).toBe("Hello");
+
+    // Can handle strings
+    newState = reducer(state, {
+      type: ACTION_TYPE.PASTE,
+      id: 1,
+      rows: [["foobar"]],
+      activeCell: { rowIndex: 1, columnIndex: 1 },
+      selections: [],
+    });
+
+    expect(newState.sheets[0].cells[1][1].text).toBe("foobar");
+
+    // Can handle formulas
+    newState = reducer(state, {
+      type: ACTION_TYPE.PASTE,
+      id: 1,
+      rows: [
+        [
+          {
+            text: "=SUM(A1,2)",
+            datatype: "formula",
+            sourceCell: {
+              rowIndex: 1,
+              columnIndex: 2,
+            },
+          },
+        ],
+      ],
+      activeCell: { rowIndex: 5, columnIndex: 5 },
+      selections: [],
+    });
+
+    expect(newState.sheets[0].cells[5][5].text).toBe("=SUM(D5,2)");
+
+    // Can handle formulas
+    newState = reducer(state, {
+      type: ACTION_TYPE.PASTE,
+      id: 1,
+      rows: [
+        [
+          {
+            text: "=SUM(A1,2)",
+            datatype: "formula",
+            sourceCell: {
+              rowIndex: 1,
+              columnIndex: 2,
+            },
+          },
+        ],
+      ],
+      activeCell: { rowIndex: 2, columnIndex: 1 },
+      selections: [],
+    });
+
+    expect(newState.sheets[0].cells[2][1].error).toBe("#REF!");
+  });
+
+  it("can cut and paste", () => {
+    const state = {
+      ...initialState,
+      sheets: [
+        {
+          name: "Sheet1",
+          id: 1,
+          cells: {
+            1: {
+              1: {
+                text: "Hello",
+              },
+            },
+            3: {
+              1: {
+                text: "foobar",
+              },
+              2: {
+                text: "foo",
+                locked: true,
+              },
+            },
+          },
+          activeCell: { rowIndex: 1, columnIndex: 1 },
+          selections: [],
+        },
+      ],
+    };
+    let newState = reducer(state, {
+      type: ACTION_TYPE.PASTE,
+      id: 1,
+      rows: [
+        [
+          {
+            text: "foobar",
+          },
+        ],
+      ],
+      activeCell: { rowIndex: 1, columnIndex: 1 },
+      selections: [],
+      cutSelection: {
+        bounds: {
+          top: 3,
+          left: 1,
+          right: 1,
+          bottom: 3,
+        },
+      },
+    });
+
+    expect(newState.sheets[0].cells[3]?.[1]).toBeUndefined();
+
+    // Skip locked cells
+    newState = reducer(state, {
+      type: ACTION_TYPE.PASTE,
+      id: 1,
+      rows: [
+        [
+          {
+            text: "foobar",
+          },
+        ],
+      ],
+      activeCell: { rowIndex: 1, columnIndex: 1 },
+      selections: [],
+      cutSelection: {
+        bounds: {
+          top: 3,
+          left: 2,
+          right: 2,
+          bottom: 3,
+        },
+      },
+    });
+
+    expect(newState.sheets[0].cells[3]?.[2].text).toBe("foo");
   });
 
   describe("Locked sheets and cells", () => {

@@ -949,7 +949,7 @@ const Spreadsheet: React.FC<SpreadSheetProps & RefAttributeSheetGrid> = memo(
      * Get cell bounds
      */
     const getCellBounds = useCallback((cell: CellInterface | null) => {
-      if (!cell) return undefined;
+      if (!cell) return void 0;
       return currentGrid.current?.getCellBounds?.(cell);
     }, []);
 
@@ -1668,57 +1668,52 @@ const Spreadsheet: React.FC<SpreadSheetProps & RefAttributeSheetGrid> = memo(
     /**.
      * On Paste
      */
-    const handlePaste = useCallback(
-      (
-        id: SheetID,
-        rows,
-        activeCell: CellInterface | null,
-        selection?: SelectionArea
-      ) => {
-        if (!activeCell) return;
-        const { rowIndex, columnIndex } = activeCell;
-        const endRowIndex = Math.max(rowIndex, rowIndex + rows.length - 1);
-        const endColumnIndex = Math.max(
-          columnIndex,
-          columnIndex + (rows.length && rows[0].length - 1)
-        );
-        const newSelection = [
-          {
-            bounds: {
-              top: rowIndex,
-              left: columnIndex,
-              bottom: endRowIndex,
-              right: endColumnIndex,
-            },
+    const handlePaste = useCallback((
+      id: SheetID,
+      rows,
+      activeCell: CellInterface | null,
+      /* Selections that needs to be removed: When user does cut + paste */
+      cutSelection?: SelectionArea
+    ) => {
+      if (!activeCell) return;
+      const { rowIndex, columnIndex } = activeCell;
+      const endRowIndex = Math.max(rowIndex, rowIndex + rows.length - 1);
+      const endColumnIndex = Math.max(
+        columnIndex,
+        columnIndex + (rows.length && rows[0].length - 1)
+      );
+      const selections = [
+        {
+          bounds: {
+            top: rowIndex,
+            left: columnIndex,
+            bottom: endRowIndex,
+            right: endColumnIndex,
           },
-        ];
-        /* Should we update selections in state */
-        const isSingleCellSelection =
-          rowIndex === endRowIndex && columnIndex === endColumnIndex;
+        },
+      ];
 
-        dispatch({
-          type: ACTION_TYPE.PASTE,
-          id,
-          rows,
-          activeCell,
-          selection,
-          newSelection: isSingleCellSelection ? void 0 : newSelection,
-        });
+      /* Should we update selections in state */
+      const isSingleCellSelection =
+        rowIndex === endRowIndex && columnIndex === endColumnIndex;
 
-        /* Update formula bar input */
-        const value = getCellConfigRef.current?.(id, activeCell)?.text;
-        handleActiveCellValueChange(id, activeCell, value);
+      dispatch({
+        type: ACTION_TYPE.PASTE,
+        id,
+        rows,
+        activeCell,
+        cutSelection,
+        selections: isSingleCellSelection ? void 0 : selections,
+      });
 
-        /* Trigger callback and calculation */
+      /* Update formula bar input */
+      const value = getCellConfigRef.current?.(id, activeCell)?.text;
+      handleActiveCellValueChange(id, activeCell, value);
 
-        cellChangeCallback(
-          id,
-          activeCell,
-          newSelection.concat(selection ?? [])
-        );
-      },
-      []
-    );
+      /* Trigger callback and calculation */
+
+      cellChangeCallback(id, activeCell, selections.concat(cutSelection ?? []));
+    }, []);
 
     const handleCopy = useCallback(
       (id: SheetID, selections: SelectionArea[]) => {

@@ -102,6 +102,9 @@ export const addressToCell = (address: string): CellInterface | null => {
  */
 export const cellToAddress = (cell: CellInterface | null): string | null => {
   if (!cell) return null;
+  if (cell.columnIndex === 0) {
+    return null;
+  }
   return `${number2Alpha(cell.columnIndex - 1)}${cell.rowIndex}`;
 };
 
@@ -177,7 +180,7 @@ export const format = (
  * Check if a cell is numeric
  */
 export const isNumeric = (cell: CellConfig) => {
-  return cell && (cell.datatype === "number" || cell.resultType === 'number');
+  return cell && (cell.datatype === "number" || cell.resultType === "number");
 };
 
 /**
@@ -302,20 +305,16 @@ export const dashArray = [2, 2];
 export const cellsInSelectionVariant = (
   selections: SelectionArea[],
   variant: BORDER_VARIANT | undefined,
-  borderStyle: BORDER_STYLE = 'thin',
+  borderStyle: BORDER_STYLE = "thin",
   color?: string,
   boundGetter?: (coords: CellInterface | null) => AreaProps | undefined
 ) => {
   const thickness =
-    borderStyle === 'medium'
-      ? 2
-      : borderStyle === 'thick'
-      ? 3
-      : 1;
+    borderStyle === "medium" ? 2 : borderStyle === "thick" ? 3 : 1;
   const dash =
-    borderStyle === 'dashed'
+    borderStyle === "dashed"
       ? dashArray
-      : borderStyle === 'dotted'
+      : borderStyle === "dotted"
       ? dotArray
       : [];
 
@@ -333,7 +332,7 @@ export const cellsInSelectionVariant = (
           : { rowIndex: j, columnIndex: k };
 
         switch (variant) {
-          case 'outer':
+          case "outer":
             if (j === bounds.top) {
               cells[rowIndex][columnIndex] = {
                 ...cells[rowIndex][columnIndex],
@@ -372,7 +371,7 @@ export const cellsInSelectionVariant = (
             }
             break;
 
-          case 'all':
+          case "all":
             cells[rowIndex][columnIndex] = {
               strokeTopColor: color,
               strokeTopWidth: thickness,
@@ -390,7 +389,7 @@ export const cellsInSelectionVariant = (
             };
             break;
 
-          case 'inner':
+          case "inner":
             if (k !== bounds.left && k !== bounds.right) {
               cells[rowIndex][columnIndex] = {
                 ...cells[rowIndex][columnIndex],
@@ -451,7 +450,7 @@ export const cellsInSelectionVariant = (
             }
             break;
 
-          case 'horizontal':
+          case "horizontal":
             cells[rowIndex][columnIndex] = {
               strokeBottomColor: color,
               strokeBottomDash: dash,
@@ -463,7 +462,7 @@ export const cellsInSelectionVariant = (
             }
             break;
 
-          case 'vertical':
+          case "vertical":
             cells[rowIndex][columnIndex] = {
               strokeRightColor: color,
               strokeRightDash: dash,
@@ -475,7 +474,7 @@ export const cellsInSelectionVariant = (
             }
             break;
 
-          case 'left':
+          case "left":
             if (k === bounds.left) {
               cells[rowIndex][columnIndex] = {
                 ...cells[rowIndex][columnIndex],
@@ -487,7 +486,7 @@ export const cellsInSelectionVariant = (
             }
             break;
 
-          case 'right':
+          case "right":
             if (k === bounds.right) {
               cells[rowIndex][columnIndex] = {
                 ...cells[rowIndex][columnIndex],
@@ -499,7 +498,7 @@ export const cellsInSelectionVariant = (
             }
             break;
 
-          case 'top':
+          case "top":
             if (j === bounds.top) {
               cells[rowIndex][columnIndex] = {
                 ...cells[rowIndex][columnIndex],
@@ -511,7 +510,7 @@ export const cellsInSelectionVariant = (
             }
             break;
 
-          case 'bottom':
+          case "bottom":
             if (j === bounds.bottom) {
               cells[rowIndex][columnIndex] = {
                 ...cells[rowIndex][columnIndex],
@@ -601,9 +600,9 @@ export const DEFAULT_CHECKBOX_VALUES = ["TRUE", "FALSE"];
 
 export const getMinMax = (o: Object) => {
   const keys = Object.keys(o ?? {}).map(Number);
-  const len = keys.length
+  const len = keys.length;
   if (len === 0) {
-    return [0, 0]
+    return [0, 0];
   }
   return [Math.min(...keys), Math.max(...keys)];
 };
