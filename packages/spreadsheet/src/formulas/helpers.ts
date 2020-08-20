@@ -283,7 +283,7 @@ export const fillFormula = (
 export const formulaToRelativeReference = (
   formula: React.ReactText | undefined,
   sourceCell: CellInterface,
-  activeCell: CellInterface
+  destinationCell: CellInterface
 ) => {
   if (formula === void 0) {
     return formula;
@@ -297,8 +297,8 @@ export const formulaToRelativeReference = (
       if (cell) {
         const rowDelta = sourceCell.rowIndex - cell.rowIndex;
         const columnDelta = sourceCell.columnIndex - cell.columnIndex;
-        cell.rowIndex = activeCell.rowIndex - rowDelta;
-        cell.columnIndex = activeCell.columnIndex - columnDelta;
+        cell.rowIndex = destinationCell.rowIndex - rowDelta;
+        cell.columnIndex = destinationCell.columnIndex - columnDelta;
         token.image = cellToAddress(cell) as string;
       }
     }
