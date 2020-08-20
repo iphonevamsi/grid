@@ -855,7 +855,7 @@ const Spreadsheet: React.FC<SpreadSheetProps & RefAttributeSheetGrid> = memo(
       onKeyDown: onUndoKeyDown,
     } = useUndo<Patch[]>({
       enableGlobalKeyHandlers,
-      onUndo: (patches) => {
+      onUndo: (patches: Patch[]) => {
         /* Side-effects */
         beforeUndoRedo(patches);
 
@@ -884,7 +884,7 @@ const Spreadsheet: React.FC<SpreadSheetProps & RefAttributeSheetGrid> = memo(
           );
         }
       },
-      onRedo: (patches) => {
+      onRedo: (patches: Patch[]) => {
         /* Side-effects */
         beforeUndoRedo(patches);
 

@@ -7,6 +7,7 @@ import {
   cloneRow,
   formattingTypeKeys,
   detectDataType,
+  getMinMax,
 } from "./constants";
 import {
   Sheet,
@@ -779,8 +780,13 @@ export const createStateReducer = ({
               for (let i = 0; i < sel.length; i++) {
                 const { bounds } = sel[i];
                 if (!bounds) continue;
-
-                for (let j = bounds.top; j <= bounds.bottom; j++) {
+                /* Limit bounds */
+                const [minRows, maxRows] = getMinMax(sheet.cells);
+                for (
+                  let j = Math.max(bounds.top, minRows);
+                  j <= Math.min(bounds.bottom, maxRows);
+                  j++
+                ) {
                   if (sheet.cells[j] === void 0) continue;
                   for (let k = bounds.left; k <= bounds.right; k++) {
                     if (
