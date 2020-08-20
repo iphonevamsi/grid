@@ -231,50 +231,6 @@ export const detokenize = (tokens: Token[]) => {
 };
 
 /**
- * Fill formula
- * @param formula
- * @param index
- * @param direction
- */
-export const fillFormula = (
-  formula: React.ReactText | undefined,
-  index: number,
-  direction: Direction
-) => {
-  if (formula === void 0) {
-    return formula;
-  }
-  const { tokens } = tokenize(formula as string);
-  let newTokens = [];
-  for (let i = 0; i < tokens.length; i++) {
-    const token = tokens[i];
-    if (token.tokenType.name === tokenVocabulary.Cell.name) {
-      const cell = addressToCell(token.image);
-      switch (direction) {
-        case Direction.Up:
-        case Direction.Down:
-          if (cell) {
-            cell.rowIndex += index;
-          }
-          token.image = cellToAddress(cell) as string;
-          break;
-
-        case Direction.Left:
-        case Direction.Right:
-          if (cell) {
-            cell.columnIndex += index;
-          }
-          token.image = cellToAddress(cell) as string;
-          break;
-      }
-    }
-    newTokens.push(token);
-  }
-
-  return detokenize(newTokens);
-};
-
-/**
  * Convert formula to relative values based on source cell
  * @param formula
  * @param sourceCell

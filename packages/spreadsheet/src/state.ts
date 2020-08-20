@@ -36,7 +36,7 @@ import {
   BORDER_VARIANT,
   DATATYPES,
 } from "./types";
-import { fillFormula, formulaToRelativeReference } from "./formulas/helpers";
+import { formulaToRelativeReference } from "./formulas/helpers";
 
 /* Enabled patches in immer */
 enablePatches();
@@ -348,7 +348,7 @@ export const createStateReducer = ({
 
           case ACTION_TYPE.CHANGE_SHEET_NAME: {
             const sheet = draft.sheets.find((sheet) => sheet.id === action.id);
-            if (sheet) {
+            if (sheet && !sheet.locked) {
               sheet.name = action.name;
             }
             break;
@@ -1083,7 +1083,7 @@ export const createStateReducer = ({
               const { activeCell } = action;
               const { columnIndex } = activeCell;
               const { cells } = sheet;
-              const changes: { [key: string]: any } = {};
+              const changes: { [key: string]: CellConfig } = {};
               for (const row in cells) {
                 const maxCol = Math.max(
                   ...Object.keys(cells[row] ?? {}).map(Number)
@@ -1115,7 +1115,7 @@ export const createStateReducer = ({
               const { rowIndex } = activeCell;
               const { cells } = sheet;
               const maxRow = Math.max(...Object.keys(cells).map(Number));
-              const changes: { [key: string]: any } = {};
+              const changes: { [key: string]: CellConfig } = {};
               changes[rowIndex] = cloneRow({ ...cells[rowIndex] });
               for (let i = rowIndex; i <= maxRow; i++) {
                 changes[i + 1] = cells[i];

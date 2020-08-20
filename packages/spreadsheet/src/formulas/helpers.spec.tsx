@@ -6,7 +6,6 @@ import {
   getCurrentCursorOffset,
   functionSuggestion,
   showCellSuggestions,
-  fillFormula,
   formulaToRelativeReference,
 } from "./helpers";
 import React, { useState } from "react";
@@ -15,7 +14,6 @@ import { Token } from "fast-formula-parser/grammar/lexing";
 import { createEditor, Editor, Transforms, Node } from "slate";
 import { Slate, Editable, withReact, ReactEditor } from "slate-react";
 import { withHistory } from "slate-history";
-import { Direction } from "@rowsncolumns/grid";
 
 describe("Extract cell selection from raw text", () => {
   it("exists", () => {
@@ -246,44 +244,6 @@ describe("tokenize/detokenize", () => {
   it("detokenizes", () => {
     const { tokens } = tokenize(text);
     expect(detokenize(tokens)).toBe(text);
-  });
-});
-
-describe("fillFormula", () => {
-  it("can fill formulas downwards", () => {
-    const newformula = fillFormula("=SUM(A1,2)", 1, Direction.Down);
-    expect(newformula).toBe("=SUM(A2,2)");
-
-    expect(fillFormula("=SUM(Sheet1!A1,2)", 1, Direction.Down)).toBe(
-      "=SUM(Sheet1!A2,2)"
-    );
-  });
-
-  it("can fill formulas upwards", () => {
-    const newformula = fillFormula("=SUM(A2,2)", -1, Direction.Up);
-    expect(newformula).toBe("=SUM(A1,2)");
-
-    expect(fillFormula("=SUM(Sheet1!A2,2)", -1, Direction.Up)).toBe(
-      "=SUM(Sheet1!A1,2)"
-    );
-  });
-
-  it("can fill formulas to the right", () => {
-    const newformula = fillFormula("=SUM(A1,2)", 1, Direction.Right);
-    expect(newformula).toBe("=SUM(B1,2)");
-
-    expect(fillFormula("=SUM(Sheet1!A1,2)", 1, Direction.Right)).toBe(
-      "=SUM(Sheet1!B1,2)"
-    );
-  });
-
-  it("can fill formulas to the left", () => {
-    const newformula = fillFormula("=SUM(B1,2)", -1, Direction.Left);
-    expect(newformula).toBe("=SUM(A1,2)");
-
-    expect(fillFormula("=SUM(Sheet1!B1,2)", -1, Direction.Left)).toBe(
-      "=SUM(Sheet1!A1,2)"
-    );
   });
 });
 
