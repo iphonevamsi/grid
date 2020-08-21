@@ -7,30 +7,28 @@ export enum FORMATTING_TYPE {
   UNDERLINE = "underline",
   FILL = "fill",
   COLOR = "color",
-  PERCENT = "percent",
   DECIMALS = "decimals",
-  CURRENCY_SYMBOL = "currencySymbol",
   FONT_SIZE = "fontSize",
   FONT_FAMILY = "fontFamily",
   CUSTOM_FORMAT = "format",
   WRAP = "wrap",
-  ROTATION = "rotation"
+  ROTATION = "rotation",
 }
 
 export enum FONT_WEIGHT {
   BOLD = "bold",
-  NORMAL = "normal"
+  NORMAL = "normal",
 }
 
 export enum FONT_STYLE {
   ITALIC = "italic",
-  NORMAL = "normal"
+  NORMAL = "normal",
 }
 
 export enum TEXT_DECORATION {
   STRIKE = "line-through",
   NONE = "",
-  UNDERLINE = "underline"
+  UNDERLINE = "underline",
 }
 
 export type VERTICAL_ALIGNMENT =
@@ -75,7 +73,7 @@ export enum STROKE_FORMATTING {
   STROKE_TOP_DASH = "strokeTopDash",
   STROKE_RIGHT_DASH = "strokeRightDash",
   STROKE_BOTTOM_DASH = "strokeBottomDash",
-  STROKE_LEFT_DASH = "strokeLeftDash"
+  STROKE_LEFT_DASH = "strokeLeftDash",
 }
 
 export interface CellFormatting extends CellDataFormatting {
@@ -153,8 +151,6 @@ export interface CellFormatting extends CellDataFormatting {
 export type Wrap = "wrap" | "clip" | "overflow";
 
 export interface CellDataFormatting {
-  [FORMATTING_TYPE.PERCENT]?: boolean;
-  [FORMATTING_TYPE.CURRENCY_SYMBOL]?: string;
   format?: string;
 }
 
@@ -225,7 +221,7 @@ export enum ErrorValue {
   DivZero = "#DIV/0!",
   Null = "#NULL!",
   Value = "#VALUE!",
-  Num = "#NUM!"
+  Num = "#NUM!",
 }
 
 export interface DataValidation {

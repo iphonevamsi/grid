@@ -33,7 +33,7 @@ export const EMPTY_ARRAY = [];
 export const HEADER_BORDER_COLOR = "#C0C0C0";
 export const CELL_BORDER_COLOR = "#E3E2E2";
 export const FORMAT_PERCENT = "0.00%";
-export const FORMAT_CURRENCY = "0.00";
+export const FORMAT_CURRENCY = "$0.00";
 export const FORMAT_DEFAULT_DECIMAL = "0.0";
 export const SYSTEM_FONT =
   "-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji";
@@ -157,15 +157,6 @@ export const format = (
         .map((_) => "0")
         .join("");
       value = SSF.format(`#.${fmt}`, num);
-    }
-    if (cellConfig.percent) {
-      value = SSF.format(FORMAT_PERCENT, num);
-    }
-    if (cellConfig.currency) {
-      value = SSF.format(
-        `${cellConfig.currencySymbol || "$"}${FORMAT_CURRENCY}`,
-        num
-      );
     }
     if (cellConfig.format) {
       value = SSF.format(cellConfig.format, num);

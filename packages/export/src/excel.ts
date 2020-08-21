@@ -163,6 +163,7 @@ export const parseExcel = async ({
       return;
     }
     const workbook = await wb.xlsx.load(buffer);
+    console.log(workbook);
 
     /* Walk each sheet */
     workbook.eachSheet((sheet) => {
@@ -269,6 +270,11 @@ export const parseExcel = async ({
             }
           }
 
+          /**
+           * Format
+           */
+          const format = cell.style.numFmt ?? void 0;
+
           let fill = undefined;
           let color = undefined;
           let strokes: CellConfig = {};
@@ -369,6 +375,7 @@ export const parseExcel = async ({
             datatype,
             resultType,
             result,
+            format,
             ...strokes,
             ...fontConfig,
             ...attributes,
@@ -460,6 +467,11 @@ export const createExcelFileFromSheets = async (
               : cell.text;
           if (value !== void 0) {
             newCell.value = value;
+          }
+
+          // Format
+          if (cell.format) {
+            newCell.numFmt = cell.format;
           }
 
           // Font
