@@ -162,6 +162,7 @@ const useCopyPaste = ({
     ];
     let type;
     let value;
+    let plainTextValue = e.clipboardData?.getData(MimeType.plain);
     for (type of mimeTypes) {
       value = e.clipboardData?.getData(type);
       if (value) break;
@@ -174,8 +175,11 @@ const useCopyPaste = ({
     if (/^text\/html/.test(type)) {
       const domparser = new DOMParser();
       const doc = domparser.parseFromString(value, type as SupportedType);
-      const supportedNodes = "table, p, span, h1, h2, h3, h4, h5, h6";
-      const nodes = doc.querySelectorAll(supportedNodes);
+      const supportedNodes = "table, p, h1, h2, h3, h4, h5, h6";
+      let nodes = doc.querySelectorAll(supportedNodes);
+      if (nodes.length === 0) {
+        rows.push([plainTextValue]);
+      }
       for (let i = 0; i < nodes.length; i++) {
         const node = nodes[i];
         if (node.nodeName === "TABLE") {
