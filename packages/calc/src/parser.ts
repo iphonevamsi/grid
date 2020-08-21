@@ -6,7 +6,7 @@ import {
   DATATYPES,
   castToString,
   isNull,
-  createPosition,
+  createPosition
 } from "./helpers";
 import { CellsBySheet } from "./calc";
 import merge from "lodash.merge";
@@ -39,6 +39,7 @@ export interface ParseResults {
   errorMessage?: string;
   color?: string;
   underline?: boolean;
+  horizontalAlign?: string;
 }
 
 const basePosition: CellPosition = { row: 1, col: 1, sheet: "Sheet1" };
@@ -76,6 +77,10 @@ export interface SheetConfig {
   columnCount: number;
 }
 
+/**
+ * Extract JSON object
+ * @param str
+ */
 function extractIfJSON(str: string) {
   try {
     return JSON.parse(str);
@@ -83,6 +88,15 @@ function extractIfJSON(str: string) {
     return str;
   }
 }
+/**
+ * Uppercase boolean
+ * @param str
+ */
+function extractBoolean(str: any) {
+  if (str === true || str === false) return str.toString().toUpperCase();
+  return str;
+}
+
 /**
  * Create a formula parser
  * @param param0
@@ -103,7 +117,7 @@ class FormulaParser {
     this.formulaParser = new FastFormulaParser({
       functionsNeedContext: options?.functions ?? {},
       onCell: this.getCellValue,
-      onRange: this.getRangeValue,
+      onRange: this.getRangeValue
     });
     this.dependencyParser = new DepParser();
   }
@@ -124,7 +138,7 @@ class FormulaParser {
     const sheet = position.sheet;
     const cell = {
       rowIndex: position.row,
-      columnIndex: position.col,
+      columnIndex: position.col
     };
     const config =
       this.currentValues?.[position.sheet]?.[position.row]?.[position.col] ??
@@ -179,6 +193,7 @@ class FormulaParser {
     let hyperlink;
     let underline;
     let color;
+    let horizontalAlign;
     let resultType: DATATYPES | undefined;
     try {
       result = await this.formulaParser
@@ -190,6 +205,10 @@ class FormulaParser {
 
       /* Check if its JSON */
       result = extractIfJSON(result);
+
+      /* Boolean */
+
+      result = extractBoolean(result);
 
       /**
        * Parse special types
@@ -206,6 +225,10 @@ class FormulaParser {
         }
       } else {
         resultType = detectDataType(result);
+      }
+      /* For boolean */
+      if (resultType === "boolean") {
+        horizontalAlign = "center";
       }
 
       if ((result as any) instanceof FormulaError) {
@@ -225,6 +248,7 @@ class FormulaParser {
       underline,
       error,
       errorMessage,
+      horizontalAlign
     });
   };
   getDependencies = (

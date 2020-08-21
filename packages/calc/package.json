@@ -25,7 +25,7 @@
   "dependencies": {
     "@babel/plugin-proposal-class-properties": "^7.10.4",
     "@types/lodash.merge": "^4.6.6",
-    "fast-formula-parser": "^1.0.15",
+    "fast-formula-parser": "^1.0.18",
     "lodash.merge": "^4.6.2"
   },
   "gitHead": "272c80dcd474a9346b6927b356d37917cfcd7c84"

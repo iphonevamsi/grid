@@ -9443,10 +9443,20 @@ fast-deep-equal@^3.1.1, fast-deep-equal@^3.1.3:
   resolved "https://registry.yarnpkg.com/fast-deep-equal/-/fast-deep-equal-3.1.3.tgz#3a7d56b559d6cbc3eb512325244e619a65c6c525"
   integrity sha512-f3qQ9oQy9j2AhBe/H9VC91wLmKBCCU/gDOnKNAYG5hswO7BLKj09Hc5HYNz9cGI++xlpDCIgDaitVs03ATR84Q==
 
-fast-formula-parser@^1.0.15, fast-formula-parser@^1.0.16:
+fast-formula-parser@^1.0.16:
   version "1.0.16"
   resolved "https://registry.yarnpkg.com/fast-formula-parser/-/fast-formula-parser-1.0.16.tgz#ae91a01d6523f363667befd0525bf69bf77caf32"
   integrity sha512-vcaqK0RrB72RUwC7yMdRN3uIU0eNlT2c6XvVVWZZ4rFlRX/PfTskBP2sKc7ZwqFK2hQ4aaPaDfnui2tcI0IquQ==
+  dependencies:
+    bahttext "^1.1.0"
+    bessel "^1.0.2"
+    chevrotain "^7.0.1"
+    jstat "^1.9.3"
+
+fast-formula-parser@^1.0.18:
+  version "1.0.18"
+  resolved "https://registry.yarnpkg.com/fast-formula-parser/-/fast-formula-parser-1.0.18.tgz#32b703c596952c266f11838038de9139b2c0db58"
+  integrity sha512-9BhXqcGuXRztGRPV+EwJVAQ0rAZOQLtijPfgupIv0Q9fXGO0CjjjOacR5lm4AZv4+uhc1ny7ksj4m7h5yQ0O4g==
   dependencies:
     bahttext "^1.1.0"
     bessel "^1.0.2"
@@ -16155,7 +16165,12 @@ prepend-http@^2.0.0:
   resolved "https://registry.yarnpkg.com/prepend-http/-/prepend-http-2.0.0.tgz#e92434bfa5ea8c19f41cdfd401d741a3c819d897"
   integrity sha1-6SQ0v6XqjBn0HN/UAddBo8gZ2Jc=
 
-prettier@^1.16.4, prettier@^2.0.5:
+prettier@^1.16.4:
+  version "1.19.1"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.19.1.tgz#f7d7f5ff8a9cd872a7be4ca142095956a60797cb"
+  integrity sha512-s7PoyDv/II1ObgQunCbB9PdLmUcBZcnWOcxDh7O0N/UwDEsHyqkW+Qh28jW+mVuCdx7gLB0BotYI1Y6uI9iyew==
+
+prettier@^2.0.5:
   version "2.0.5"
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.0.5.tgz#d6d56282455243f2f92cc1716692c08aa31522d4"
   integrity sha512-7PtVymN48hGcO4fGjybyBSIWDsLU4H4XlvOHfq91pz9kkGlonzwTfYkaIEwiRg/dAJF9YlbsduBAgtYLi+8cFg==
