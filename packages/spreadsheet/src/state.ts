@@ -37,7 +37,10 @@ import {
   BORDER_VARIANT,
   DATATYPES,
 } from "./types";
-import { formulaToRelativeReference } from "./formulas/helpers";
+import {
+  formulaToRelativeReference,
+  moveMergedCells,
+} from "./formulas/helpers";
 import { FormulaError } from "./formulas";
 
 /* Enabled patches in immer */
@@ -1075,6 +1078,13 @@ export const createStateReducer = ({
                   cells[row][col] = changes[row][col];
                 }
               }
+
+              // Move merged cells
+              sheet.mergedCells = moveMergedCells(
+                sheet.mergedCells,
+                "column-remove",
+                columnIndex
+              );
             }
             break;
           }
@@ -1117,6 +1127,13 @@ export const createStateReducer = ({
               for (const index in changes) {
                 cells[index] = changes[index];
               }
+
+              // Move merged cells
+              sheet.mergedCells = moveMergedCells(
+                sheet.mergedCells,
+                "row-remove",
+                rowIndex
+              );
             }
             break;
           }
@@ -1169,6 +1186,13 @@ export const createStateReducer = ({
                   cells[row][col] = changes[row][col] ?? {};
                 }
               }
+
+              // Move merged cells
+              sheet.mergedCells = moveMergedCells(
+                sheet.mergedCells,
+                "column-insert",
+                columnIndex
+              );
             }
             break;
           }
@@ -1210,6 +1234,13 @@ export const createStateReducer = ({
               for (const index in changes) {
                 cells[index] = changes[index];
               }
+
+              // Move merged cells
+              sheet.mergedCells = moveMergedCells(
+                sheet.mergedCells,
+                "row-insert",
+                rowIndex
+              );
             }
             break;
           }

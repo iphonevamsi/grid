@@ -8,7 +8,7 @@ import {
   cellToAddress,
   desanitizeSheetName,
 } from "./../constants";
-import { CellInterface, SelectionArea } from "@rowsncolumns/grid";
+import { CellInterface, SelectionArea, AreaProps } from "@rowsncolumns/grid";
 import { FormulaSelection } from "../Grid/Grid";
 import { SheetID } from "../Spreadsheet";
 import { Direction } from "@rowsncolumns/grid";
@@ -231,6 +231,11 @@ export const detokenize = (tokens: Token[]) => {
 };
 
 type ReferenceMode = "row" | "column";
+type SheetOperation =
+  | "column-insert"
+  | "column-remove"
+  | "row-insert"
+  | "row-remove";
 /**
  * Convert formula to relative values based on source cell
  * @param formula
@@ -301,10 +306,85 @@ export const formulaToRelativeReference = (
   return detokenize(newTokens);
 };
 
+/**
+ * Cleanup function token to remove parentheses
+ * @param text
+ */
 export const cleanFunctionToken = (text: string) => {
   return text.replace(new RegExp(/\(|\)/, "gi"), "");
 };
 
+/**
+ * Move merged cells when user is inserts, deletes row and columns
+ * @param mergedCells
+ * @param mode
+ * @param referenceIndex
+ */
+export const moveMergedCells = (
+  mergedCells: AreaProps[] | undefined,
+  op: SheetOperation,
+  referenceIndex: number
+) => {
+  switch (op) {
+    case "column-insert": {
+      return mergedCells?.map((area) => {
+        if (area.left >= referenceIndex) {
+          return {
+            ...area,
+            left: area.left + 1,
+            right: area.right + 1,
+          };
+        }
+        return area;
+      });
+    }
+    case "row-insert": {
+      return mergedCells?.map((area) => {
+        if (area.top >= referenceIndex) {
+          return {
+            ...area,
+            top: area.top + 1,
+            bottom: area.bottom + 1,
+          };
+        }
+        return area;
+      });
+    }
+
+    case "column-remove": {
+      return mergedCells?.map((area) => {
+        if (area.left >= referenceIndex) {
+          return {
+            ...area,
+            left: area.left - 1,
+            right: area.right - 1,
+          };
+        }
+        return area;
+      });
+    }
+
+    case "row-remove": {
+      return mergedCells?.map((area) => {
+        if (area.top >= referenceIndex) {
+          return {
+            ...area,
+            top: area.top - 1,
+            bottom: area.bottom - 1,
+          };
+        }
+        return area;
+      });
+    }
+  }
+  return mergedCells;
+};
+
+/**
+ * Check if editor should suggest function
+ * @param tokens
+ * @param editor
+ */
 export const functionSuggestion = (
   tokens: Token[],
   editor: Editor

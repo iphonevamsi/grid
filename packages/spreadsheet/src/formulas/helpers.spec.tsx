@@ -7,6 +7,7 @@ import {
   functionSuggestion,
   showCellSuggestions,
   formulaToRelativeReference,
+  moveMergedCells,
 } from "./helpers";
 import React, { useState } from "react";
 import { render } from "@testing-library/react";
@@ -266,5 +267,71 @@ describe("formulaToRelativeReference", () => {
         { rowIndex: 2, columnIndex: 2 }
       )
     ).toBe("=A2 + SUM(A2:A4)");
+  });
+});
+
+describe("moveMergedCells", () => {
+  it("can shift merged cells when a new row is inserted", () => {
+    let mergedCells = [
+      {
+        top: 1,
+        left: 1,
+        right: 2,
+        bottom: 1,
+      },
+    ];
+    mergedCells = moveMergedCells(mergedCells, "row-insert", 1);
+    expect(mergedCells).toEqual([{ top: 2, left: 1, right: 2, bottom: 2 }]);
+  });
+
+  it("can shift merged cells when a new column is inserted", () => {
+    let mergedCells = [
+      {
+        top: 1,
+        left: 1,
+        right: 2,
+        bottom: 1,
+      },
+    ];
+    mergedCells = moveMergedCells(mergedCells, "column-insert", 1);
+    expect(mergedCells).toEqual([{ top: 1, left: 2, right: 3, bottom: 1 }]);
+  });
+  it("can shift merged cells when a row is deleted", () => {
+    let mergedCells = [
+      {
+        top: 2,
+        left: 1,
+        right: 2,
+        bottom: 2,
+      },
+    ];
+    mergedCells = moveMergedCells(mergedCells, "row-remove", 1);
+    expect(mergedCells).toEqual([{ top: 1, left: 1, right: 2, bottom: 1 }]);
+  });
+
+  it("can shift merged cells when a column is deleted", () => {
+    let mergedCells = [
+      {
+        top: 2,
+        left: 2,
+        right: 2,
+        bottom: 5,
+      },
+    ];
+    mergedCells = moveMergedCells(mergedCells, "column-remove", 1);
+    expect(mergedCells).toEqual([{ top: 2, left: 1, right: 1, bottom: 5 }]);
+  });
+
+  it("will not shift merged cell is referenceIndex is out of bounds", () => {
+    let mergedCells = [
+      {
+        top: 2,
+        left: 2,
+        right: 2,
+        bottom: 5,
+      },
+    ];
+    mergedCells = moveMergedCells(mergedCells, "column-remove", 10);
+    expect(mergedCells).toEqual([{ top: 2, left: 2, right: 2, bottom: 5 }]);
   });
 });
