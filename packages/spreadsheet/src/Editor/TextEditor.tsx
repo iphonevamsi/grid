@@ -512,6 +512,7 @@ const TextEditor: React.FC<EditableProps & RefAttribute> = memo(
             minWidth="calc(100% + 4px)"
             maxHeight={400}
             overflow="auto"
+            zIndex={1}
           >
             {(items as string[]).map((item, index: number) => {
               return (
