@@ -278,6 +278,26 @@ describe("formulaToRelativeReference", () => {
       )
     ).toBe("=$A$1 + SUM($A$1:$A$3)");
   });
+
+  it("support absolute row references", () => {
+    expect(
+      formulaToRelativeReference(
+        "=A$1 + SUM(A$1:A$3)",
+        { rowIndex: 1, columnIndex: 2 },
+        { rowIndex: 2, columnIndex: 3 }
+      )
+    ).toBe("=B$1 + SUM(B$1:B$3)");
+  });
+
+  it("support absolute column references", () => {
+    expect(
+      formulaToRelativeReference(
+        "=$A1 + SUM($A1:$A3)",
+        { rowIndex: 1, columnIndex: 2 },
+        { rowIndex: 2, columnIndex: 3 }
+      )
+    ).toBe("=$A2 + SUM($A2:$A4)");
+  });
 });
 
 describe("moveMergedCells", () => {
