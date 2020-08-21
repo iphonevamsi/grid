@@ -501,7 +501,7 @@ const useEditable = ({
         showEditor();
       }
     },
-    [frozenRows, frozenColumns]
+    [frozenRows, frozenColumns, onBeforeEdit]
   );
 
   /**
