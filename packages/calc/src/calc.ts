@@ -419,6 +419,8 @@ class CalcEngine {
    * @param changes
    */
   initialize = async (changes: CellsBySheet, getValue: CellConfigGetter) => {
+    /* Clear all mapping */
+    this.mapping.clearAll();
     const values = {};
     for (const sheet in changes) {
       for (const rowIndex in changes[sheet]) {

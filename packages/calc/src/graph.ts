@@ -69,6 +69,9 @@ export class DependencyMapping {
   constructor() {
     this.map = new Map();
   }
+  clearAll() {
+    this.map = new Map();
+  }
   get(address: string, sheet: Sheet, cell: CellInterface) {
     const key = `${sheet}!${address}`;
     if (!this.map.has(key)) {

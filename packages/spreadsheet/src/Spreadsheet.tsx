@@ -799,6 +799,17 @@ const Spreadsheet: React.FC<SpreadSheetProps & RefAttributeSheetGrid> = memo(
     getSheetRef.current = getSheet;
 
     /**
+     * Get all cells by sheet name
+     */
+    const getCellsBySheet = useCallback(() => {
+      const initial: CellsBySheet = {};
+      return sheets.reduce((acc, sheet) => {
+        acc[sheet.name] = getSheetRef.current?.(sheet.id)?.cells ?? {};
+        return acc;
+      }, initial);
+    }, [sheets]);
+
+    /**
      * Get properties of a sheet
      */
     const getSheetRange = useCallback(
@@ -1105,14 +1116,8 @@ const Spreadsheet: React.FC<SpreadSheetProps & RefAttributeSheetGrid> = memo(
     );
 
     useEffect(() => {
-      const initial: CellsBySheet = {};
-      const changes = sheets.reduce((acc, sheet) => {
-        acc[sheet.name] = sheet.cells;
-        return acc;
-      }, initial);
-
       /* Trigger batch calculation */
-      triggerBatchInitialization(changes);
+      triggerBatchInitialization(getCellsBySheet());
     }, []);
 
     /**
@@ -1751,6 +1756,11 @@ const Spreadsheet: React.FC<SpreadSheetProps & RefAttributeSheetGrid> = memo(
         });
 
         onInsertRow?.(id, activeCell);
+
+        /* Trigger batch calculation */
+        requestAnimationFrame(() =>
+          triggerBatchInitialization(getCellsBySheet())
+        );
       },
       []
     );
@@ -1768,6 +1778,11 @@ const Spreadsheet: React.FC<SpreadSheetProps & RefAttributeSheetGrid> = memo(
         });
 
         onInsertColumn?.(id, activeCell);
+
+        /* Trigger batch calculation */
+        requestAnimationFrame(() =>
+          triggerBatchInitialization(getCellsBySheet())
+        );
       },
       []
     );
@@ -1783,6 +1798,11 @@ const Spreadsheet: React.FC<SpreadSheetProps & RefAttributeSheetGrid> = memo(
         });
 
         onDeleteRow?.(id, activeCell);
+
+        /* Trigger batch calculation */
+        requestAnimationFrame(() =>
+          triggerBatchInitialization(getCellsBySheet())
+        );
       },
       []
     );
@@ -1798,6 +1818,11 @@ const Spreadsheet: React.FC<SpreadSheetProps & RefAttributeSheetGrid> = memo(
         });
 
         onDeleteColumn?.(id, activeCell);
+
+        /* Trigger batch calculation */
+        requestAnimationFrame(() =>
+          triggerBatchInitialization(getCellsBySheet())
+        );
       },
       []
     );

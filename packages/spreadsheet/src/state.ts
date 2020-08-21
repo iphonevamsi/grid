@@ -1143,13 +1143,18 @@ export const createStateReducer = ({
                   const cellConfig = cells[row][i];
                   /* Modify formulas to be relative */
                   if (cellConfig?.datatype === "formula") {
-                    cellConfig.text = formulaToRelativeReference(
+                    const newFormula = formulaToRelativeReference(
                       cellConfig.text,
-                      { rowIndex: Number(row), columnIndex },
-                      { rowIndex: Number(row), columnIndex: columnIndex + 1 },
+                      { rowIndex: Number(row), columnIndex: i },
+                      { rowIndex: Number(row), columnIndex: i + 1 },
                       "column",
                       columnIndex
                     );
+                    if (newFormula === void 0) {
+                      cellConfig.error = new FormulaError("#REF!").error;
+                    } else {
+                      cellConfig.text = newFormula;
+                    }
                   }
                   if (i < columnIndex) {
                     continue;
@@ -1161,7 +1166,7 @@ export const createStateReducer = ({
 
               for (const row in changes) {
                 for (const col in changes[row]) {
-                  cells[row][col] = changes[row][col];
+                  cells[row][col] = changes[row][col] ?? {};
                 }
               }
             }
