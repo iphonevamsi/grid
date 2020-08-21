@@ -230,16 +230,27 @@ export const detokenize = (tokens: Token[]) => {
   return str;
 };
 
+type ReferenceMode = "row" | "column";
 /**
  * Convert formula to relative values based on source cell
  * @param formula
  * @param sourceCell
  * @param activeCell
+ *
+ * Any cells less than the insertionIndex will be untouched
+ * Eg:
+ * B3 => 4
+ * B5 => =B3
+ *
+ * User inserts a row in B4
+ * B5 will be untouched as it references a cell above B4 => B3
  */
 export const formulaToRelativeReference = (
   formula: React.ReactText | undefined,
   sourceCell: CellInterface,
-  destinationCell: CellInterface
+  destinationCell: CellInterface,
+  mode?: ReferenceMode,
+  insertionIndex?: number
 ): string | undefined => {
   if (formula === void 0) {
     return formula;
@@ -251,11 +262,22 @@ export const formulaToRelativeReference = (
     if (token.tokenType.name === tokenVocabulary.Cell.name) {
       const cell = addressToCell(token.image);
       if (cell) {
+        if (mode !== void 0 && insertionIndex !== void 0) {
+          if (mode === "row" && cell.rowIndex < insertionIndex) {
+            /* Do not change the token */
+            newTokens.push(token);
+            continue;
+          }
+          if (mode === "column" && cell.columnIndex < insertionIndex) {
+            /* Do not change the token */
+            newTokens.push(token);
+            continue;
+          }
+        }
         const rowDelta = sourceCell.rowIndex - cell.rowIndex;
         const columnDelta = sourceCell.columnIndex - cell.columnIndex;
         cell.rowIndex = destinationCell.rowIndex - rowDelta;
         cell.columnIndex = destinationCell.columnIndex - columnDelta;
-
         /**
          * If there is a cyclic dependency return undefined
          */
