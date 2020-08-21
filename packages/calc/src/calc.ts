@@ -426,7 +426,7 @@ class CalcEngine {
       for (const rowIndex in changes[sheet]) {
         for (const columnIndex in changes[sheet][rowIndex]) {
           const cellConfig = changes[sheet][rowIndex][columnIndex];
-          const datatype = cellConfig.datatype;
+          const datatype = cellConfig?.datatype;
           const text = cellConfig?.text as string;
 
           if (!isNull(text) && datatype === "formula") {

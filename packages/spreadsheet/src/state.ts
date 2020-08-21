@@ -1068,8 +1068,7 @@ export const createStateReducer = ({
                   if (i < columnIndex) {
                     continue;
                   }
-                  changes[row][i] = changes[row][i] ?? {};
-                  changes[row][i] = cells[row]?.[i + 1];
+                  changes[row][i] = cells[row]?.[i + 1] ?? {};
                 }
               }
 

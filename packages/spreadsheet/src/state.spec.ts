@@ -1603,7 +1603,7 @@ describe("state reducers", () => {
       },
     });
 
-    expect(newState.sheets[0].cells[1]?.[1]).toBeUndefined();
+    expect(newState.sheets[0].cells[1]?.[1]).toEqual({});
 
     // Sheet does not exist
     newState = reducer(state, {
