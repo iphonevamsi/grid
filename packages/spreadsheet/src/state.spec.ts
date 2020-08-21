@@ -370,6 +370,11 @@ describe("state reducers", () => {
                 datatype: "formula",
               },
             },
+            6: {
+              2: {
+                locked: true,
+              },
+            },
           },
         };
       }),
@@ -404,7 +409,7 @@ describe("state reducers", () => {
       ],
     });
 
-    expect(newState.sheets[0].cells[6][2].text).toBe("=SUM(A2,A3)");
+    expect(newState.sheets[0].cells[6][2].text).toBeUndefined();
     expect(newState.sheets[0].cells[7][2].text).toBe("=SUM(A3,A4)");
     expect(newState.sheets[0].cells[8][2].text).toBe("=SUM(A4,A5)");
   });
@@ -420,6 +425,11 @@ describe("state reducers", () => {
               2: {
                 text: "=SUM(A4, A5)",
                 datatype: "formula",
+              },
+            },
+            3: {
+              2: {
+                locked: true,
               },
             },
           },
@@ -456,7 +466,7 @@ describe("state reducers", () => {
       ],
     });
 
-    expect(newState.sheets[0].cells[3][2].text).toBe("=SUM(A2, A3)");
+    expect(newState.sheets[0].cells[3][2].text).toBeUndefined();
     expect(newState.sheets[0].cells[4][2].text).toBe("=SUM(A3, A4)");
   });
 
@@ -471,6 +481,9 @@ describe("state reducers", () => {
               5: {
                 text: "=SUM(F10, F11)",
                 datatype: "formula",
+              },
+              2: {
+                locked: true,
               },
             },
           },
@@ -507,7 +520,7 @@ describe("state reducers", () => {
       ],
     });
 
-    expect(newState.sheets[0].cells[5][2].text).toBe("=SUM(C10, C11)");
+    expect(newState.sheets[0].cells[5][2].text).toBeUndefined();
     expect(newState.sheets[0].cells[5][3].text).toBe("=SUM(D10, D11)");
   });
 
@@ -522,6 +535,9 @@ describe("state reducers", () => {
               5: {
                 text: "=SUM(F10, F11)",
                 datatype: "formula",
+              },
+              6: {
+                locked: true,
               },
             },
           },
@@ -558,7 +574,7 @@ describe("state reducers", () => {
       ],
     });
 
-    expect(newState.sheets[0].cells[5][6].text).toBe("=SUM(G10, G11)");
+    expect(newState.sheets[0].cells[5][6].text).toBeUndefined();
     expect(newState.sheets[0].cells[5][7].text).toBe("=SUM(H10, H11)");
   });
 
@@ -2560,6 +2576,20 @@ describe("state reducers", () => {
       });
 
       expect(newState.sheets[1].cells[1][1].valid).toBeFalsy();
+
+      // Will not update validation status is flag is undefined
+      newState = reducer(state, {
+        type: ACTION_TYPE.VALIDATION_SUCCESS,
+        id: 2,
+        valid: void 0,
+        cell: {
+          rowIndex: 2,
+          columnIndex: 2,
+        },
+        prompt: void 0,
+      });
+
+      expect(newState.sheets[1].cells[2][2].valid).toBeUndefined();
     });
 
     it("will not change formatting if sheet is locked", () => {

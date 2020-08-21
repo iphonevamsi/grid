@@ -548,7 +548,7 @@ export const createStateReducer = ({
                       ...sheet.cells?.[curSelRowIndex]?.[j],
                     };
                     // Skip locked cell
-                    if (sheet.cells[i][i]?.locked) {
+                    if (sheet.cells[i][j]?.locked) {
                       continue;
                     }
                     sheet.cells[i][j] = cellConfig;
