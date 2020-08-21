@@ -1,4 +1,8 @@
-import { Sheet, createNewSheet } from "@rowsncolumns/spreadsheet";
+import {
+  Sheet,
+  createNewSheet,
+  DEFAULT_ROW_COUNT,
+} from "@rowsncolumns/spreadsheet";
 import { ParseProps, ParseResults } from "./excel";
 
 const DELIMITER = ",";
@@ -39,6 +43,8 @@ export const parseCSV = ({ file }: ParseProps): Promise<ParseResults> => {
     const text = reader.result as String;
     const rows = text.split("\n");
     const rowCount = rows.length;
+    // Set rowCount
+    sheet.rowCount = Math.max(DEFAULT_ROW_COUNT, rowCount);
     for (let i = 0; i < rowCount; i++) {
       const rowIndex = i + 1;
       sheet.cells[rowIndex] = {};
