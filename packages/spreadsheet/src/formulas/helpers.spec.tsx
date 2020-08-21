@@ -268,6 +268,16 @@ describe("formulaToRelativeReference", () => {
       )
     ).toBe("=A2 + SUM(A2:A4)");
   });
+
+  it("support absolute references", () => {
+    expect(
+      formulaToRelativeReference(
+        "=$A$1 + SUM($A$1:$A$3)",
+        { rowIndex: 1, columnIndex: 2 },
+        { rowIndex: 2, columnIndex: 2 }
+      )
+    ).toBe("=$A$1 + SUM($A$1:$A$3)");
+  });
 });
 
 describe("moveMergedCells", () => {

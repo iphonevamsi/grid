@@ -199,7 +199,6 @@ export const normalizeTokens = (text: string | undefined): Token[] => {
       activeSheet = null;
       i++;
     }
-
     return normalizedTokens;
   } catch (err) {
     return normalizedTokens;
@@ -211,7 +210,13 @@ export const normalizeTokens = (text: string | undefined): Token[] => {
  * @param text
  */
 export const tokenize = (text: string) => {
-  return lex(text);
+  try {
+    return lex(text);
+  } catch (err) {
+    return {
+      tokens: [],
+    };
+  }
 };
 
 /**
@@ -228,6 +233,26 @@ export const detokenize = (tokens: Token[]) => {
     prevOffset = token.endColumn;
   }
   return str;
+};
+
+/**
+ * Check if a formula contains absolute column references
+ * $A2 | $A$2
+ * @param formula
+ */
+export const isAbsoluteColumnReference = (formula: string | undefined) => {
+  if (!formula) return false;
+  return /\$[A-Z]+/gi.test(formula);
+};
+
+/**
+ * Check if a formula contains absolute row references
+ * A$2 | $A$2
+ * @param formula
+ */
+export const isAbsoluteRowReference = (formula: string | undefined) => {
+  if (!formula) return false;
+  return /\$\d+/gi.test(formula);
 };
 
 type ReferenceMode = "row" | "column";
@@ -249,6 +274,8 @@ type SheetOperation =
  *
  * User inserts a row in B4
  * B5 will be untouched as it references a cell above B4 => B3
+ *
+ * Absolute formula references $A$2 will not be moved
  */
 export const formulaToRelativeReference = (
   formula: React.ReactText | undefined,
@@ -266,6 +293,8 @@ export const formulaToRelativeReference = (
     const token = tokens[i];
     if (token.tokenType.name === tokenVocabulary.Cell.name) {
       const cell = addressToCell(token.image);
+      const isAbsoluteRow = isAbsoluteRowReference(token.image);
+      const isAbsoluteColumn = isAbsoluteColumnReference(token.image);
       if (cell) {
         if (mode !== void 0 && insertionIndex !== void 0) {
           if (mode === "row" && cell.rowIndex < insertionIndex) {
@@ -281,8 +310,12 @@ export const formulaToRelativeReference = (
         }
         const rowDelta = sourceCell.rowIndex - cell.rowIndex;
         const columnDelta = sourceCell.columnIndex - cell.columnIndex;
-        cell.rowIndex = destinationCell.rowIndex - rowDelta;
-        cell.columnIndex = destinationCell.columnIndex - columnDelta;
+        if (!isAbsoluteRow) {
+          cell.rowIndex = destinationCell.rowIndex - rowDelta;
+        }
+        if (!isAbsoluteColumn) {
+          cell.columnIndex = destinationCell.columnIndex - columnDelta;
+        }
         /**
          * If there is a cyclic dependency return undefined
          */
@@ -294,7 +327,7 @@ export const formulaToRelativeReference = (
           return void 0;
         }
 
-        const address = cellToAddress(cell);
+        const address = cellToAddress(cell, isAbsoluteColumn, isAbsoluteRow);
         if (address === null) {
           return void 0;
         }

@@ -73,7 +73,7 @@ export const alpha2number = (letters: string): number => {
  * @param address
  */
 export const addressToCell = (address: string): CellInterface | null => {
-  const regex = /([A-Z]+)(\d+)/gim;
+  const regex = /\$?([A-Z]+)\$?(\d+)/gim;
   let m;
   let matches: string[] = [];
 
@@ -100,12 +100,18 @@ export const addressToCell = (address: string): CellInterface | null => {
  * Convert cellInterface to address string
  * @param cell
  */
-export const cellToAddress = (cell: CellInterface | null): string | null => {
+export const cellToAddress = (
+  cell: CellInterface | null,
+  isAbsoluteColumn: boolean = false,
+  isAbsoluteRow: boolean = false
+): string | null => {
   if (!cell) return null;
   if (cell.columnIndex === 0) {
     return null;
   }
-  return `${number2Alpha(cell.columnIndex - 1)}${Math.max(0, cell.rowIndex)}`;
+  return `${isAbsoluteColumn ? "$" : ""}${number2Alpha(cell.columnIndex - 1)}${
+    isAbsoluteRow ? "$" : ""
+  }${Math.max(0, cell.rowIndex)}`;
 };
 
 /**

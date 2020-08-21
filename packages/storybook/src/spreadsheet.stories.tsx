@@ -500,6 +500,12 @@ export const Formula = () => {
               text: "=C6",
             },
           },
+          8: {
+            2: {
+              text: "=VLOOKUP(A9,$A$2:$B$5, 2, FALSE)",
+              datatype: "formula",
+            },
+          },
           // 2: {
           //   2: {
           //     datatype: "formula",
