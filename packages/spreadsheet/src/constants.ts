@@ -607,7 +607,7 @@ export const createCustomValidation = (): DataValidation => {
 
 /* Clone a cell config excluding text, result */
 export const cloneCellConfig = (config: CellConfig): Partial<CellConfig> => {
-  const { text, result, formula, ...rest } = config;
+  const { text, result, resultType, ...rest } = config;
   return rest;
 };
 

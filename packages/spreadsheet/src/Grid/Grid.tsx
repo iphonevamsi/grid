@@ -1195,6 +1195,9 @@ const SheetGrid: React.FC<GridProps & RefAttributeGrid> = memo(
             clearSelections();
           }
         }
+        /* Update active sheet */
+        currentlyEditingSheetName.current = sheetName;
+        currentlyEditingSheetId.current = selectedSheet;
         editingCellRef.current = cell;
       },
       hideOnBlur: isFormulaMode ? !formulaState.showCellSuggestion : true,
@@ -1228,9 +1231,6 @@ const SheetGrid: React.FC<GridProps & RefAttributeGrid> = memo(
           config?.horizontalAlign ??
           (config?.datatype === "number" && !config?.plaintext && "right");
         const address = cellToAddress(cell);
-        /* Update active sheet */
-        currentlyEditingSheetId.current = selectedSheet;
-        currentlyEditingSheetName.current = sheetName;
 
         return (props: EditorProps) => (
           <CellEditor

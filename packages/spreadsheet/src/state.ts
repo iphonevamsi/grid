@@ -1047,7 +1047,24 @@ export const createStateReducer = ({
                   ...Object.keys(cells[row] ?? {}).map(Number)
                 );
                 changes[row] = changes[row] ?? {};
-                for (let i = columnIndex; i <= maxCol; i++) {
+                for (let i = 0; i <= maxCol; i++) {
+                  const cellConfig = cells[row][i];
+                  /* Modify formulas to be relative */
+                  if (cellConfig?.datatype === "formula") {
+                    const newFormula = formulaToRelativeReference(
+                      cellConfig.text,
+                      { rowIndex: Number(row), columnIndex },
+                      { rowIndex: Number(row), columnIndex: columnIndex - 1 }
+                    );
+                    if (newFormula === void 0) {
+                      cellConfig.error = new FormulaError("#REF!").error;
+                    } else {
+                      cellConfig.text = newFormula;
+                    }
+                  }
+                  if (i < columnIndex) {
+                    continue;
+                  }
                   changes[row][i] = changes[row][i] ?? {};
                   changes[row][i] = cells[row]?.[i + 1];
                 }
@@ -1072,7 +1089,29 @@ export const createStateReducer = ({
               const { cells } = sheet;
               const maxRow = Math.max(...Object.keys(cells).map(Number));
               const changes: { [key: string]: any } = {};
-              for (let i = rowIndex; i <= maxRow; i++) {
+              for (let i = 0; i <= maxRow; i++) {
+                const maxCol = Math.max(
+                  ...Object.keys(cells[i] ?? {}).map(Number)
+                );
+                for (let j = 0; j <= maxCol; j++) {
+                  const cellConfig = cells[i][j];
+                  /* Modify formulas to be relative */
+                  if (cellConfig?.datatype === "formula") {
+                    const newFormula = formulaToRelativeReference(
+                      cellConfig.text,
+                      { rowIndex: Number(i), columnIndex: j },
+                      { rowIndex: Number(i) - 1, columnIndex: j }
+                    );
+                    if (newFormula === void 0) {
+                      cellConfig.error = new FormulaError("#REF!").error;
+                    } else {
+                      cellConfig.text = newFormula;
+                    }
+                  }
+                }
+                if (i < rowIndex) {
+                  continue;
+                }
                 changes[i] = cells[i + 1];
               }
               for (const index in changes) {
@@ -1099,7 +1138,21 @@ export const createStateReducer = ({
                 changes[row][columnIndex] = cloneCellConfig(
                   cells[row][columnIndex] ?? {}
                 );
-                for (let i = columnIndex; i <= maxCol; i++) {
+                /* We will need to loop through all columns and update formula references */
+                for (let i = 0; i <= maxCol; i++) {
+                  const cellConfig = cells[row][i];
+                  /* Modify formulas to be relative */
+                  if (cellConfig?.datatype === "formula") {
+                    cellConfig.text = formulaToRelativeReference(
+                      cellConfig.text,
+                      { rowIndex: Number(row), columnIndex },
+                      { rowIndex: Number(row), columnIndex: columnIndex + 1 }
+                    );
+                  }
+                  if (i < columnIndex) {
+                    continue;
+                  }
+                  /* Only update text after the inserted column */
                   changes[row][i + 1] = cells[row]?.[i];
                 }
               }
@@ -1124,7 +1177,24 @@ export const createStateReducer = ({
               const maxRow = Math.max(...Object.keys(cells).map(Number));
               const changes: { [key: string]: CellConfig } = {};
               changes[rowIndex] = cloneRow({ ...cells[rowIndex] });
-              for (let i = rowIndex; i <= maxRow; i++) {
+              for (let i = 0; i <= maxRow; i++) {
+                const maxCol = Math.max(
+                  ...Object.keys(cells[i] ?? {}).map(Number)
+                );
+                for (let j = 0; j <= maxCol; j++) {
+                  const cellConfig = cells[i][j];
+                  /* Modify formulas to be relative */
+                  if (cellConfig?.datatype === "formula") {
+                    cellConfig.text = formulaToRelativeReference(
+                      cellConfig.text,
+                      { rowIndex: Number(i), columnIndex: j },
+                      { rowIndex: Number(i) + 1, columnIndex: j }
+                    );
+                  }
+                }
+                if (i < rowIndex) {
+                  continue;
+                }
                 changes[i + 1] = cells[i];
               }
               for (const index in changes) {

@@ -255,6 +255,17 @@ export const formulaToRelativeReference = (
         const columnDelta = sourceCell.columnIndex - cell.columnIndex;
         cell.rowIndex = destinationCell.rowIndex - rowDelta;
         cell.columnIndex = destinationCell.columnIndex - columnDelta;
+
+        /**
+         * If there is a cyclic dependency return undefined
+         */
+        if (
+          cell.columnIndex === destinationCell.columnIndex &&
+          cell.rowIndex === destinationCell.rowIndex
+        ) {
+          return void 0;
+        }
+
         const address = cellToAddress(cell);
         if (address === null) {
           return void 0;

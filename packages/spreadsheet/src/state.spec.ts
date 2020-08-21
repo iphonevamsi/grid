@@ -1645,6 +1645,72 @@ describe("state reducers", () => {
     expect(newState).toEqual(state);
   });
 
+  it("delete row will update formula references", () => {
+    let state: StateInterface = {
+      ...initialState,
+      sheets: [
+        {
+          name: "Sheet1",
+          id: 1,
+          cells: {
+            2: {
+              1: {
+                text: "=SUM(B2, C10)",
+                datatype: "formula",
+              },
+            },
+          },
+          activeCell: { rowIndex: 1, columnIndex: 1 },
+          selections: [],
+        },
+      ],
+    };
+
+    let newState = reducer(state, {
+      type: ACTION_TYPE.DELETE_ROW,
+      id: 1,
+      activeCell: {
+        rowIndex: 1,
+        columnIndex: 1,
+      },
+    });
+
+    expect(newState.sheets[0].cells[1]?.[1].text).toBe("=SUM(B1, C9)");
+  });
+
+  it("delete column will update formula references", () => {
+    let state: StateInterface = {
+      ...initialState,
+      sheets: [
+        {
+          name: "Sheet1",
+          id: 1,
+          cells: {
+            2: {
+              2: {
+                text: "=SUM(C4, C10)",
+                datatype: "formula",
+              },
+            },
+          },
+          activeCell: { rowIndex: 1, columnIndex: 1 },
+          selections: [],
+        },
+      ],
+    };
+
+    let newState = reducer(state, {
+      type: ACTION_TYPE.DELETE_COLUMN,
+      id: 1,
+      activeCell: {
+        rowIndex: 1,
+        columnIndex: 1,
+      },
+    });
+
+    expect(newState.sheets[0].cells[2]?.[1].text).toBe("=SUM(B4, B10)");
+  });
+
   it("can insert column", () => {
     let state: StateInterface = {
       ...initialState,
@@ -1690,6 +1756,52 @@ describe("state reducers", () => {
     expect(newState).toEqual(state);
   });
 
+  it("insert column will update formula references", () => {
+    let state: StateInterface = {
+      ...initialState,
+      sheets: [
+        {
+          name: "Sheet1",
+          id: 1,
+          cells: {
+            1: {
+              1: {
+                text: "=SUM(A2, A3)",
+                datatype: "formula",
+              },
+            },
+          },
+          activeCell: { rowIndex: 1, columnIndex: 1 },
+          selections: [],
+        },
+      ],
+    };
+
+    let newState = reducer(state, {
+      type: ACTION_TYPE.INSERT_COLUMN,
+      id: 1,
+      activeCell: {
+        rowIndex: 1,
+        columnIndex: 1,
+      },
+    });
+
+    expect(newState.sheets[0].cells[1]?.[1]).toBeDefined();
+    expect(newState.sheets[0].cells[1][2].text).toBe("=SUM(B2, B3)");
+
+    // Sheet does not exist
+    newState = reducer(state, {
+      type: ACTION_TYPE.INSERT_COLUMN,
+      id: 10,
+      activeCell: {
+        rowIndex: 1,
+        columnIndex: 1,
+      },
+    });
+
+    expect(newState).toEqual(state);
+  });
+
   it("can insert row", () => {
     let state: StateInterface = {
       ...initialState,
@@ -1721,6 +1833,52 @@ describe("state reducers", () => {
 
     expect(newState.sheets[0].cells[1]?.[1]).toBeDefined();
     expect(newState.sheets[0].cells[2][1].text).toBe("hello");
+
+    // Sheet does not exist
+    newState = reducer(state, {
+      type: ACTION_TYPE.INSERT_ROW,
+      id: 10,
+      activeCell: {
+        rowIndex: 1,
+        columnIndex: 1,
+      },
+    });
+
+    expect(newState).toEqual(state);
+  });
+
+  it("insert row will update formula references", () => {
+    let state: StateInterface = {
+      ...initialState,
+      sheets: [
+        {
+          name: "Sheet1",
+          id: 1,
+          cells: {
+            1: {
+              1: {
+                text: "=SUM(B1, C3)",
+                datatype: "formula",
+              },
+            },
+          },
+          activeCell: { rowIndex: 1, columnIndex: 1 },
+          selections: [],
+        },
+      ],
+    };
+
+    let newState = reducer(state, {
+      type: ACTION_TYPE.INSERT_ROW,
+      id: 1,
+      activeCell: {
+        rowIndex: 1,
+        columnIndex: 1,
+      },
+    });
+
+    expect(newState.sheets[0].cells[1]?.[1]).toBeDefined();
+    expect(newState.sheets[0].cells[2][1].text).toBe("=SUM(B2, C4)");
 
     // Sheet does not exist
     newState = reducer(state, {

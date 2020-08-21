@@ -476,11 +476,10 @@ export const Formula = () => {
             1: {
               text: "20",
               datatype: "number",
-              locked: true,
             },
             2: {
               datatype: "formula",
-              text: "=SUM(A1, 20)",
+              text: "=SUM(B2, 20)",
               // text: '=HYPERLINK("Google", www.google.com)'
               // text: '=HYPERLINK("asdas")'
               // text: '=CONCAT(A1, "hello")',
@@ -491,8 +490,8 @@ export const Formula = () => {
           },
           2: {
             1: {
-              text: "30",
-              datatype: "number",
+              text: "=SUM(B2, 100)",
+              datatype: "formula",
             },
           },
           7: {
