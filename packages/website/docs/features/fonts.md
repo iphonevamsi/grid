@@ -3,6 +3,14 @@ title: Fonts
 ---
 import SpreadSheet from "@rowsncolumns/spreadsheet";
 
+All fontsizes are in `point` format. `10pt = 13px`
+
+### `fontSize`
+
+Default fontsize of all cells is `10pt`, which  is equivalent of `13px`
+
+## Font family
+
 SpreadSheet grid supports webfonts from Google, Typekit, Fonts.com and FontDeck using [WebfontLoader](https://github.com/typekit/webfontloader)
 
 ### `fontList?: string[]`
