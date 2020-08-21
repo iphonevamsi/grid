@@ -319,7 +319,6 @@ export const formulaToRelativeReference = (
         /**
          * If there is a cyclic dependency return undefined
          */
-
         if (
           cell.columnIndex === destinationCell.columnIndex &&
           cell.rowIndex === destinationCell.rowIndex
@@ -328,6 +327,7 @@ export const formulaToRelativeReference = (
         }
 
         const address = cellToAddress(cell, isAbsoluteColumn, isAbsoluteRow);
+
         if (address === null) {
           return void 0;
         }

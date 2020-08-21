@@ -1057,7 +1057,9 @@ export const createStateReducer = ({
                     const newFormula = formulaToRelativeReference(
                       cellConfig.text,
                       { rowIndex: Number(row), columnIndex },
-                      { rowIndex: Number(row), columnIndex: columnIndex - 1 }
+                      { rowIndex: Number(row), columnIndex: columnIndex - 1 },
+                      "column",
+                      columnIndex
                     );
                     if (newFormula === void 0) {
                       cellConfig.error = new FormulaError("#REF!").error;
@@ -1109,7 +1111,9 @@ export const createStateReducer = ({
                     const newFormula = formulaToRelativeReference(
                       cellConfig.text,
                       { rowIndex: Number(i), columnIndex: j },
-                      { rowIndex: Number(i) - 1, columnIndex: j }
+                      { rowIndex: Number(i) - 1, columnIndex: j },
+                      "row",
+                      rowIndex
                     );
                     if (newFormula === void 0) {
                       cellConfig.error = new FormulaError("#REF!").error;
