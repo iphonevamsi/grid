@@ -525,7 +525,7 @@ const TextEditor: React.FC<EditableProps & RefAttribute> = memo(
                   cursor="pointer"
                   fontFamily={isFormulaMode ? FORMULA_FONT : fontFamily}
                   fontSize={`${
-                    (isFormulaMode ? FORMULA_FONT_SIZE : fontSize) * scale
+                    (isFormulaMode ? FORMULA_FONT_SIZE : 12) * scale
                   }px`}
                   onMouseMove={() => onMouseMove?.(index)}
                   onMouseDown={onMouseDown}

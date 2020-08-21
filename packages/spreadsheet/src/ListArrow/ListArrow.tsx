@@ -33,7 +33,6 @@ const FilterIcon: React.FC<FilterIconProps> = ({
   const posX = x + width - LIST_ICON_DIM - 2; // - padding + 0.5;
   const posY = y + padding + 0.5;
   const handleMouseEnter = useCallback(() => {
-    console.log("called");
     setIsHovered(true);
   }, []);
   const handleMouseLeave = useCallback(() => {
