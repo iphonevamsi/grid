@@ -1156,7 +1156,6 @@ const SheetGrid: React.FC<GridProps & RefAttributeGrid> = memo(
         onActiveCellValueChange?.(value, cell);
         const isFormula = isAFormula(value);
         setFormulaMode?.(!!isFormula);
-        console.log("d", tokenize(value));
         if (isFormula) {
           const sel = getSelectionsFromInput(
             value,
