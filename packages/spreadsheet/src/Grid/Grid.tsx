@@ -1508,6 +1508,8 @@ const SheetGrid: React.FC<GridProps & RefAttributeGrid> = memo(
         theme,
         scale,
         filterHeaderCells,
+        CellRenderer,
+        HeaderCellRenderer,
       ]
     );
 
