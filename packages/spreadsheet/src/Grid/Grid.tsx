@@ -1409,7 +1409,7 @@ const SheetGrid: React.FC<GridProps & RefAttributeGrid> = memo(
       (cell: CellInterface) => {
         makeEditable(cell);
       },
-      [frozenRows, frozenColumns]
+      [frozenRows, frozenColumns, selectedSheet]
     );
 
     /**
