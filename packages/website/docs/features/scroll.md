@@ -13,4 +13,4 @@ When users scroll, SpreadSheet Grid  can snap to the next row or column. To enab
 
 ### Demo
 
-<SpreadSheet snap />
+<SpreadSheet autoFocus={false} snap />

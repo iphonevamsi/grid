@@ -50,6 +50,7 @@ const CustomEditor = (props) => {
 ### Demo
 
 <SpreadSheet
+  autoFocus={false}
   CellEditor={(props) => {
     const { rowIndex, columnIndex, position, onSubmit, cell, value } = props
     return (

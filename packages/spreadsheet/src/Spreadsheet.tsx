@@ -379,6 +379,10 @@ export interface SpreadSheetProps {
    * called when calculation is successfull
    */
   onCalculateSuccess?: (changes: CellsBySheet) => void;
+  /**
+   * Autofocus the grid on initial mount
+   */
+  autoFocus?: boolean;
 }
 
 export type FormulaMap = Record<string, (...args: any[]) => any>;
@@ -579,6 +583,7 @@ const Spreadsheet: React.FC<SpreadSheetProps & RefAttributeSheetGrid> = memo(
       gridLineColor,
       gridBackgroundColor,
       onCalculateSuccess,
+      autoFocus = true,
     } = props;
 
     /* Last active cells: for undo, redo */
@@ -640,6 +645,10 @@ const Spreadsheet: React.FC<SpreadSheetProps & RefAttributeSheetGrid> = memo(
 
     useEffect(() => {
       isMounted.current = true;
+      /* Focus on the grid */
+      if (autoFocus) {
+        focusGrid();
+      }
       return () => {
         isMounted.current = false;
       };

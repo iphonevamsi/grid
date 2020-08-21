@@ -48,7 +48,7 @@ export const App = () => {
     }
   }
   return (
-  <SpreadSheet formulas={formulas} />
+  <SpreadSheet autoFocus={false} formulas={formulas} />
   )
 }
 
@@ -114,7 +114,7 @@ export const App2 = () => {
   }
   }
   return (
-  <SpreadSheet formulas={formulas} />
+  <SpreadSheet autoFocus={false} formulas={formulas} />
   )
 }
 

@@ -115,6 +115,7 @@ export const CellRendererApp = () => {
   }
   return (
     <SpreadSheet
+      autoFocus={false}
       CellRenderer={CellRenderer}
     />
   )

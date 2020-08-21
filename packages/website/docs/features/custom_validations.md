@@ -48,7 +48,7 @@ export const App = () => {
     return defaultValidation(value, sheet, cell, cellConfig)
   }
   return (
-    <SpreadSheet onValidate={handleValidate} />
+    <SpreadSheet autoFocus={false} onValidate={handleValidate} />
   )
 }
 
@@ -123,7 +123,7 @@ export const EmailValidation = () => {
     return defaultValidation(value, sheet, cell, cellConfig)
   }
   return (
-    <SpreadSheet onValidate={handleValidate} sheets={sheets} />
+    <SpreadSheet autoFocus={false} onValidate={handleValidate} sheets={sheets} />
   )
 }
 
@@ -149,6 +149,6 @@ const handleValidate = async (value, sheet, cell, cellConfig) => {
   return defaultValidation(value, sheet, cell, cellConfig)
 }
 return (
-  <SpreadSheet onValidate={handleValidate} />
+  <SpreadSheet  onValidate={handleValidate} />
 )
 ```

@@ -71,6 +71,7 @@ export const MySpreadSheet = () => {
   const gridRef = useRef(null)  
   return (
     <SpreadSheet
+      autoFocus={false}
       ref={gridRef}
       initialSheets={sheets}
       CellRenderer={(props) => {

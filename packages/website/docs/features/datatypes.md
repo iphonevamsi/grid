@@ -59,7 +59,7 @@ export const NumberType = () => {
       }
     },
   ]
-  return <SpreadSheet initialSheets={sheets} />
+  return <SpreadSheet autoFocus={false} initialSheets={sheets} />
 }
 
 <NumberType />
@@ -98,7 +98,7 @@ export const StringType = () => {
       }
     },
   ]
-  return <SpreadSheet initialSheets={sheets} />
+  return <SpreadSheet autoFocus={false} initialSheets={sheets} />
 }
 
 <StringType />
@@ -150,7 +150,7 @@ export const Boolean = () => {
       }
     },
   ]
-  return <SpreadSheet initialSheets={sheets} />
+  return <SpreadSheet autoFocus={false} initialSheets={sheets} />
 }
 
 <Boolean />
@@ -196,7 +196,7 @@ export const HyperLink = () => {
       }
     },
   ]
-  return <SpreadSheet initialSheets={sheets} />
+  return <SpreadSheet autoFocus={false} initialSheets={sheets} />
 }
 
 <HyperLink />
@@ -244,7 +244,7 @@ export const Error = () => {
       }
     },
   ]
-  return <SpreadSheet initialSheets={sheets} />
+  return <SpreadSheet autoFocus={false} initialSheets={sheets} />
 }
 
 <Error />

@@ -56,6 +56,7 @@ const App = () => {
     <>
       <button onClick={() => handleExport({ sheets })}>Export to excel</button>
       <Spreadsheet
+        autoFocus={false}
         sheets={sheets}
         onChange={setSheets}
       />

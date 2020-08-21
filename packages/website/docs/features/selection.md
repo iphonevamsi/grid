@@ -14,18 +14,21 @@ You can customize how rows and columns are selected when user selects a cell.
 ### Row selection mode
 
 <SpreadSheet
+  autoFocus={false}
   selectionMode='row'
 />
 
 ### Column selection mode
 
 <SpreadSheet
+  autoFocus={false}
   selectionMode='column'
 />
 
 ### Row and Column selection mode
 
 <SpreadSheet
+  autoFocus={false}
   selectionMode='both'
 />
 
@@ -46,5 +49,6 @@ The following policies are accepted
 ```
 
 <SpreadSheet
+  autoFocus={false}
   selectionPolicy='single'
 />

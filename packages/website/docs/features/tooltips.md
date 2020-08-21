@@ -73,5 +73,5 @@ const TooltipComponent = (props: TooltipProps) => {
   )
 }
 
-<SpreadSheet Tooltip={TooltipComponent} />
+<SpreadSheet autoFocus={false} Tooltip={TooltipComponent} />
 ```

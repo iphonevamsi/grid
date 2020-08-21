@@ -36,6 +36,7 @@ export const App = () => {
   ]
   return (
     <SpreadSheet
+      autoFocus={false}
       initialSheets={initialSheets}
     />
   )

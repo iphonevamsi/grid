@@ -54,7 +54,7 @@ export const App = () => {
     }
   ]
   return (
-    <SpreadSheet initialSheets={initialSheets} />
+    <SpreadSheet autoFocus={false} initialSheets={initialSheets} />
   )
 }
 
@@ -120,7 +120,7 @@ export const AppStatusBar = () => {
     }
   ]
   return (
-    <SpreadSheet initialSheets={initialSheets} StatusBar={StatusBarComponent} />
+    <SpreadSheet autoFocus={false} initialSheets={initialSheets} StatusBar={StatusBarComponent} />
   )
 }
 

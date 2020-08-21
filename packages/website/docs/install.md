@@ -23,7 +23,7 @@ import SpreadSheet from '@rowsncolumns/spreadsheet'
 
 function App () {
   return (
-    <SpreadSheet />
+    <SpreadSheet autoFocus={false} />
   )
 }
 ```

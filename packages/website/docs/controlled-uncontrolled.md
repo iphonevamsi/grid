@@ -29,6 +29,7 @@ Pass your `initialSheets` and let SpreadSheet Grid handle the state. Change in `
 
 return (
   <SpreadSheet
+    autoFocus={false}
     initialSheets={initialSheets}
     onChange={(sheets) => {
       // Persist state

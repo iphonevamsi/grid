@@ -735,7 +735,7 @@ exports[`SpreadSheet matches snapshot 1`] = `
             tabindex="-1"
           >
             <div
-              style="position: absolute; height: 49995px; width: 1px;"
+              style="position: absolute; height: 49937px; width: 1px;"
             />
           </div>
           <div
@@ -744,7 +744,7 @@ exports[`SpreadSheet matches snapshot 1`] = `
             tabindex="-1"
           >
             <div
-              style="position: absolute; width: 1396px; height: 1px;"
+              style="position: absolute; width: 1496px; height: 1px;"
             />
           </div>
         </div>

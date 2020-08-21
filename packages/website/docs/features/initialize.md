@@ -14,7 +14,7 @@ return (
 )
 ```
 
-<SpreadSheet />
+<SpreadSheet autoFocus={false} />
 
 ## Initialize Sheets
 
@@ -65,6 +65,7 @@ export const Demo1 = ()  => {
   ]
   return (
     <SpreadSheet
+      autoFocus={false}
       initialSheets={sheets}
     />
   )
@@ -172,6 +173,7 @@ export const SheetFromJSON = () => {
   }, [])
   return (
     <SpreadSheet
+      autoFocus={false}
       sheets={sheets}
       onChange={setSheets}
     />

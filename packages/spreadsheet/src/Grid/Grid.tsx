@@ -39,7 +39,7 @@ import Grid, {
   throttle,
 } from "@rowsncolumns/grid";
 import { debounce, cellIdentifier } from "@rowsncolumns/grid";
-import { ThemeProvider, ColorModeProvider } from "@chakra-ui/core";
+import { ThemeProvider, ColorModeProvider, usePrevious } from "@chakra-ui/core";
 import {
   DEFAULT_COLUMN_WIDTH,
   DEFAULT_ROW_HEIGHT,
@@ -343,7 +343,6 @@ const SheetGrid: React.FC<GridProps & RefAttributeGrid> = memo(
       supportedFormulas = EMPTY_ARRAY,
       onEditorKeyDown,
     } = props;
-
     const gridRef = useRef<GridRef | null>(null);
     const isLockedRef = useRef<boolean | undefined>(false);
     const onSheetChangeRef = useRef<(props: any) => void>();
@@ -364,6 +363,7 @@ const SheetGrid: React.FC<GridProps & RefAttributeGrid> = memo(
       FormulaSelection[]
     >([]);
     const { newSelectionMode, showCellSuggestion } = formulaState;
+    const previousSelectedSheet = usePrevious(selectedSheet);
 
     useEffect(() => {
       isFormulaModeRef.current = isFormulaMode;
@@ -978,6 +978,10 @@ const SheetGrid: React.FC<GridProps & RefAttributeGrid> = memo(
      * If grid changes, lets restore the state
      */
     useEffect(() => {
+      /* Ignore for first mount */
+      if (!previousSelectedSheet) {
+        return;
+      }
       if (scrollState) {
         isTouchDevice
           ? scrollToTouch(scrollState)
@@ -997,6 +1001,7 @@ const SheetGrid: React.FC<GridProps & RefAttributeGrid> = memo(
       setSelections(initialSelections);
       /* Hide filter */
       hideFilter();
+
       /* Focus on the grid */
       gridRef.current?.focus();
 

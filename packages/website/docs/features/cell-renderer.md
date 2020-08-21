@@ -71,7 +71,7 @@ export const App = () => {
       }
     }
   ]
-  return <SpreadSheet CellRenderer={Cell} initialSheets={sheets} />
+  return <SpreadSheet autoFocus={false} CellRenderer={Cell} initialSheets={sheets} />
 }
 
 <App />

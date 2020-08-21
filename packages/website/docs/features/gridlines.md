@@ -52,6 +52,7 @@ export const Demo1 = ()  => {
   ]
   return (
     <SpreadSheet
+      autoFocus={false}
       initialSheets={sheets}
     />
   )

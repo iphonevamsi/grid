@@ -15,6 +15,7 @@ Hides formatting toolbar
 
 <SpreadSheet
   showToolbar={false}
+  autoFocus={false}
 />
 
 ## Hide formula  bar
@@ -29,6 +30,7 @@ Hides formula input box
 
 <SpreadSheet
   showFormulabar={false}
+  autoFocus={false}
 />
 
 ## Hide Tabstrip
@@ -43,6 +45,7 @@ Hides new tab, tab list section
 
 <SpreadSheet
   showTabStrip={false}
+  autoFocus={false}
 />
 
 ## Hide Status bar
@@ -57,6 +60,7 @@ Hides Count, Average and Sum status section
 
 <SpreadSheet
   showStatusBar={false}
+  autoFocus={false}
 />
 
 
@@ -78,4 +82,5 @@ Display only the grid without any toolbars
   showTabStrip={false}
   showFormulabar={false}
   showStatusBar={false}
+  autoFocus={false}
 />

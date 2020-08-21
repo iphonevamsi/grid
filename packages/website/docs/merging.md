@@ -64,5 +64,6 @@ const initialSheets = [
 ]
 
 <SpreadSheet
+  autoFocus={false}
   initialSheets={initialSheets}
 />

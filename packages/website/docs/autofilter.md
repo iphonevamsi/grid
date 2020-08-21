@@ -122,6 +122,7 @@ export const App = () => {
   return (
     <SpreadSheet
       initialSheets={initialSheets}
+      autoFocus={false}
     />
   )
 }

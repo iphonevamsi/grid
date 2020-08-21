@@ -80,6 +80,7 @@ export const App = () => {
   const [sheets, setSheets] = useState(defaultSheets)
   return (
     <SpreadSheet
+      autoFocus={false}
       sheets={sheets}
       activeSheet={2}
     />

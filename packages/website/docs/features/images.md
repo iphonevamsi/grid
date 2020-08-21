@@ -123,6 +123,7 @@ export const ImageApp = () => {
   }
   return (
     <SpreadSheet
+      autoFocus={false}
       initialSheets={sheets}
       CellRenderer={Cell}
     />

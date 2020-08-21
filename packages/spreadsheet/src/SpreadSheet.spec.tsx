@@ -29,6 +29,7 @@ describe("Copy paste", () => {
         initialSheets={defaultSheets}
         enableGlobalKeyHandlers
         onChangeCells={onChangeCells}
+        autoFocus
       />
     );
   };
@@ -74,6 +75,7 @@ describe("Cut paste", () => {
         initialSheets={defaultSheets}
         enableGlobalKeyHandlers
         onChangeCells={onChangeCells}
+        autoFocus
       />
     );
   };
@@ -132,6 +134,7 @@ describe("Undo/redo", () => {
         initialSheets={defaultSheets}
         enableGlobalKeyHandlers
         onChangeCells={onChangeCells}
+        autoFocus
       />
     );
   };
