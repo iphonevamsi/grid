@@ -22,6 +22,8 @@ import {
   sanitizeSheetName,
   FORMULA_FONT,
   FORMULA_FONT_SIZE,
+  DEFAULT_FONT_SIZE,
+  pointToPixel,
 } from "../constants";
 import { EditorType, FONT_WEIGHT } from "../types";
 import { ExtraEditorProps } from "../Grid/Grid";
@@ -71,7 +73,7 @@ const Editor: React.FC<CustomEditorProps & RefAttribute> = forwardRef(
       autoFocus = true,
       background,
       color,
-      fontSize = 12,
+      fontSize: fontSizePt = DEFAULT_FONT_SIZE,
       fontFamily = DEFAULT_FONT_FAMILY,
       bold,
       wrap: cellWrap = "nowrap",
@@ -90,6 +92,9 @@ const Editor: React.FC<CustomEditorProps & RefAttribute> = forwardRef(
       supportedFormulas,
       onFormulaChange,
     } = props;
+    const fontSize = useMemo(() => pointToPixel(fontSizePt) as number, [
+      fontSizePt,
+    ]);
     const wrapping: any = cellWrap === "wrap" ? "wrap" : "nowrap";
     const { colorMode } = useColorMode();
     const isLight = colorMode === "light";
@@ -99,8 +104,7 @@ const Editor: React.FC<CustomEditorProps & RefAttribute> = forwardRef(
         : isLight
         ? "white"
         : DARK_MODE_COLOR_LIGHT;
-    const textColor =
-      color !== void 0 ? color : isLight ? DARK_MODE_COLOR_LIGHT : "white";
+    const textColor = color !== void 0 ? color : isLight ? "black" : "white";
     const borderWidth = 2;
     const padding = 10; /* 2x (border) + 2x (left/right spacing) + 2 (buffer) */
     const hasScrollPositionChanged = useRef(false);
@@ -206,7 +210,7 @@ const Editor: React.FC<CustomEditorProps & RefAttribute> = forwardRef(
           position: "absolute",
           width: inputWidth,
           height: inputHeight + borderWidth / 2,
-          padding: borderWidth,
+          padding: 1,
           boxShadow: "0 2px 6px 2px rgba(60,64,67,.15)",
           border: "2px #1a73e8 solid",
           background: backgroundColor,

@@ -291,6 +291,14 @@ export const parseExcel = async ({
             if (fillValue) fill = "#" + fillValue;
           }
 
+          if (cell.font?.size) {
+            /**
+             * Excel font sizes are in `pt`
+             * 10pt = 13px
+             */
+            fontConfig.fontSize = cell.font.size;
+          }
+
           if (cell.font?.color) {
             const colorValue = cell.font.color.argb?.slice(2);
             if (colorValue) color = "#" + colorValue;
@@ -319,36 +327,45 @@ export const parseExcel = async ({
 
           if (border) {
             for (const key in border) {
-              if (!border[key as keyof Borders]?.color?.argb) {
-                continue;
-              }
               if (key === "bottom") {
                 strokes.strokeBottomDash =
-                  border[key]?.style === "dotted" ? dotArray : [];
+                  border[key]?.style === "dotted" ||
+                  border[key]?.style === "hair"
+                    ? dotArray
+                    : [];
                 strokes.strokeBottomWidth = 1;
                 strokes.strokeBottomColor =
-                  "#" + border[key]?.color?.argb?.slice(2);
+                  "#" + (border[key]?.color?.argb?.slice(2) ?? "black");
               }
               if (key === "top") {
                 strokes.strokeTopDash =
-                  border[key]?.style === "dotted" ? dotArray : [];
+                  border[key]?.style === "dotted" ||
+                  border[key]?.style === "hair"
+                    ? dotArray
+                    : [];
                 strokes.strokeTopWidth = 1;
                 strokes.strokeTopColor =
-                  "#" + border[key]?.color?.argb?.slice(2);
+                  "#" + (border[key]?.color?.argb?.slice(2) ?? "black");
               }
               if (key === "left") {
                 strokes.strokeLeftDash =
-                  border[key]?.style === "dotted" ? dotArray : [];
+                  border[key]?.style === "dotted" ||
+                  border[key]?.style === "hair"
+                    ? dotArray
+                    : [];
                 strokes.strokeLeftWidth = 1;
                 strokes.strokeLeftColor =
-                  "#" + border[key]?.color?.argb?.slice(2);
+                  "#" + (border[key]?.color?.argb?.slice(2) ?? "black");
               }
               if (key === "right") {
                 strokes.strokeRightDash =
-                  border[key]?.style === "dotted" ? dotArray : [];
+                  border[key]?.style === "dotted" ||
+                  border[key]?.style === "hair"
+                    ? dotArray
+                    : [];
                 strokes.strokeRightWidth = 1;
                 strokes.strokeRightColor =
-                  "#" + border[key]?.color?.argb?.slice(2);
+                  "#" + (border[key]?.color?.argb?.slice(2) ?? "black");
               }
             }
           }

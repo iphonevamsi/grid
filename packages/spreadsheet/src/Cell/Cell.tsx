@@ -1,4 +1,4 @@
-import React, { memo, useCallback } from "react";
+import React, { memo, useCallback, useMemo } from "react";
 import {
   RendererProps,
   isNull,
@@ -12,6 +12,7 @@ import {
   DEFAULT_FONT_SIZE,
   INVALID_COLOR,
   ERROR_COLOR,
+  pointToPixel,
 } from "../constants";
 import {
   FONT_WEIGHT,
@@ -78,8 +79,10 @@ const Cell: React.FC<CellProps> = memo((props) => {
     dataValidation,
     cellConfig,
     formulaRange,
+    fontSize: fontSizePt = DEFAULT_FONT_SIZE,
     ...cellProps
   } = props;
+  const fontSize = useMemo(() => pointToPixel(fontSizePt), [fontSizePt]);
   const validatorType = dataValidation?.type;
   const checked =
     validatorType === "boolean"
@@ -94,6 +97,7 @@ const Cell: React.FC<CellProps> = memo((props) => {
     <DefaultCell
       isLightMode={isLightMode}
       {...cellProps}
+      fontSize={fontSize}
       text={text}
       type={validatorType}
       checked={checked}
@@ -121,8 +125,8 @@ const DefaultCell: React.FC<CellRenderProps> = memo((props) => {
     underline,
     strike,
     fontFamily,
-    padding = 4,
-    fontSize = DEFAULT_FONT_SIZE,
+    padding = 3,
+    fontSize,
     wrap = DEFAULT_WRAP,
     lineHeight = 1,
     isLightMode,
@@ -164,7 +168,7 @@ const DefaultCell: React.FC<CellRenderProps> = memo((props) => {
         : "left"
       : horizontalAlign;
   const defaultFill = isLightMode ? "white" : DARK_MODE_COLOR_LIGHT;
-  const textColor = userColor ? userColor : isLightMode ? "#333" : "white";
+  const textColor = userColor ? userColor : isLightMode ? "black" : "white";
   const showRect = !isNull(userFill) || isMergedCell;
   const hasFill = !isNull(userFill) || isSelected;
   const hasText = !isNull(text);

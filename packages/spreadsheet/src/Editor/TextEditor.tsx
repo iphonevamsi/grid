@@ -518,7 +518,7 @@ const TextEditor: React.FC<EditableProps & RefAttribute> = memo(
               return (
                 <Box
                   padding={1}
-                  pl={isFormulaMode ? "11px" : 1}
+                  pl={isFormulaMode ? "10px" : 1}
                   pr={1}
                   whiteSpace="nowrap"
                   color={inputColor}

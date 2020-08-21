@@ -244,7 +244,7 @@ exports[`Toolbar matches snapshot 1`] = `
           <input
             aria-label="select-input"
             style="width: 44px; height: 24px; padding-left: 4px; padding-right: 2px; border-color: #cbd5e0; background: rgb(255, 255, 255); color: rgb(26, 32, 44); border-style: solid; border-width: 1px; font-size: 12px;"
-            value="12"
+            value="10"
           />
           <button
             aria-label="Open"

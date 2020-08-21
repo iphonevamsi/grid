@@ -60,6 +60,7 @@ const Select: React.FC<SelectProps> = memo((props) => {
     onMouseMove,
     onClick,
   } = useShiftDown({
+    limit: 100,
     options,
     filter: () => true,
     selectedItem: value,

@@ -55,6 +55,8 @@ import {
   cellToAddress,
   isAFormula,
   sanitizeSheetName,
+  pointToPixel,
+  DEFAULT_FONT_SIZE,
 } from "./../constants";
 import HeaderCell from "./../HeaderCell";
 import Cell from "./../Cell";
@@ -636,7 +638,10 @@ const SheetGrid: React.FC<GridProps & RefAttributeGrid> = memo(
           cellConfig?.dataValidation?.type === "list"
             ? LIST_ICON_DIM + iconPadding
             : 0;
-        return { ...cellConfig, text: formattedValue, spacing };
+        const fontSize = pointToPixel(
+          cellConfig?.fontSize ?? DEFAULT_FONT_SIZE
+        );
+        return { ...cellConfig, fontSize, text: formattedValue, spacing };
       },
       getText: getDisplayText,
       columnSizes,

@@ -44,7 +44,7 @@ export const ERROR_COLOR = "#C63929";
 export const INFO_COLOR = "#1D72E8";
 export const HYPERLINK_COLOR = "#1155CC";
 export const LINE_HEIGHT_RATIO = 1;
-export const DEFAULT_CELL_PADDING = 4;
+export const DEFAULT_CELL_PADDING = 2;
 export const CELL_BORDER_WIDTH = 1;
 
 /**
@@ -271,7 +271,7 @@ export const SCALE_VALUES = [
   },
 ];
 export const DEFAULT_DATE_FORMAT = "d-mmm-yy";
-export const DEFAULT_FONT_SIZE = 12;
+export const DEFAULT_FONT_SIZE = 10;
 export const DEFAULT_FONT_FAMILY = "Arial";
 /**
  * Lighten or darken colors
@@ -292,6 +292,9 @@ export const luminance = (color: string | undefined, amount: number) => {
       )
   );
 };
+
+export const pointToPixel = (pt: number | undefined) =>
+  pt === void 0 ? void 0 : Math.round((13 / 10) * pt);
 
 /* DPR */
 const dpr = canUseDOM ? window.devicePixelRatio : 1;

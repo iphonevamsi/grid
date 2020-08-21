@@ -13,6 +13,8 @@ import {
   SYSTEM_FONT,
   isAFormula,
   FORMULA_FONT_SIZE,
+  DEFAULT_FONT_SIZE,
+  pointToPixel,
 } from "./../constants";
 
 interface FormulabarProps {
@@ -92,7 +94,9 @@ const Formulabar: React.FC<FormulabarProps & FormulaRef> = memo(
           onFocus={onFocus}
           height={"100%"}
           lineHeight={1}
-          fontSize={isFormula ? FORMULA_FONT_SIZE : 12}
+          fontSize={
+            isFormula ? FORMULA_FONT_SIZE : pointToPixel(DEFAULT_FONT_SIZE)
+          }
           ref={forwardedRef}
           transition="none"
           _focus={{
