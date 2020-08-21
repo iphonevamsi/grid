@@ -169,6 +169,7 @@ export const parseExcel = async ({
       if (sheet.state === "hidden") {
         return;
       }
+
       const _sheet: Sheet = {
         id: uuid(),
         name: sheet.name,
@@ -180,7 +181,7 @@ export const parseExcel = async ({
         hiddenColumns: [],
         filterViews: [],
         rowCount: Math.max(DEFAULT_ROW_COUNT, sheet.rowCount),
-        columnCount: Math.max(DEFAULT_COLUMN_COUNT, sheet.columns.length),
+        columnCount: Math.max(DEFAULT_COLUMN_COUNT, sheet.columns?.length ?? 0),
       };
       const mergedCellMap = new Map();
       if (sheet.hasMerges) {
