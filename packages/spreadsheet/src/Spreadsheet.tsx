@@ -480,6 +480,7 @@ export type RefAttributeSheetGrid = {
 
 export type SheetGridRef = {
   grid: WorkbookGridRef | null;
+  resize: (id: SheetID, axis: AXIS, index: number, dimension: number) => void;
   redo: () => void;
   undo: () => void;
   dispatch: (action: ActionTypes) => void;
@@ -1016,6 +1017,7 @@ const Spreadsheet: React.FC<SpreadSheetProps & RefAttributeSheetGrid> = memo(
       () => {
         return {
           grid: currentGrid.current,
+          resize: handleResize,
           undo,
           redo,
           dispatch,

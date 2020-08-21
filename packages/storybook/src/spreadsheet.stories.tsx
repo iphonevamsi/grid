@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect, useRef } from "react";
 import Spreadsheet, {
   Sheet,
   defaultSheets,
@@ -640,5 +640,47 @@ export const TickingFormula = () => {
       />
     );
   };
+  return <App />;
+};
+
+export const autoResize = () => {
+  const App = () => {
+    const gridRef = useRef();
+    const [sheets, sheetSheets] = useState([
+      {
+        id: 1,
+        name: "Sheet 1",
+        activeCell: { rowIndex: 1, columnIndex: 1 },
+        selections: [],
+        cells: {
+          1: {
+            2: {
+              image: "https://placeimg.com/640/480/any",
+            },
+          },
+        },
+      },
+    ]);
+    return (
+      <div className="App">
+        <Spreadsheet
+          ref={gridRef}
+          sheets={sheets}
+          onChange={sheetSheets}
+          onChangeCells={(sheetId, cells) => {
+            for (const rowIndex in cells) {
+              for (const columnIndex in cells[rowIndex]) {
+                const cellConfig = cells[rowIndex][columnIndex];
+                if (cellConfig.image) {
+                  gridRef.current.resize(sheetId, "y", rowIndex, 100);
+                }
+              }
+            }
+          }}
+        />
+      </div>
+    );
+  };
+
   return <App />;
 };

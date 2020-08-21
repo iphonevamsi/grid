@@ -1108,8 +1108,8 @@ const Grid: React.FC<GridProps & RefAttribute> = memo(
 
     const resizeColumns = useCallback((indices: number[]) => {
       const leftMost = Math.min(...indices);
-      resetAfterIndices({ columnIndex: leftMost }, false);
       instanceProps.current.recalcColumnIndices = indices;
+      resetAfterIndices({ columnIndex: leftMost }, false);
       forceRender();
     }, []);
 
@@ -1118,8 +1118,8 @@ const Grid: React.FC<GridProps & RefAttribute> = memo(
      */
     const resizeRows = useCallback((indices: number[]) => {
       const topMost = Math.min(...indices);
-      resetAfterIndices({ rowIndex: topMost }, false);
       instanceProps.current.recalcRowIndices = indices;
+      resetAfterIndices({ rowIndex: topMost }, false);
       forceRender();
     }, []);
 
