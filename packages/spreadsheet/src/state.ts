@@ -1160,11 +1160,11 @@ export const createStateReducer = ({
                     continue;
                   }
                   /* Only update text after the inserted column */
-                  changes[row][i + 1] = cells[row]?.[i];
+                  changes[row][i + 1] = cells[row][i] ?? {};
                 }
               }
-
               for (const row in changes) {
+                cells[row] = cells[row] ?? {};
                 for (const col in changes[row]) {
                   cells[row][col] = changes[row][col] ?? {};
                 }
@@ -1205,7 +1205,7 @@ export const createStateReducer = ({
                 if (i < rowIndex) {
                   continue;
                 }
-                changes[i + 1] = cells[i];
+                changes[i + 1] = cells[i] ?? {};
               }
               for (const index in changes) {
                 cells[index] = changes[index];
