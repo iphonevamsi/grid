@@ -1081,7 +1081,6 @@ const Spreadsheet: React.FC<SpreadSheetProps & RefAttributeSheetGrid> = memo(
           }, LOADING_INDICATOR_DELAY);
         }
         const values = await onCalculateBatch?.(changes);
-        console.log("d", values);
 
         /* Set flag to true so dont show loading indicator */
         receivedResponse = true;
