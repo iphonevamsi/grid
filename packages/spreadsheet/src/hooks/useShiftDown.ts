@@ -167,10 +167,6 @@ const useShiftDown = (props: ShiftDownProps): ShiftDownResults => {
     };
   }, [menuRef]);
 
-  useEffect(() => {
-    setHighlightedIndex(defaultHighlightedIndex);
-  }, [defaultHighlightedIndex]);
-
   const handleMouseMove = useCallback(
     index => {
       if (index === highlightedIndex) {
