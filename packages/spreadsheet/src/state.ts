@@ -468,6 +468,21 @@ export const createStateReducer = ({
                     if (sheet.cells[rowIndex][columnIndex].locked) {
                       continue;
                     }
+                    // Current range
+                    const cell = sheet.cells[rowIndex][columnIndex];
+                    if (cell.formulaRange) {
+                      /* Check for formula range */
+                      const [right, bottom] = cell.formulaRange;
+                      const start = Number(rowIndex);
+                      const end = Number(columnIndex);
+                      for (let a = 0; a < bottom; a++) {
+                        for (let b = 0; b < right; b++) {
+                          clearCellKeepFormatting(
+                            sheet.cells?.[start + a]?.[end + b]
+                          );
+                        }
+                      }
+                    }
                     const values = changes[name][rowIndex][columnIndex];
                     for (const key in values) {
                       const value = values[key];
