@@ -52,15 +52,22 @@ export interface DefaultTooltipProps {
 const DefaultTooltipComponent: React.FC<DefaultTooltipProps> = ({
   x = 0,
   y = 0,
+  scrollLeft = 0,
+  scrollTop = 0,
+  width = 0,
+  height = 0,
 }) => {
+  const posX = x + width - scrollLeft;
+  const posY = y - scrollTop;
   return (
     <div
       style={{
         position: "absolute",
         left: 0,
         top: 0,
-        transform: `translate(${x}px, ${y}px)`,
+        transform: `translate(${posX}px, ${posY}px)`,
         maxWidth: 200,
+        minWidth: 160,
         background: "white",
         boxShadow: "0 4px 8px 3px rgba(60,64,67,.15)",
         padding: 12,
@@ -91,7 +98,7 @@ const useTooltip = ({
   const showTooltip = !!activeCell;
   const TooltipComponent = useMemo(() => {
     return getTooltip(activeCell);
-  }, [activeCell]);
+  }, [activeCell, getTooltip]);
 
   const handleTooltipMouseEnter = useCallback(() => {
     isTooltipActive.current = true;

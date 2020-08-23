@@ -7,7 +7,7 @@ import {
   castToString,
   isNull,
   createPosition,
-  ERROR_REFERENCE
+  ERROR_REFERENCE,
 } from "./helpers";
 import { CellsBySheet } from "./calc";
 import merge from "lodash.merge";
@@ -131,7 +131,7 @@ class FormulaParser {
     this.formulaParser = new FastFormulaParser({
       functionsNeedContext: options?.functions ?? {},
       onCell: this.getCellValue,
-      onRange: this.getRangeValue
+      onRange: this.getRangeValue,
     });
     this.dependencyParser = new DepParser();
   }
@@ -152,7 +152,7 @@ class FormulaParser {
     const sheet = position.sheet;
     const cell = {
       rowIndex: position.row,
-      columnIndex: position.col
+      columnIndex: position.col,
     };
     const config =
       this.currentValues?.[position.sheet]?.[position.row]?.[position.col] ??
@@ -266,7 +266,7 @@ class FormulaParser {
       underline,
       error,
       errorMessage,
-      horizontalAlign
+      horizontalAlign,
     });
   };
   getDependencies = (

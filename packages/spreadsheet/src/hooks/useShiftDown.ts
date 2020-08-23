@@ -3,7 +3,7 @@ import React, {
   useCallback,
   useEffect,
   useRef,
-  useMemo
+  useMemo,
 } from "react";
 import { KeyCodes, castToString } from "@rowsncolumns/grid";
 import { escapeRegExp } from "../constants";
@@ -69,7 +69,7 @@ const useShiftDown = (props: ShiftDownProps): ShiftDownResults => {
     filter,
     defaultHighlightedIndex = null,
     selectedItem: controlledSelecteditem,
-    limit = 10
+    limit = 10,
   } = props;
   const { current: isControlled } = useRef(controlledSelecteditem !== void 0);
   const [highlightedIndex, setHighlightedIndex] = useState<number | null>(
@@ -105,7 +105,7 @@ const useShiftDown = (props: ShiftDownProps): ShiftDownResults => {
       return [];
     }
     return (options as any[])
-      .filter(item => {
+      .filter((item) => {
         if (!inputValue || (!isDirty.current && !filterOnInitialOpen))
           return true;
         if (filter) return filter(item);
@@ -124,14 +124,14 @@ const useShiftDown = (props: ShiftDownProps): ShiftDownResults => {
         }
       }
       if (keyCode === KeyCodes.Up) {
-        setHighlightedIndex(prev => {
+        setHighlightedIndex((prev) => {
           const next = prev === null ? filteredItems.length - 1 : prev - 1;
           if (next < 0) return filteredItems.length - 1;
           return next;
         });
         e?.preventDefault?.();
       } else if (keyCode === KeyCodes.Down) {
-        setHighlightedIndex(prev => {
+        setHighlightedIndex((prev) => {
           const next = prev === null ? 0 : prev + 1;
           if (next > filteredItems.length - 1) return 0;
           return next;
@@ -168,7 +168,7 @@ const useShiftDown = (props: ShiftDownProps): ShiftDownResults => {
   }, [menuRef]);
 
   const handleMouseMove = useCallback(
-    index => {
+    (index) => {
       if (index === highlightedIndex) {
         return;
       }
@@ -199,7 +199,7 @@ const useShiftDown = (props: ShiftDownProps): ShiftDownResults => {
   }, []);
 
   const toggleMenu = useCallback(() => {
-    setIsOpen(prev => !prev);
+    setIsOpen((prev) => !prev);
   }, []);
 
   const handleFocus = useCallback(() => {
@@ -236,7 +236,7 @@ const useShiftDown = (props: ShiftDownProps): ShiftDownResults => {
     onMouseDown: handleMouseDown,
     onClick: handleSetSelectedItem,
     onFocus: handleFocus,
-    onBlur: handleBlur
+    onBlur: handleBlur,
   };
 };
 

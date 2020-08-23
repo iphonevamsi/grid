@@ -60,11 +60,11 @@ export interface UseSelectionOptions {
   /**
    * Hidden rows
    */
-  isHiddenRow: HiddenType;
+  isHiddenRow?: HiddenType;
   /**
    * Hidden columns
    */
-  isHiddenColumn: HiddenType;
+  isHiddenColumn?: HiddenType;
   /**
    * Always scroll to active cell
    */
@@ -92,19 +92,19 @@ export interface UseSelectionOptions {
   /**
    * Mousedown
    */
-  mouseDownInterceptor: (
+  mouseDownInterceptor?: (
     e: React.MouseEvent<HTMLDivElement>,
     coords: CellInterface,
     start: React.MutableRefObject<CellInterface | null>,
     end: React.MutableRefObject<CellInterface | null>
   ) => boolean | undefined;
-  mouseMoveInterceptor: (
+  mouseMoveInterceptor?: (
     e: globalThis.MouseEvent,
     coords: CellInterface,
     start: React.MutableRefObject<CellInterface | null>,
     end: React.MutableRefObject<CellInterface | null>
   ) => boolean | undefined;
-  canSelectionSpanMergedCells: (
+  canSelectionSpanMergedCells?: (
     start: CellInterface,
     end: CellInterface
   ) => boolean;

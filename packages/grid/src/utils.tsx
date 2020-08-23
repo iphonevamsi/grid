@@ -1,6 +1,19 @@
-import React from "react";
+import React, { useState, useCallback } from "react";
 import { ShapeConfig } from "konva/types/Shape";
 import { Line, Rect } from "react-konva";
+
+interface BoxConfig extends ShapeConfig {
+  strokeLeftColor?: string;
+  strokeTopColor?: string;
+  strokeRightColor?: string;
+  strokeBottomColor?: string;
+  strokeWidth?: number;
+  strokeTopWidth?: number;
+  strokeRightWidth?: number;
+  strokeBottomWidth?: number;
+  strokeLeftWidth?: number;
+  fillOpacity?: number
+}
 
 /**
  * Create a box with custom top/right/bottom/left colors and widths
@@ -118,7 +131,7 @@ export const createHTMLBox = ({
   key,
   strokeStyle = "solid",
   fillOpacity = 1,
-}: ShapeConfig) => {
+}: BoxConfig) => {
   const commonProps = {};
   width = width - Math.floor(strokeWidth / 2);
   height = height - Math.floor(strokeWidth / 2);
@@ -135,6 +148,7 @@ export const createHTMLBox = ({
         borderColor: strokeTopColor,
         borderTopWidth: strokeTopWidth,
         borderStyle: strokeStyle,
+        pointerEvents: 'none',
       }}
       key="top"
       {...commonProps}
@@ -150,6 +164,7 @@ export const createHTMLBox = ({
         borderColor: strokeRightColor,
         borderRightWidth: strokeRightWidth,
         borderStyle: strokeStyle,
+        pointerEvents: 'none',
       }}
       key="right"
       {...commonProps}
@@ -166,6 +181,7 @@ export const createHTMLBox = ({
         borderColor: strokeBottomColor,
         borderBottomWidth: strokeBottomWidth,
         borderStyle: strokeStyle,
+        pointerEvents: 'none',
       }}
       key="bottom"
       {...commonProps}
@@ -181,14 +197,14 @@ export const createHTMLBox = ({
         borderColor: strokeLeftColor,
         borderLeftWidth: strokeLeftWidth,
         borderStyle: strokeStyle,
+        pointerEvents: 'none',
       }}
       key="left"
       {...commonProps}
     />,
   ];
-
   return (
-    <React.Fragment key={key}>
+    <React.Fragment key={key}>      
       {fill && (
         <div
           style={{
@@ -200,7 +216,7 @@ export const createHTMLBox = ({
             backgroundColor: fill,
             opacity: fillOpacity,
             userSelect: "none",
-            pointerEvents: "none",
+            pointerEvents: 'none',
           }}
           {...commonProps}
         />
@@ -209,3 +225,4 @@ export const createHTMLBox = ({
     </React.Fragment>
   );
 };
+

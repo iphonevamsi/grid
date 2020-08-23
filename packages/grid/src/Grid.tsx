@@ -251,6 +251,10 @@ export interface GridProps
    * Scale
    */
   scale?: number;
+  /**
+   * Shared active cells
+   */
+  sharedActiveCells?: SharedActiveCell[]
 }
 
 export interface CellRangeArea extends CellInterface {
@@ -264,7 +268,7 @@ export type RefAttribute = {
 export type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>;
 export interface SelectionProps extends ShapeConfig {
   fillHandleProps?: Record<string, (e: any) => void>;
-  type: "fill" | "activeCell" | "selection";
+  type: "fill" | "activeCell" | "selection" | "sharedActiveCell";
 }
 
 export type ScrollCoords = {
@@ -320,6 +324,13 @@ export interface CellInterface {
 export interface OptionalCellInterface {
   rowIndex?: number;
   columnIndex?: number;
+}
+
+export interface SharedActiveCell {
+  cell: CellInterface,
+  isEditing?: boolean;
+  label?: string
+  style: Style
 }
 
 export interface ViewPortProps {
@@ -504,6 +515,7 @@ const Grid: React.FC<GridProps & RefAttribute> = memo(
       isHiddenColumn,
       isHiddenCell,
       scale = 1,
+      sharedActiveCells,
       ...rest
     } = props;
 
@@ -2313,6 +2325,75 @@ const Grid: React.FC<GridProps & RefAttribute> = memo(
     }
 
     /**
+     * Shared active cells
+     */
+    const sharedActiveCellSelections = []
+    if (sharedActiveCells) {
+      for (let i = 0; i < sharedActiveCells.length; i++) {
+        const { cell, style, label } = sharedActiveCells[i]
+        const bounds = getCellBounds(cell);
+        const { top, left, right, bottom } = bounds;
+        const actualBottom = Math.min(rowStopIndex, bottom);
+        const actualRight = Math.min(columnStopIndex, right);
+        const isInFrozenColumn = left < frozenColumns;
+        const isInFrozenRow = top < frozenRows;
+        const isInFrozenIntersection = isInFrozenRow && isInFrozenColumn;
+        const y = getRowOffset({
+          index: top,
+          rowHeight,
+          columnWidth,
+          instanceProps: instanceProps.current,
+          scale,
+        });
+        const height =
+          getRowOffset({
+            index: actualBottom,
+            rowHeight,
+            columnWidth,
+            instanceProps: instanceProps.current,
+            scale,
+          }) -
+          y +
+          getRowHeight(actualBottom, instanceProps.current);
+
+        const x = getColumnOffset({
+          index: left,
+          rowHeight,
+          columnWidth,
+          instanceProps: instanceProps.current,
+          scale,
+        });
+
+        const width =
+          getColumnOffset({
+            index: actualRight,
+            rowHeight,
+            columnWidth,
+            instanceProps: instanceProps.current,
+            scale,
+          }) -
+          x +
+          getColumnWidth(actualRight, instanceProps.current);
+
+        const sel = selectionRenderer({
+          stroke: selectionBorderColor,
+          strokeWidth: activeCellStrokeWidth,
+          fill: "transparent",
+          x: x,
+          y: y,
+          width: width,
+          height: height,
+          type: "sharedActiveCell",
+          containerWidth,
+          label,
+          ...style,
+        });
+
+        sharedActiveCellSelections.push(sel)
+      }
+    }
+
+    /**
      * Convert selections to area
      * Removed useMemo as changes to lastMeasureRowIndex, lastMeasuredColumnIndex,
      * does not trigger useMemo
@@ -2856,8 +2937,9 @@ const Grid: React.FC<GridProps & RefAttribute> = memo(
           >
             {borderStyleCells}
             {fillSelections}
+            {sharedActiveCellSelections}
             {selectionAreas}
-            {activeCellSelection}
+            {activeCellSelection}            
             {fillhandleComponent}
           </div>
         </div>

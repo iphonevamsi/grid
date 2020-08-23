@@ -1,14 +1,14 @@
 import {
   lex,
   tokenVocabulary,
-  Token
+  Token,
 } from "fast-formula-parser/grammar/lexing";
 import {
   addressToCell,
   cellToAddress,
   desanitizeSheetName,
   ERROR_CIRCULAR_DEPENDENCY,
-  ERROR_REFERENCE
+  ERROR_REFERENCE,
 } from "./../constants";
 import { CellInterface, SelectionArea, AreaProps } from "@rowsncolumns/grid";
 import { FormulaSelection } from "../Grid/Grid";
@@ -45,7 +45,7 @@ export const getSelectionColorAtIndex = (key: number) => {
     "#880e4f",
     "#827717",
     "#f7981d", // orange
-    "#7e3794"
+    "#7e3794",
   ];
   var str = key.toString();
   for (let i = 0; i < str.length; i++) {
@@ -67,9 +67,9 @@ export const selectionFromCells = (
       top: Math.min(start.rowIndex, end.rowIndex),
       left: start.columnIndex,
       right: end.columnIndex,
-      bottom: Math.max(start.rowIndex, end.rowIndex)
+      bottom: Math.max(start.rowIndex, end.rowIndex),
     },
-    sheet: desanitizeSheetName(sheetName)
+    sheet: desanitizeSheetName(sheetName),
   };
 };
 
@@ -189,7 +189,7 @@ export const normalizeTokens = (text: string | undefined): Token[] => {
           index: ++selIndex,
           sheetName,
           range: isRange,
-          sel: sel
+          sel: sel,
         });
 
         if (isRange) {
@@ -217,7 +217,7 @@ export const tokenize = (text: string) => {
     return lex(text);
   } catch (err) {
     return {
-      tokens: []
+      tokens: [],
     };
   }
 };
@@ -381,24 +381,24 @@ export const moveMergedCells = (
 ) => {
   switch (op) {
     case "column-insert": {
-      return mergedCells?.map(area => {
+      return mergedCells?.map((area) => {
         if (area.left >= referenceIndex) {
           return {
             ...area,
             left: area.left + 1,
-            right: area.right + 1
+            right: area.right + 1,
           };
         }
         return area;
       });
     }
     case "row-insert": {
-      return mergedCells?.map(area => {
+      return mergedCells?.map((area) => {
         if (area.top >= referenceIndex) {
           return {
             ...area,
             top: area.top + 1,
-            bottom: area.bottom + 1
+            bottom: area.bottom + 1,
           };
         }
         return area;
@@ -406,12 +406,12 @@ export const moveMergedCells = (
     }
 
     case "column-remove": {
-      return mergedCells?.map(area => {
+      return mergedCells?.map((area) => {
         if (area.left >= referenceIndex) {
           return {
             ...area,
             left: area.left - 1,
-            right: area.right - 1
+            right: area.right - 1,
           };
         }
         return area;
@@ -419,12 +419,12 @@ export const moveMergedCells = (
     }
 
     case "row-remove": {
-      return mergedCells?.map(area => {
+      return mergedCells?.map((area) => {
         if (area.top >= referenceIndex) {
           return {
             ...area,
             top: area.top - 1,
-            bottom: area.bottom - 1
+            bottom: area.bottom - 1,
           };
         }
         return area;
@@ -449,7 +449,7 @@ export const functionSuggestion = (
     const range = Editor.range(editor, start, charBefore);
     const str = Editor.string(editor, range);
     const token = tokens.find(
-      token =>
+      (token) =>
         start.offset >= token.startOffset && start.offset <= token.endColumn
     );
 
@@ -488,13 +488,13 @@ export const showCellSuggestions = (editor: Editor, tokens: Token[]) => {
     "Function",
     "ExcelRefFunction",
     "ExcelConditionalRefFunction",
-    "QuoteS"
+    "QuoteS",
   ];
   const parens = [
     "CloseParen",
     "CloseSquareParen",
     "CloseCurlyParen",
-    "QuoteS"
+    "QuoteS",
   ];
   const nextOps = ["Comma", ...parens];
   // console.log('d', start, prevToken, curToken, nextToken)
@@ -564,7 +564,7 @@ export const getCurrentToken = (tokens: Token[], editor: Editor) => {
   const { selection } = editor;
   if (selection && Range.isCollapsed(selection)) {
     const [start] = Range.edges(selection);
-    return tokens.find(token => token.endColumn >= start.offset);
+    return tokens.find((token) => token.endColumn >= start.offset);
   }
   return void 0;
 };
@@ -595,7 +595,7 @@ export const getNextToken = (
 ): Token | undefined => {
   const start = getCurrentCursorOffset(editor);
   if (!start) return void 0;
-  return tokens.find(token => {
+  return tokens.find((token) => {
     return token.startOffset >= start.offset;
   });
 };
@@ -614,7 +614,7 @@ export const operators = [
   "LteOp",
   "GtOp",
   "EqOp",
-  "LtOp"
+  "LtOp",
 ];
 
 export const operatorTokenNames = [
@@ -633,7 +633,7 @@ export const operatorTokenNames = [
   // "OpenCurlyParen",
   // "CloseCurlyParen",
   // "QuoteS",
-  ...operators
+  ...operators,
 ];
 
 export { tokenVocabulary };
