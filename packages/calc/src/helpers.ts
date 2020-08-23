@@ -15,6 +15,10 @@ export type DATATYPES =
   | "error"
   | "hyperlink"
   | "array";
+
+export const ERROR_CIRCULAR_DEPENDENCY = "Circular dependency detected.";
+export const ERROR_REFERENCE = "Reference does not exist.";
+
 /**
  * Detect datatype of a string
  * @param value

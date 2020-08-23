@@ -26,6 +26,7 @@ declare module "fast-formula-parser/grammar/dependency/hooks" {
 
 declare module "fast-formula-parser/formulas/error" {
   class FormulaError {
+    static REF: any;
     constructor(readonly error: string, readonly message?: string) {}
   }
   export default FormulaError;

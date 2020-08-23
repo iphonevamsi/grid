@@ -68,6 +68,7 @@ import ContextMenuComponent from "./ContextMenu";
 import TooltipComponent, { TooltipProps } from "./Tooltip";
 import validate, { ValidationResponse } from "./validation";
 import useCalc from "./hooks/useCalc";
+import { formulaToRelativeReference } from "./formulas/helpers";
 
 export interface SpreadSheetProps {
   /**
@@ -447,6 +448,10 @@ export interface CellConfig extends CellFormatting {
    * Formula errors
    */
   error?: string;
+  /**
+   * Error message to be displayed in tooltips
+   */
+  errorMessage?: string;
   /**
    * Validation errors
    */
@@ -1151,6 +1156,27 @@ const Spreadsheet: React.FC<SpreadSheetProps & RefAttributeSheetGrid> = memo(
         /* If user has disabled */
         if (disableFormula && datatype === "formula") {
           datatype = "string";
+        }
+
+        /**
+         * Catch errors early on
+         * Validate circular dependency
+         */
+        if (datatype === "formula") {
+          try {
+            formulaToRelativeReference(value, cell, cell);
+          } catch (err) {
+            dispatch({
+              type: ACTION_TYPE.SET_CELL_ERROR,
+              id,
+              cell,
+              value,
+              datatype,
+              error: err.toString(),
+              errorMessage: err.message
+            });
+            return;
+          }
         }
 
         dispatch({

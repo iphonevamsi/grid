@@ -1,6 +1,10 @@
 declare module "fast-formula-parser/formulas/error" {
   class FormulaError {
-    constructor(readonly error: string, readonly message?: string) {}
+    constructor(
+      readonly error: string,
+      readonly message?: string,
+      readonly details?: string
+    ) {}
   }
   export default FormulaError;
 }

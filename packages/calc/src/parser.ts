@@ -6,7 +6,8 @@ import {
   DATATYPES,
   castToString,
   isNull,
-  createPosition
+  createPosition,
+  ERROR_REFERENCE
 } from "./helpers";
 import { CellsBySheet } from "./calc";
 import merge from "lodash.merge";
@@ -55,6 +56,19 @@ export const removeUndefined = (o: ParseResults) => {
     }
   }
   return o;
+};
+
+/**
+ * Returns default error message
+ * @param err
+ */
+export const getDefaultErrorMessage = (
+  err: FormulaError
+): string | undefined => {
+  if (err === FormulaError.REF) {
+    return ERROR_REFERENCE;
+  }
+  return void 0;
 };
 
 export interface CellInterface {
@@ -199,6 +213,7 @@ class FormulaParser {
       result = await this.formulaParser
         .parseAsync(text, position, true)
         .catch((err: FormulaError) => {
+          result = void 0;
           error = err.error || err.message;
           errorMessage = err.message;
         });
@@ -233,7 +248,10 @@ class FormulaParser {
 
       if ((result as any) instanceof FormulaError) {
         error = ((result as unknown) as FormulaError).error;
-        errorMessage = ((result as unknown) as FormulaError).message;
+        errorMessage =
+          ((result as unknown) as FormulaError).message ||
+          getDefaultErrorMessage(result);
+        result = void 0;
       }
     } catch (err) {
       error = err.toString();

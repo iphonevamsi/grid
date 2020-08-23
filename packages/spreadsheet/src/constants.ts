@@ -46,6 +46,8 @@ export const HYPERLINK_COLOR = "#1155CC";
 export const LINE_HEIGHT_RATIO = 1;
 export const DEFAULT_CELL_PADDING = 2;
 export const CELL_BORDER_WIDTH = 1;
+export const ERROR_CIRCULAR_DEPENDENCY = "Circular dependency detected.";
+export const ERROR_REFERENCE = "Reference does not exist.";
 
 /**
  * Number to alphabet
