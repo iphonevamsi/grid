@@ -1304,58 +1304,74 @@ export const createStateReducer = ({
                * Only paste in that area
                */
               const { selections: userSelections } = sheet;
-              const { rowIndex, columnIndex } = activeCell;
+              const sel = userSelections.length
+                ? userSelections[userSelections.length - 1]
+                : selectionFromActiveCell(activeCell)[0];
               const { cells } = sheet;
-              for (let i = 0; i < rows.length; i++) {
-                const row = rows[i];
-                const r = rowIndex + i;
-                cells[r] = cells[r] ?? {};
-                for (let j = 0; j < row.length; j++) {
-                  const text = row[j];
-                  const c = columnIndex + j;
-                  const coords = { rowIndex: r, columnIndex: c };
-                  cells[r][c] = cells[r][c] ?? {};
-                  if (cells[r][c].locked) {
+              const { top: startTop, left: startLeft } = sel.bounds;
+              const [rowSpan, colSpan] = [rows.length, rows[0].length];
+              const bottom = Math.max(
+                sel.bounds.bottom + 1,
+                startTop + rowSpan
+              );
+              const right = Math.max(sel.bounds.right + 1, startLeft + colSpan);
+
+              let rowCounter = 0;
+              for (let i = startTop; i < bottom; i++) {
+                if (rowCounter >= rowSpan) {
+                  rowCounter = 0;
+                }
+                let colCounter = 0;
+                cells[i] = cells[i] ?? {};
+                for (let j = startLeft; j < right; j++) {
+                  if (colCounter >= colSpan) {
+                    colCounter = 0;
+                  }
+                  cells[i][j] = cells[i][j] ?? {};
+                  // Check if its locked
+                  if (cells[i][j]?.locked) {
                     continue;
                   }
-                  if (typeof text === "object") {
-                    const cellConfig = text as CellConfig;
-                    // Empty cells in JSON will be `null`
-                    if (isNull(cellConfig)) {
+                  const cell = rows[rowCounter][colCounter];
+                  if (typeof cell === "object") {
+                    if (isNull(cell)) {
                       continue;
                     }
+                    const cellConfig = { ...cell } as CellConfig;
+                    const sourceCell = cellConfig?.sourceCell;
                     delete cellConfig?.formulaRange;
                     delete cellConfig?.result;
                     delete cellConfig?.parentCell;
                     delete cellConfig?.resultType;
-
-                    // TODO: Array formulas does not work well with copy/paste
-                    // const { parentCell, ...config } = text as CellConfig;
-                    cells[r][c] = cellConfig as CellConfig;
+                    delete cellConfig?.sourceCell;
+                    cells[i][j] = cellConfig as CellConfig;
                     if (cellConfig.datatype === "formula") {
+                      const destinationCell = { rowIndex: i, columnIndex: j };
                       try {
                         const relativeFormula = formulaToRelativeReference(
                           cellConfig.text,
-                          cellConfig.sourceCell as CellInterface,
-                          coords
+                          sourceCell as CellInterface,
+                          destinationCell
                         );
-                        cells[r][c].text = relativeFormula;
+                        cells[i][j].text = relativeFormula;
                       } catch (err) {
-                        cells[r][c].text = (err as FormulaError).details;
-                        cells[r][c].error = (err as FormulaError).toString();
-                        cells[r][
-                          c
+                        cells[i][j].text = (err as FormulaError).details;
+                        cells[i][j].error = (err as FormulaError).toString();
+                        cells[i][
+                          j
                         ].errorMessage = (err as FormulaError).message;
                       }
-                      delete cellConfig.sourceCell;
                     }
                   } else {
-                    cells[r][c].text =
-                      text === null || isNull(text) ? "" : text;
-                    cells[r][c].datatype = detectDataType(cells[r][c].text);
+                    cells[i][j].text =
+                      cell === null || isNull(cell) ? "" : cell;
+                    cells[i][j].datatype = detectDataType(cells[i][j].text);
                   }
+                  colCounter++;
                 }
+                rowCounter++;
               }
+
               /* Remove cut selections */
               if (cutSelection) {
                 const { bounds } = cutSelection;
@@ -1370,7 +1386,7 @@ export const createStateReducer = ({
               }
               /* Update sheet selections */
               if (selections !== void 0) {
-                sheet.selections = selections;
+                // sheet.selections = selections;
               }
 
               /* Keep reference of active cell, so we can focus back */

@@ -1714,6 +1714,7 @@ const Spreadsheet: React.FC<SpreadSheetProps & RefAttributeSheetGrid> = memo(
       id: SheetID,
       rows,
       activeCell: CellInterface | null,
+      selections: SelectionArea[],
       /* Selections that needs to be removed: When user does cut + paste */
       cutSelection?: SelectionArea
     ) => {
@@ -1724,13 +1725,17 @@ const Spreadsheet: React.FC<SpreadSheetProps & RefAttributeSheetGrid> = memo(
         columnIndex,
         columnIndex + (rows.length && rows[0].length - 1)
       );
-      const selections = [
+      const sel = selections.length
+        ? selections[selections.length - 1].bounds
+        : (getCellBounds(activeCell) as AreaProps);
+
+      const newSelection = [
         {
           bounds: {
-            top: rowIndex,
-            left: columnIndex,
-            bottom: endRowIndex,
-            right: endColumnIndex
+            top: sel.top,
+            left: sel.left,
+            bottom: Math.max(sel.bottom, endRowIndex),
+            right: Math.max(sel.right, endColumnIndex)
           }
         }
       ];
@@ -1739,13 +1744,17 @@ const Spreadsheet: React.FC<SpreadSheetProps & RefAttributeSheetGrid> = memo(
       const isSingleCellSelection =
         rowIndex === endRowIndex && columnIndex === endColumnIndex;
 
+      if (!isSingleCellSelection) {
+        setSelections(newSelection);
+      }
+
       dispatch({
         type: ACTION_TYPE.PASTE,
         id,
         rows,
         activeCell,
         cutSelection,
-        selections: isSingleCellSelection ? void 0 : selections
+        selections: isSingleCellSelection ? void 0 : newSelection
       });
 
       /* Update formula bar input */
@@ -1753,8 +1762,11 @@ const Spreadsheet: React.FC<SpreadSheetProps & RefAttributeSheetGrid> = memo(
       handleActiveCellValueChange(id, activeCell, value);
 
       /* Trigger callback and calculation */
-
-      cellChangeCallback(id, activeCell, selections.concat(cutSelection ?? []));
+      cellChangeCallback(
+        id,
+        activeCell,
+        newSelection.concat(cutSelection ?? [])
+      );
     }, []);
 
     const handleCopy = useCallback(

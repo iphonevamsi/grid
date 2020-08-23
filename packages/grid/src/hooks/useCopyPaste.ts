@@ -30,6 +30,7 @@ export interface CopyProps {
   onPaste?: (
     rows: (string | null)[][],
     activeCell: CellInterface | null,
+    selectionArea: SelectionArea[],
     /* Selection to remove */
     selection?: SelectionArea
   ) => void;
@@ -68,7 +69,7 @@ const useCopyPaste = ({
   onPaste,
   onCut,
   onCopy,
-  getText = defaultGetText,
+  getText = defaultGetText
 }: CopyProps): CopyResults => {
   const selectionRef = useRef({ selections, activeCell, getValue });
   const cutSelections = useRef<SelectionArea>();
@@ -123,11 +124,11 @@ const useCopyPaste = ({
         for (let j = left; j <= right; j++) {
           const coords = {
             rowIndex: i,
-            columnIndex: j,
+            columnIndex: j
           };
           const config = {
             ...selectionRef.current.getValue(coords),
-            sourceCell: coords,
+            sourceCell: coords
           };
           const value = getText(config);
           cell.push(config);
@@ -158,7 +159,7 @@ const useCopyPaste = ({
       MimeType.json,
       MimeType.html,
       MimeType.csv,
-      MimeType.plain,
+      MimeType.plain
     ];
     let type;
     let value;
@@ -215,7 +216,12 @@ const useCopyPaste = ({
     }
 
     onPaste &&
-      onPaste(rows, selectionRef.current.activeCell, cutSelections.current);
+      onPaste(
+        rows,
+        selectionRef.current.activeCell,
+        selectionRef.current.selections,
+        cutSelections.current
+      );
 
     cutSelections.current = undefined;
   };
@@ -245,7 +251,7 @@ const useCopyPaste = ({
   return {
     copy: handleProgramaticCopy,
     paste: handleProgramaticPaste,
-    cut: handleCut,
+    cut: handleCut
   };
 };
 

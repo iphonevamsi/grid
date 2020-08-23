@@ -11,7 +11,7 @@ import {
   SelectionArea,
   ScrollCoords,
   isNull,
-  FilterDefinition,
+  FilterDefinition
 } from "@rowsncolumns/grid";
 import { WorkbookGridRef } from "../Grid/Grid";
 import { AXIS } from "../types";
@@ -19,7 +19,7 @@ import {
   DARK_MODE_COLOR_LIGHT,
   EMPTY_ARRAY,
   DEFAULT_COLUMN_COUNT,
-  DEFAULT_ROW_COUNT,
+  DEFAULT_ROW_COUNT
 } from "../constants";
 
 export interface WorkbookProps
@@ -81,7 +81,8 @@ export interface WorkbookProps
     id: SheetID,
     rows: (string | null)[][],
     activeCell: CellInterface | null,
-    selection?: SelectionArea
+    selections: SelectionArea[],
+    cutSelections?: SelectionArea
   ) => void;
   onCut?: (id: SheetID, selection: SelectionArea) => void;
   onCopy?: (id: SheetID, selections: SelectionArea[]) => void;
@@ -193,13 +194,13 @@ const Workbook: React.FC<WorkbookProps & WorkBookRefAttribute> = memo(
       setFormulaMode,
       isFormulaInputActive,
       supportedFormulas,
-      onEditorKeyDown,
+      onEditorKeyDown
     } = props;
 
     const { colorMode } = useColorMode();
     const isLight = colorMode === "light";
     const [containerRef, { width, height }] = useMeasure({
-      polyfill: ResizeObserver,
+      polyfill: ResizeObserver
     });
 
     const {
@@ -219,7 +220,7 @@ const Workbook: React.FC<WorkbookProps & WorkBookRefAttribute> = memo(
       rowCount = DEFAULT_ROW_COUNT,
       columnCount = DEFAULT_COLUMN_COUNT,
       locked,
-      name: sheetName,
+      name: sheetName
     } = currentSheet;
 
     /* Current sheet ref */
@@ -261,11 +262,20 @@ const Workbook: React.FC<WorkbookProps & WorkBookRefAttribute> = memo(
       []
     );
 
-    const handlePaste = useCallback((rows, activeCell, cutSelections) => {
-      onPaste?.(selectedSheetRef.current, rows, activeCell, cutSelections);
-    }, []);
+    const handlePaste = useCallback(
+      (rows, activeCell, selections, cutSelections) => {
+        onPaste?.(
+          selectedSheetRef.current,
+          rows,
+          activeCell,
+          selections,
+          cutSelections
+        );
+      },
+      []
+    );
 
-    const handleCopy = useCallback((selections) => {
+    const handleCopy = useCallback(selections => {
       onCopy?.(selectedSheetRef.current, selections);
     }, []);
 
