@@ -1,6 +1,13 @@
 import React, { useRef } from "react";
-import Grid, { Cell, useSelection, useTouch, GridRef, useTooltip, DefaultTooltipProps } from "@rowsncolumns/grid";
-import './style.css'
+import Grid, {
+  Cell,
+  useSelection,
+  useTouch,
+  GridRef,
+  useTooltip,
+  DefaultTooltipProps,
+} from "@rowsncolumns/grid";
+import "./style.css";
 
 export default {
   title: "Collaboration",
@@ -10,14 +17,14 @@ export default {
 export const SharedActiveCells = () => {
   const rowCount = 200;
   const columnCount = 200;
-  const gridRef = useRef<GridRef>();  
+  const gridRef = useRef<GridRef>();
   const { selections, ...selectionProps } = useSelection({
     gridRef,
     rowCount,
     columnCount,
     getValue: () => {
-      return ''
-    }
+      return "";
+    },
   });
   const touchProps = useTouch({
     gridRef,
@@ -28,42 +35,46 @@ export const SharedActiveCells = () => {
       isEditing: false,
       cell: {
         rowIndex: 1,
-        columnIndex: 2
+        columnIndex: 2,
       },
       style: {
-        fill: 'rgba(0,0,0,0.2)',
-        stroke: 'green',
+        fill: "rgba(0,0,0,0.2)",
+        stroke: "green",
         strokeWidth: 2,
-      }
+      },
     },
     {
       label: "User B",
       isEditing: false,
       cell: {
         rowIndex: 4,
-        columnIndex: 6
+        columnIndex: 6,
       },
       style: {
-        stroke: 'green',
+        stroke: "green",
         strokeWidth: 2,
-      }
-    }
-  ]
+      },
+    },
+  ];
   const { tooltipComponent, ...tooltipProps } = useTooltip({
     gridRef,
-    getTooltip: (cell) =>  {
-      return (props: DefaultTooltipProps) =>  {
+    getTooltip: (cell) => {
+      return (props: DefaultTooltipProps) => {
         const {
           x = 0,
           y = 0,
           scrollLeft = 0,
           scrollTop = 0,
           width = 0,
-          height = 0
-        } = props
-        const isSharedActiveCell = sharedActiveCells.find(item => item.cell.rowIndex === cell.rowIndex && item.cell.columnIndex === cell.columnIndex)
-        if (!isSharedActiveCell) return null
-        const posX = x + width - scrollLeft
+          height = 0,
+        } = props;
+        const isSharedActiveCell = sharedActiveCells.find(
+          (item) =>
+            item.cell.rowIndex === cell.rowIndex &&
+            item.cell.columnIndex === cell.columnIndex
+        );
+        if (!isSharedActiveCell) return null;
+        const posX = x + width - scrollLeft;
         const posY = y - scrollTop;
         return (
           <div
@@ -71,27 +82,38 @@ export const SharedActiveCells = () => {
               position: "absolute",
               left: 0,
               top: 0,
-              transform: `translate(${posX}px, ${posY}px)`,              
+              transform: `translate(${posX}px, ${posY}px)`,
               background: "green",
               boxShadow: "0 4px 8px 3px rgba(60,64,67,.15)",
               padding: 2,
               borderTopRightRadius: 2,
               borderBottomRightRadius: 2,
               fontSize: 12,
-              fontFamily: 'Arial',
-              color: 'white'
+              fontFamily: "Arial",
+              color: "white",
             }}
           >
             {isSharedActiveCell.label}
           </div>
-        )
-      }
-    }
-  })
+        );
+      };
+    },
+  });
+  const borderStyles = sharedActiveCells.map(({ cell, style }) => {
+    return {
+      bounds: {
+        top: cell.rowIndex,
+        bottom: cell.rowIndex,
+        left: cell.columnIndex,
+        right: cell.columnIndex,
+      },
+      style,
+    };
+  });
   return (
     <div
       style={{
-        position: 'relative'
+        position: "relative",
       }}
     >
       <Grid
@@ -103,7 +125,7 @@ export const SharedActiveCells = () => {
         rowCount={rowCount}
         columnCount={columnCount}
         selections={selections}
-        sharedActiveCells={sharedActiveCells}
+        borderStyles={borderStyles}
         {...selectionProps}
         {...touchProps}
         {...tooltipProps}
