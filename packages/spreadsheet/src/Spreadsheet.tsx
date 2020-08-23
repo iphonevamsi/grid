@@ -765,9 +765,6 @@ const Spreadsheet: React.FC<SpreadSheetProps & RefAttributeSheetGrid> = memo(
           onChangeSelectedSheet?.(newState.selectedSheet as React.ReactText);
         }
 
-        /* Update current reference */
-        currentStateRef.current = newState;
-
         /* Call back */
         onChange?.(newState.sheets);
       },
@@ -1744,10 +1741,6 @@ const Spreadsheet: React.FC<SpreadSheetProps & RefAttributeSheetGrid> = memo(
       const isSingleCellSelection =
         rowIndex === endRowIndex && columnIndex === endColumnIndex;
 
-      if (!isSingleCellSelection) {
-        setSelections(newSelection);
-      }
-
       dispatch({
         type: ACTION_TYPE.PASTE,
         id,
@@ -1756,6 +1749,10 @@ const Spreadsheet: React.FC<SpreadSheetProps & RefAttributeSheetGrid> = memo(
         cutSelection,
         selections: isSingleCellSelection ? void 0 : newSelection
       });
+
+      if (!isSingleCellSelection) {
+        setSelections(newSelection);
+      }
 
       /* Update formula bar input */
       const value = getCellConfigRef.current?.(id, activeCell)?.text;

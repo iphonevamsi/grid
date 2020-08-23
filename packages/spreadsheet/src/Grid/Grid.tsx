@@ -348,7 +348,6 @@ const SheetGrid: React.FC<GridProps & RefAttributeGrid> = memo(
     } = props;
     const gridRef = useRef<GridRef | null>(null);
     const isLockedRef = useRef<boolean | undefined>(false);
-    const onSheetChangeRef = useRef<(props: any) => void>();
     const rowCount = initialRowCount + 1;
     const columnCount = initialColumnCount + 1;
     const currentlyEditingSheetId = useRef<SheetID>();
@@ -397,13 +396,9 @@ const SheetGrid: React.FC<GridProps & RefAttributeGrid> = memo(
     }, [filterViews]);
 
     useEffect(() => {
-      onSheetChangeRef.current = onSheetChange
-        ? debounce(onSheetChange, 100)
-        : void 0;
       debounceScroll.current = onScroll ? debounce(onScroll, 500) : void 0;
 
       return () => {
-        onSheetChangeRef.current = void 0;
         debounceScroll.current = void 0;
       };
     }, []);
@@ -974,7 +969,7 @@ const SheetGrid: React.FC<GridProps & RefAttributeGrid> = memo(
         return;
       }
       /* Batch this cos of debounce */
-      onSheetChangeRef.current?.({ activeCell, selections });
+      onSheetChange?.({ activeCell, selections });
 
       /* Callback */
       onSelectionChange?.(activeCell, selections);

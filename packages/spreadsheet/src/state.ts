@@ -1397,7 +1397,7 @@ export const createStateReducer = ({
               }
               /* Update sheet selections */
               if (selections !== void 0) {
-                // sheet.selections = selections;
+                sheet.selections = selections;
               }
 
               /* Keep reference of active cell, so we can focus back */

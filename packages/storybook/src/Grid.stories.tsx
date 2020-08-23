@@ -7,14 +7,14 @@ import Grid, {
   useEditable,
   useSizer as useAutoSizer,
   useTooltip,
-  Direction,
+  Direction
 } from "@rowsncolumns/grid";
 import { useMeasure } from "react-use";
 import { Rect, Text, Group, RegularPolygon } from "react-konva";
 
 export default {
   title: "Grid",
-  component: Grid,
+  component: Grid
 };
 
 export const BaseGrid: React.FC = () => {
@@ -27,16 +27,16 @@ export const BaseGrid: React.FC = () => {
         height={height}
         columnCount={200}
         rowCount={200}
-        columnWidth={(index) => {
+        columnWidth={index => {
           return 100;
         }}
-        itemRenderer={(props) => (
+        itemRenderer={props => (
           <DefaultCell
             {...props}
             value={`${props.rowIndex}:${props.columnIndex}`}
           />
         )}
-        rowHeight={(index) => {
+        rowHeight={index => {
           return 20;
         }}
       />
@@ -55,7 +55,7 @@ export const BaseGridSnap: React.FC = () => {
     x,
     y,
     width,
-    height,
+    height
   }: IChildrenProps) => {
     const text = `${rowIndex}x${columnIndex}`;
     return (
@@ -88,12 +88,12 @@ export const BaseGridSnap: React.FC = () => {
         height={height}
         columnCount={200}
         rowCount={200}
-        columnWidth={(index) => {
+        columnWidth={index => {
           return 100;
         }}
         snap
-        itemRenderer={(props) => <Cell {...props} />}
-        rowHeight={(index) => {
+        itemRenderer={props => <Cell {...props} />}
+        rowHeight={index => {
           return 20;
         }}
       />
@@ -104,11 +104,11 @@ export const BaseGridSnap: React.FC = () => {
 };
 
 BaseGridSnap.story = {
-  name: "Autosnap",
+  name: "Autosnap"
 };
 
 export const FullWidthGrid: React.FC = () => {
-  const itemRenderer = (props) => (
+  const itemRenderer = props => (
     <DefaultCell value={`${props.rowIndex}:${props.columnIndex}`} {...props} />
   );
   const App = () => {
@@ -118,7 +118,7 @@ export const FullWidthGrid: React.FC = () => {
         style={{
           flex: 1,
           width: "100%",
-          height: 600,
+          height: 600
         }}
         ref={containerRef}
       >
@@ -127,11 +127,11 @@ export const FullWidthGrid: React.FC = () => {
           height={height}
           columnCount={200}
           rowCount={200}
-          columnWidth={(index) => {
+          columnWidth={index => {
             return 100;
           }}
           itemRenderer={itemRenderer}
-          rowHeight={(index) => {
+          rowHeight={index => {
             return 20;
           }}
         />
@@ -152,7 +152,7 @@ export const AutoSizer: React.FC = () => {
     y,
     width,
     height,
-    value,
+    value
   }: IChildrenProps) => {
     const text = value || `${rowIndex}x${columnIndex}`;
     return (
@@ -183,7 +183,7 @@ export const AutoSizer: React.FC = () => {
     const [data, setData] = useState({
       [[1, 2]]: "Hello, good morning",
       [[30, 4]]: "lorem asd asd as das dasd asd as da sdasdasda",
-      [[2, 15]]: "lorem asd asd as das dasd asd as da sdasdasda",
+      [[2, 15]]: "lorem asd asd as das dasd asd as da sdasdasda"
     });
     const gridRef = useRef(null);
     const getCellValue = useCallback(
@@ -192,7 +192,7 @@ export const AutoSizer: React.FC = () => {
     );
     const autoSizerProps = useAutoSizer({
       gridRef,
-      getValue: getCellValue,
+      getValue: getCellValue
     });
     return (
       <Grid
@@ -201,13 +201,13 @@ export const AutoSizer: React.FC = () => {
         height={height}
         columnCount={200}
         rowCount={200}
-        columnWidth={(index) => {
+        columnWidth={index => {
           return 100;
         }}
-        itemRenderer={(props) => (
+        itemRenderer={props => (
           <Cell value={data[[props.rowIndex, props.columnIndex]]} {...props} />
         )}
-        rowHeight={(index) => {
+        rowHeight={index => {
           return 20;
         }}
         {...autoSizerProps}
@@ -227,7 +227,7 @@ export const MergedCells: React.FC = () => {
     x,
     y,
     width,
-    height,
+    height
   }: IChildrenProps) => {
     const text = `${rowIndex}x${columnIndex}`;
     return (
@@ -259,20 +259,20 @@ export const MergedCells: React.FC = () => {
         top: 5,
         left: 5,
         right: 6,
-        bottom: 5,
+        bottom: 5
       },
       {
         top: 1,
         left: 2,
         right: 4,
-        bottom: 5,
+        bottom: 5
       },
       {
         top: 5,
         left: 0,
         right: 1,
-        bottom: 5,
-      },
+        bottom: 5
+      }
     ];
     const gridRef = useRef();
     const rowCount = 200;
@@ -280,7 +280,7 @@ export const MergedCells: React.FC = () => {
     const { selection, ...selectionProps } = useSelection({
       gridRef,
       rowCount,
-      columnCount,
+      columnCount
     });
     return (
       <Grid
@@ -290,11 +290,11 @@ export const MergedCells: React.FC = () => {
         rowCount={200}
         ref={gridRef}
         mergedCells={mergedCells}
-        columnWidth={(index) => {
+        columnWidth={index => {
           return 100;
         }}
-        itemRenderer={(props) => <Cell {...props} />}
-        rowHeight={(index) => {
+        itemRenderer={props => <Cell {...props} />}
+        rowHeight={index => {
           return 20;
         }}
         selection={selection}
@@ -315,14 +315,14 @@ export const BaseGridWithSelection: React.FC = () => {
         top: 2,
         right: 3,
         left: 2,
-        bottom: 20,
+        bottom: 20
       },
       style: {
         // strokeWidth: 1,
         // stroke: "red",
-        borderStyle: "dashed",
-      },
-    },
+        borderStyle: "dashed"
+      }
+    }
   ];
 
   const Cell = ({
@@ -331,7 +331,7 @@ export const BaseGridWithSelection: React.FC = () => {
     x,
     y,
     width,
-    height,
+    height
   }: IChildrenProps) => {
     const text = `${rowIndex}x${columnIndex}`;
     return (
@@ -356,7 +356,7 @@ export const BaseGridWithSelection: React.FC = () => {
       initialSelections,
       gridRef,
       rowCount,
-      columnCount,
+      columnCount
     });
     return (
       <Grid
@@ -374,10 +374,10 @@ export const BaseGridWithSelection: React.FC = () => {
         snap
         ref={gridRef}
         {...selectionProps}
-        columnWidth={(index) => {
+        columnWidth={index => {
           return 100;
         }}
-        rowHeight={(index) => {
+        rowHeight={index => {
           return 20;
         }}
         itemRenderer={Cell}
@@ -397,7 +397,7 @@ export const VariableSizeGrid: React.FC = () => {
     x,
     y,
     width,
-    height,
+    height
   }: IChildrenProps) => {
     const text = `${rowIndex}x${columnIndex}`;
     return (
@@ -429,11 +429,11 @@ export const VariableSizeGrid: React.FC = () => {
       height={height}
       columnCount={200}
       rowCount={200}
-      columnWidth={(index) => {
+      columnWidth={index => {
         if (index % 3 === 0) return 200;
         return 100;
       }}
-      rowHeight={(index) => {
+      rowHeight={index => {
         if (index % 2 === 0) return 40;
         return 20;
       }}
@@ -451,7 +451,7 @@ export const LargeGrid: React.FC = () => {
     x,
     y,
     width,
-    height,
+    height
   }: IChildrenProps) => {
     const text = `${rowIndex}x${columnIndex}`;
     const fill =
@@ -491,11 +491,11 @@ export const LargeGrid: React.FC = () => {
       height={height}
       columnCount={1000000}
       rowCount={1000000}
-      columnWidth={(index) => {
+      columnWidth={index => {
         if (index % 3 === 0) return 200;
         return 100;
       }}
-      rowHeight={(index) => {
+      rowHeight={index => {
         if (index % 2 === 0) return 40;
         return 20;
       }}
@@ -505,7 +505,7 @@ export const LargeGrid: React.FC = () => {
 };
 
 LargeGrid.story = {
-  name: "1,000,000 rows and cols",
+  name: "1,000,000 rows and cols"
 };
 
 export const DataGrid: React.FC = () => {
@@ -520,7 +520,7 @@ export const DataGrid: React.FC = () => {
     y,
     width,
     height,
-    header,
+    header
   }: IChildrenProps) => {
     const text = header
       ? columnIndex < frozenColumns
@@ -563,17 +563,17 @@ export const DataGrid: React.FC = () => {
         frozenColumns={frozenColumns}
         ref={gridRef}
         width={width}
-        columnWidth={(index) => {
+        columnWidth={index => {
           if (index === 0) return 80;
           if (index % 3 === 0) return 200;
           return 100;
         }}
-        rowHeight={(index) => {
+        rowHeight={index => {
           if (index % 2 === 0) return 40;
           return 20;
         }}
         showScrollbar={false}
-        itemRenderer={(props) => <Cell {...props} header />}
+        itemRenderer={props => <Cell {...props} header />}
       />
       <Grid
         columnCount={columnCount}
@@ -581,12 +581,12 @@ export const DataGrid: React.FC = () => {
         frozenColumns={frozenColumns}
         height={height}
         width={width}
-        columnWidth={(index) => {
+        columnWidth={index => {
           if (index === 0) return 80;
           if (index % 3 === 0) return 200;
           return 100;
         }}
-        rowHeight={(index) => {
+        rowHeight={index => {
           if (index % 2 === 0) return 40;
           return 20;
         }}
@@ -601,7 +601,7 @@ export const DataGrid: React.FC = () => {
 
 export const DataGridResize: React.FC = () => {
   const dragHandleWidth = 5;
-  const DraggableRect = (props) => {
+  const DraggableRect = props => {
     return (
       <Rect
         fill="blue"
@@ -609,10 +609,10 @@ export const DataGridResize: React.FC = () => {
         hitStrokeWidth={20}
         onMouseEnter={() => (document.body.style.cursor = "ew-resize")}
         onMouseLeave={() => (document.body.style.cursor = "default")}
-        dragBoundFunc={(pos) => {
+        dragBoundFunc={pos => {
           return {
             ...pos,
-            y: 0,
+            y: 0
           };
         }}
         {...props}
@@ -627,7 +627,7 @@ export const DataGridResize: React.FC = () => {
     width,
     height,
     frozenColumns,
-    onResize,
+    onResize
   }) => {
     const text = columnIndex < frozenColumns ? "S/No" : `Header ${columnIndex}`;
     const fill = "#eee";
@@ -657,7 +657,7 @@ export const DataGridResize: React.FC = () => {
           y={y}
           width={dragHandleWidth}
           height={height}
-          onDragMove={(e) => {
+          onDragMove={e => {
             const node = e.target;
             const newWidth = node.x() - x + dragHandleWidth;
 
@@ -674,7 +674,7 @@ export const DataGridResize: React.FC = () => {
     y,
     width,
     height,
-    key,
+    key
   }: IChildrenProps) => {
     const text = `${rowIndex}x${columnIndex}`;
     const fill = "white";
@@ -712,10 +712,10 @@ export const DataGridResize: React.FC = () => {
     const frozenColumns = 1;
     const [columnWidthMap, setColumnWidthMap] = useState({});
     const handleResize = (columnIndex, newWidth) => {
-      setColumnWidthMap((prev) => {
+      setColumnWidthMap(prev => {
         return {
           ...prev,
-          [columnIndex]: newWidth,
+          [columnIndex]: newWidth
         };
       });
       gridRef.current.resizeColumns([columnIndex]);
@@ -730,18 +730,18 @@ export const DataGridResize: React.FC = () => {
           frozenColumns={frozenColumns}
           ref={gridRef}
           width={width}
-          columnWidth={(index) => {
+          columnWidth={index => {
             if (index in columnWidthMap) return columnWidthMap[index];
             if (index === 0) return 80;
             if (index % 3 === 0) return 200;
             return 100;
           }}
-          rowHeight={(index) => {
+          rowHeight={index => {
             if (index % 2 === 0) return 40;
             return 20;
           }}
           showScrollbar={false}
-          itemRenderer={(props) => (
+          itemRenderer={props => (
             <HeaderComponent
               onResize={handleResize}
               frozenColumns={frozenColumns}
@@ -756,13 +756,13 @@ export const DataGridResize: React.FC = () => {
           height={height}
           width={width}
           ref={mainGridRef}
-          columnWidth={(index) => {
+          columnWidth={index => {
             if (index in columnWidthMap) return columnWidthMap[index];
             if (index === 0) return 80;
             if (index % 3 === 0) return 200;
             return 100;
           }}
-          rowHeight={(index) => {
+          rowHeight={index => {
             if (index % 2 === 0) return 40;
             return 20;
           }}
@@ -778,7 +778,7 @@ export const DataGridResize: React.FC = () => {
 };
 
 DataGridResize.story = {
-  name: "Grid with resizable headers",
+  name: "Grid with resizable headers"
 };
 
 export const GridWithFrozenRow: React.FC = () => {
@@ -791,7 +791,7 @@ export const GridWithFrozenRow: React.FC = () => {
     x,
     y,
     width,
-    height,
+    height
   }: IChildrenProps) => {
     const text = `${rowIndex}x${columnIndex}`;
     const isFrozen = rowIndex < frozenRows;
@@ -825,10 +825,10 @@ export const GridWithFrozenRow: React.FC = () => {
       columnCount={200}
       rowCount={200}
       frozenRows={frozenRows}
-      columnWidth={(index) => {
+      columnWidth={index => {
         return 100;
       }}
-      rowHeight={(index) => {
+      rowHeight={index => {
         return 20;
       }}
       itemRenderer={Cell}
@@ -836,7 +836,7 @@ export const GridWithFrozenRow: React.FC = () => {
   );
 };
 GridWithFrozenRow.story = {
-  name: "Frozen rows",
+  name: "Frozen rows"
 };
 
 export const GridWithFrozenColumns: React.FC = () => {
@@ -849,7 +849,7 @@ export const GridWithFrozenColumns: React.FC = () => {
     x,
     y,
     width,
-    height,
+    height
   }: IChildrenProps) => {
     const text = `${rowIndex}x${columnIndex}`;
     const isFrozen = columnIndex < frozenColumns;
@@ -883,10 +883,10 @@ export const GridWithFrozenColumns: React.FC = () => {
       columnCount={200}
       rowCount={200}
       frozenColumns={frozenColumns}
-      columnWidth={(index) => {
+      columnWidth={index => {
         return 100;
       }}
-      rowHeight={(index) => {
+      rowHeight={index => {
         return 20;
       }}
       itemRenderer={Cell}
@@ -894,7 +894,7 @@ export const GridWithFrozenColumns: React.FC = () => {
   );
 };
 GridWithFrozenColumns.story = {
-  name: "Frozen columns",
+  name: "Frozen columns"
 };
 
 export const GridWithFrozenEdges: React.FC = () => {
@@ -908,7 +908,7 @@ export const GridWithFrozenEdges: React.FC = () => {
     x,
     y,
     width,
-    height,
+    height
   }: IChildrenProps) => {
     const text = `${rowIndex}x${columnIndex}`;
     const isFrozen = rowIndex < frozenRows || columnIndex < frozenColumns;
@@ -942,7 +942,7 @@ export const GridWithFrozenEdges: React.FC = () => {
     const { selection, ...selectionProps } = useSelection({
       gridRef,
       rowCount,
-      columnCount,
+      columnCount
     });
     return (
       <Grid
@@ -954,10 +954,10 @@ export const GridWithFrozenEdges: React.FC = () => {
         rowCount={100000}
         frozenColumns={frozenColumns}
         frozenRows={frozenRows}
-        columnWidth={(index) => {
+        columnWidth={index => {
           return 100;
         }}
-        rowHeight={(index) => {
+        rowHeight={index => {
           return 20;
         }}
         itemRenderer={Cell}
@@ -970,20 +970,20 @@ export const GridWithFrozenEdges: React.FC = () => {
 };
 
 GridWithFrozenEdges.story = {
-  name: "Frozen columns and rows",
+  name: "Frozen columns and rows"
 };
 
 export const EditableGrid: React.FC = () => {
   const width = 900;
   const height = 600;
-  const SelectEditor: React.FC<EditorProps> = (props) => {
+  const SelectEditor: React.FC<EditorProps> = props => {
     const {
       position,
       onSubmit,
       value,
       cell,
       nextFocusableCell,
-      onBlur,
+      onBlur
     } = props;
     return (
       <div
@@ -992,7 +992,7 @@ export const EditableGrid: React.FC = () => {
           left: position.x,
           top: position.y,
           width: position.width,
-          height: position.height,
+          height: position.height
         }}
       >
         <select
@@ -1001,7 +1001,7 @@ export const EditableGrid: React.FC = () => {
           value={value}
           onBlur={onBlur}
           value={value}
-          onChange={(e) => {
+          onChange={e => {
             onSubmit(
               e.target.value,
               cell,
@@ -1022,7 +1022,7 @@ export const EditableGrid: React.FC = () => {
       [[2, 3]]: "Cannot be edited",
       [[30, 4]]: "lorem asd asd as das dasd asd as da sdasdasda",
       [[2, 15]]: "lorem asd asd as das dasd asd as da sdasdasda",
-      [[100, 80]]: "asdhasd asd asd asd as dasdas",
+      [[100, 80]]: "asdhasd asd asd asd as dasdas"
     });
     const rowCount = 200;
     const columnCount = 200;
@@ -1050,18 +1050,20 @@ export const EditableGrid: React.FC = () => {
             changes[[i, j]] = value;
           }
         }
-        setData((prev) => ({ ...prev, ...changes }));
-      },
+        setData(prev => ({ ...prev, ...changes }));
+      }
     });
     const { getTextMetrics, ...autoSizerProps } = useAutoSizer({
       gridRef,
       getValue: getCellValue,
       resizeStrategy: "lazy",
       rowCount,
-      autoResize: false,
+      autoResize: false
     });
     const { editorComponent, isEditInProgress, ...editableProps } = useEditable(
       {
+        rowCount,
+        columnCount,
         gridRef,
         getValue: getCellValue,
         selections,
@@ -1082,39 +1084,39 @@ export const EditableGrid: React.FC = () => {
               }
               return acc;
             }, {});
-            setData((prev) => ({ ...prev, ...newValues }));
+            setData(prev => ({ ...prev, ...newValues }));
             const selectionBounds = selections[0].bounds;
 
             gridRef.current.resetAfterIndices(
               {
                 columnIndex: selectionBounds.left,
-                rowIndex: selectionBounds.top,
+                rowIndex: selectionBounds.top
               },
               true
             );
           } else if (activeCell) {
-            setData((prev) => {
+            setData(prev => {
               return {
                 ...prev,
-                [[activeCell.rowIndex, activeCell.columnIndex]]: "",
+                [[activeCell.rowIndex, activeCell.columnIndex]]: ""
               };
             });
             gridRef.current.resetAfterIndices(activeCell);
           }
         },
-        onBeforeEdit: ({ rowIndex, columnIndex }) => {
+        canEdit: ({ rowIndex, columnIndex }) => {
           if (rowIndex === 2 && columnIndex === 3) return false;
           return true;
         },
         onSubmit: (value, { rowIndex, columnIndex }, nextActiveCell) => {
-          setData((prev) => ({ ...prev, [[rowIndex, columnIndex]]: value }));
+          setData(prev => ({ ...prev, [[rowIndex, columnIndex]]: value }));
           gridRef.current.resizeColumns([columnIndex]);
 
           /* Select the next cell */
           if (nextActiveCell) {
             setActiveCell(nextActiveCell);
           }
-        },
+        }
       }
     );
     return (
@@ -1127,18 +1129,18 @@ export const EditableGrid: React.FC = () => {
           ref={gridRef}
           activeCell={activeCell}
           selections={selections}
-          columnWidth={(index) => {
+          columnWidth={index => {
             return 100;
           }}
           showFillHandle={!isEditInProgress}
-          itemRenderer={(props) => (
+          itemRenderer={props => (
             <DefaultCell
               value={data[[props.rowIndex, props.columnIndex]]}
               align="left"
               {...props}
             />
           )}
-          rowHeight={(index) => {
+          rowHeight={index => {
             return 20;
           }}
           {...selectionProps}
@@ -1170,7 +1172,7 @@ export const WithTooltip: React.FC = () => {
     x,
     y,
     width,
-    height,
+    height
   }: IChildrenProps) => {
     const text = `${rowIndex}x${columnIndex}`;
     return (
@@ -1202,7 +1204,7 @@ export const WithTooltip: React.FC = () => {
       gridRef,
       getValue: ({ rowIndex, columnIndex }) => {
         return `You are at: ${rowIndex}, ${columnIndex}`;
-      },
+      }
     });
     return (
       <div style={{ position: "relative" }}>
@@ -1212,11 +1214,11 @@ export const WithTooltip: React.FC = () => {
           height={height}
           columnCount={200}
           rowCount={200}
-          columnWidth={(index) => {
+          columnWidth={index => {
             return 100;
           }}
-          itemRenderer={(props) => <Cell {...props} />}
-          rowHeight={(index) => {
+          itemRenderer={props => <Cell {...props} />}
+          rowHeight={index => {
             return 20;
           }}
           {...tooltipProps}
@@ -1241,7 +1243,7 @@ export const GridWithContextMenu: React.FC = () => {
           position: "absolute",
           padding: 8,
           background: "white",
-          boxShadow: "0 1px 2px 3px rgba(0,0,0,0.2)",
+          boxShadow: "0 1px 2px 3px rgba(0,0,0,0.2)"
         }}
       >
         <div>
@@ -1260,16 +1262,16 @@ export const GridWithContextMenu: React.FC = () => {
       <div style={{ position: "relative" }}>
         <Grid
           ref={gridRef}
-          onContextMenu={(e) => {
+          onContextMenu={e => {
             const {
               rowIndex,
-              columnIndex,
+              columnIndex
             } = gridRef.current.getCellCoordsFromOffset(e.clientX, e.clientY);
             setContextMenuPosition({
               left: e.clientX + 10,
               top: e.clientY + 10,
               rowIndex,
-              columnIndex,
+              columnIndex
             });
             e.preventDefault();
           }}
@@ -1278,16 +1280,16 @@ export const GridWithContextMenu: React.FC = () => {
           height={height}
           columnCount={200}
           rowCount={200}
-          columnWidth={(index) => {
+          columnWidth={index => {
             return 100;
           }}
-          itemRenderer={(props) => (
+          itemRenderer={props => (
             <DefaultCell
               {...props}
               value={`${props.rowIndex}:${props.columnIndex}`}
             />
           )}
-          rowHeight={(index) => {
+          rowHeight={index => {
             return 20;
           }}
         />
