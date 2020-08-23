@@ -17,7 +17,7 @@
     "exceljs": "^4.1.0"
   },
   "peerDependencies": {
-    "@rowsncolumns/spreadsheet": "^1.4.11"
+    "@rowsncolumns/spreadsheet": "^6.1.3"
   },
   "devDependencies": {
     "@rowsncolumns/spreadsheet": "^6.1.3"
