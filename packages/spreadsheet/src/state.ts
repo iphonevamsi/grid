@@ -473,6 +473,9 @@ export const createStateReducer = ({
                       const end = Number(columnIndex);
                       for (let a = 0; a < bottom; a++) {
                         for (let b = 0; b < right; b++) {
+                          if (a === 0 && b === 0) {
+                            continue;
+                          }
                           clearCellKeepFormatting(
                             sheet.cells?.[start + a]?.[end + b]
                           );
