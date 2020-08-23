@@ -683,16 +683,16 @@ exports[`SpreadSheet matches snapshot 1`] = `
                   style="position: absolute; top: 24px; left: 46px; height: 20px; width: 99px; background-color: transparent; opacity: 1; user-select: none; pointer-events: none;"
                 />
                 <div
-                  style="position: absolute; left: 46px; top: 24px; width: 99px; height: 2px; border-width: 0px; border-color: #1a73e8; border-top-width: 2px; border-style: solid;"
+                  style="position: absolute; left: 46px; top: 24px; width: 99px; height: 2px; border-width: 0px; border-color: #1a73e8; border-top-width: 2px; border-style: solid; pointer-events: none;"
                 />
                 <div
-                  style="position: absolute; left: 145px; top: 24px; width: 2px; height: 20px; border-width: 0px; border-color: #1a73e8; border-right-width: 2px; border-style: solid;"
+                  style="position: absolute; left: 145px; top: 24px; width: 2px; height: 20px; border-width: 0px; border-color: #1a73e8; border-right-width: 2px; border-style: solid; pointer-events: none;"
                 />
                 <div
-                  style="position: absolute; left: 46px; top: 44px; width: 101px; height: 2px; border-width: 0px; border-color: #1a73e8; border-bottom-width: 2px; border-style: solid;"
+                  style="position: absolute; left: 46px; top: 44px; width: 101px; height: 2px; border-width: 0px; border-color: #1a73e8; border-bottom-width: 2px; border-style: solid; pointer-events: none;"
                 />
                 <div
-                  style="position: absolute; left: 46px; top: 24px; width: 2px; height: 20px; border-width: 0px; border-color: #1a73e8; border-left-width: 2px; border-style: solid;"
+                  style="position: absolute; left: 46px; top: 24px; width: 2px; height: 20px; border-width: 0px; border-color: #1a73e8; border-left-width: 2px; border-style: solid; pointer-events: none;"
                 />
                 <div
                   style="position: absolute; left: 142px; top: 41px; width: 8px; height: 8px; border: 1px solid white; background: rgb(26, 115, 232); cursor: crosshair; pointer-events: all;"
