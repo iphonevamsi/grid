@@ -338,7 +338,7 @@ describe("state reducers", () => {
         }
       }
     });
-    expect(newState.sheets[0].cells[1][1].text).toBeUndefined();
+    expect(newState.sheets[0].cells[1][1].result).toBe(10);
   });
 
   it("can update cells after validation", () => {

@@ -464,10 +464,6 @@ export const createStateReducer = ({
                     sheet.cells[rowIndex][columnIndex] =
                       sheet.cells[rowIndex][columnIndex] ?? {};
 
-                    // Skip locked cell
-                    if (sheet.cells[rowIndex][columnIndex].locked) {
-                      continue;
-                    }
                     // Current range
                     const cell = sheet.cells[rowIndex][columnIndex];
                     if (cell.formulaRange) {
