@@ -7,7 +7,6 @@ import Grid, {
   useTooltip,
   DefaultTooltipProps,
 } from "@rowsncolumns/grid";
-import "./style.css";
 
 export default {
   title: "Collaboration",
