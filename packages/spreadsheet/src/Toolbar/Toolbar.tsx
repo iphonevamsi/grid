@@ -523,7 +523,7 @@ const Toolbar: React.FC<ToolbarProps> = memo((props) => {
           </Tooltip>
           <MenuList
             placement="top-start"
-            minWidth={250}
+            minWidth={280}
             borderColor={borderColor}
             borderStyle="solid"
             fontSize={14}
@@ -595,7 +595,7 @@ const Toolbar: React.FC<ToolbarProps> = memo((props) => {
                     )}
                   </Box>
                   <Box flex={1}>{item.label}</Box>
-                  <Box textAlign="right" color="gray.500">
+                  <Box fontSize={1} textAlign="right" color="gray.500">
                     {item.sample}
                   </Box>
                 </MenuItem>
