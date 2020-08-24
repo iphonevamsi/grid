@@ -104,6 +104,9 @@ const getCellText = (
       const text = (cell.value as CellHyperlinkValue).text;
       return typeof text === "string" ? text : "Unable to parse";
     }
+    case ValueType.Date:
+      return cell.value?.toString();
+
     case ValueType.RichText:
       return (cell.value as CellRichTextValue).richText
         .map((value) => value.text)

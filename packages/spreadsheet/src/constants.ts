@@ -156,16 +156,16 @@ export const format = (
     return castToString(value);
   if (!cellConfig) return castToString(value);
   if (datatype === "date") {
-    return SSF.format(cellConfig.format || DEFAULT_DATE_FORMAT, value);
+    return SSF.format(
+      cellConfig.format || DEFAULT_DATE_FORMAT,
+      typeof value === "string" ? new Date(value) : value
+    );
   }
-  const num = parseFloat(typeof value !== "string" ? "" + value : value);
+  const num =
+    datatype === "number"
+      ? parseFloat(typeof value !== "string" ? "" + value : value)
+      : value;
   try {
-    if (cellConfig.decimals) {
-      let fmt = Array.from({ length: cellConfig.decimals })
-        .map((_) => "0")
-        .join("");
-      value = SSF.format(`#.${fmt}`, num);
-    }
     if (cellConfig.format) {
       value = SSF.format(cellConfig.format, num);
     }

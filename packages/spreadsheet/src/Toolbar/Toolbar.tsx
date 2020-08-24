@@ -595,7 +595,7 @@ const Toolbar: React.FC<ToolbarProps> = memo((props) => {
                     )}
                   </Box>
                   <Box flex={1}>{item.label}</Box>
-                  <Box fontSize={1} textAlign="right" color="gray.500">
+                  <Box textAlign="right" color="gray.500">
                     {item.sample}
                   </Box>
                 </MenuItem>

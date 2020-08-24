@@ -20,13 +20,6 @@ describe("Helper functions", () => {
     expect(value).toBe("12.00");
   });
 
-  it("can format decimals", () => {
-    const value = format(12, "number", {
-      decimals: 2,
-    });
-    expect(value).toBe("12.00");
-  });
-
   it("can format percent", () => {
     const value = format(12, "number", {
       format: "0.00%",
