@@ -24,6 +24,7 @@ interface FormulabarProps {
   onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
   value?: string;
   isFormulaMode?: boolean;
+  locked?: boolean;
 }
 
 export type FormulaRef = {
@@ -39,6 +40,7 @@ const Formulabar: React.FC<FormulabarProps & FormulaRef> = memo(
       onFocus,
       onBlur,
       isFormulaMode,
+      locked,
     } = props;
     const isFormula = isAFormula(value) || isFormulaMode;
     const { colorMode } = useColorMode();
@@ -75,6 +77,7 @@ const Formulabar: React.FC<FormulabarProps & FormulaRef> = memo(
           borderLeftColor={borderColor}
         />
         <Input
+          isDisabled={locked}
           borderTopWidth={0}
           borderBottomWidth={0}
           size="sm"
