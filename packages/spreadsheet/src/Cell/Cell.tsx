@@ -90,8 +90,9 @@ const Cell: React.FC<CellProps> = memo((props) => {
       : false;
   const isFormula = datatype === "formula";
   const textValue = isFormula ? props.error ?? props.result : props.text;
+  const effectiveType = isFormula ? props.resultType : datatype;
   const text = formatter
-    ? formatter(textValue, datatype ?? props.resultType, cellConfig)
+    ? formatter(textValue, effectiveType, cellConfig)
     : castToString(textValue);
   return (
     <DefaultCell
@@ -166,7 +167,11 @@ const DefaultCell: React.FC<CellRenderProps> = memo((props) => {
     horizontalAlign === void 0
       ? hasError
         ? "center"
-        : (datatype === "number" || resultType === "number") && !plaintext
+        : (datatype === "number" ||
+            resultType === "number" ||
+            datatype === "date" ||
+            resultType === "date") &&
+          !plaintext
         ? "right"
         : "left"
       : horizontalAlign;

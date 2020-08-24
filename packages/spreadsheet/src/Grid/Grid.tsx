@@ -549,9 +549,19 @@ const SheetGrid: React.FC<GridProps & RefAttributeGrid> = memo(
      * Get display text of a cell. Applicable to visible text display in the cell
      */
     const getDisplayText = useCallback((cellConfig: CellConfig) => {
-      const isFormula = cellConfig?.datatype === "formula";
-      const text = isFormula ? cellConfig?.result : cellConfig?.text;
-      return text !== void 0 ? castToString(text) : text;
+      const datatype = cellConfig?.datatype;
+      const isFormula = datatype === "formula";
+      const textValue = isFormula
+        ? cellConfig?.error ?? cellConfig?.result
+        : cellConfig?.text;
+      const effectiveType = isFormula ? cellConfig?.resultType : datatype;
+      const formattedValue = formatter
+        ? formatter(textValue, effectiveType, cellConfig)
+        : textValue;
+
+      return formattedValue !== void 0
+        ? castToString(formattedValue)
+        : formattedValue;
     }, []);
 
     /**
@@ -626,9 +636,6 @@ const SheetGrid: React.FC<GridProps & RefAttributeGrid> = memo(
       isHiddenColumn,
       getValue: (cell: CellInterface) => {
         const cellConfig = getValue(cell);
-        const formattedValue = formatter
-          ? formatter(cellConfig?.text, cellConfig?.datatype, cellConfig)
-          : cellConfig?.text;
         const iconPadding = 5;
         const spacing =
           cellConfig?.dataValidation?.type === "list"
@@ -637,7 +644,7 @@ const SheetGrid: React.FC<GridProps & RefAttributeGrid> = memo(
         const fontSize = pointToPixel(
           cellConfig?.fontSize ?? DEFAULT_FONT_SIZE
         );
-        return { ...cellConfig, fontSize, text: formattedValue, spacing };
+        return { ...cellConfig, fontSize, spacing };
       },
       getText: getDisplayText,
       columnSizes,

@@ -224,7 +224,6 @@ const useAutoSizer = ({
               fontFamily: cellValue.fontFamily,
             });
           }
-
           const metrics = autoSizer.current.measureText(text);
           if (metrics) {
             width += Math.ceil(metrics.width) + cellSpacing;

@@ -77,6 +77,8 @@ import {
   FORMAT_CURRENCY,
   changeDecimals,
   SCALE_VALUES,
+  AVAILABLE_DATE_FORMATS,
+  AVAILABLE_CUSTOM_FORMATS,
 } from "./../constants";
 import {
   FORMATTING_TYPE,
@@ -576,6 +578,56 @@ const Toolbar: React.FC<ToolbarProps> = memo((props) => {
             })}
             <MenuDivider borderColor={borderColor} />
             {AVAILABLE_CURRENCY_FORMATS.map((item, idx) => {
+              return (
+                <MenuItem
+                  display="flex"
+                  onClick={() => {
+                    onFormattingChange?.(
+                      FORMATTING_TYPE.CUSTOM_FORMAT,
+                      item.value
+                    );
+                  }}
+                  key={idx}
+                >
+                  <Box width="24px">
+                    {format === item.value && !plaintext && (
+                      <Icon name="check" mr={1} />
+                    )}
+                  </Box>
+                  <Box flex={1}>{item.label}</Box>
+                  <Box textAlign="right" color="gray.500">
+                    {item.sample}
+                  </Box>
+                </MenuItem>
+              );
+            })}
+            <MenuDivider borderColor={borderColor} />
+            {AVAILABLE_DATE_FORMATS.map((item, idx) => {
+              return (
+                <MenuItem
+                  display="flex"
+                  onClick={() => {
+                    onFormattingChange?.(
+                      FORMATTING_TYPE.CUSTOM_FORMAT,
+                      item.value
+                    );
+                  }}
+                  key={idx}
+                >
+                  <Box width="24px">
+                    {format === item.value && !plaintext && (
+                      <Icon name="check" mr={1} />
+                    )}
+                  </Box>
+                  <Box flex={1}>{item.label}</Box>
+                  <Box textAlign="right" color="gray.500">
+                    {item.sample}
+                  </Box>
+                </MenuItem>
+              );
+            })}
+            <MenuDivider borderColor={borderColor} />
+            {AVAILABLE_CUSTOM_FORMATS.map((item, idx) => {
               return (
                 <MenuItem
                   display="flex"

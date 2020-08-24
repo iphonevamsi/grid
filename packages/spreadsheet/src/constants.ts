@@ -8,7 +8,7 @@ import {
   FormatInputValue,
   DATATYPES,
   FORMATTING_TYPE,
-  STROKE_FORMATTING
+  STROKE_FORMATTING,
 } from "./types";
 import {
   isNull,
@@ -16,7 +16,7 @@ import {
   CellInterface,
   AreaProps,
   canUseDOM,
-  castToString
+  castToString,
 } from "@rowsncolumns/grid";
 import SSF from "ssf";
 
@@ -94,7 +94,7 @@ export const addressToCell = (address: string): CellInterface | null => {
   const [columnAlpha, rowIndex] = matches;
   return {
     rowIndex: parseInt(rowIndex),
-    columnIndex: alpha2number(columnAlpha)
+    columnIndex: alpha2number(columnAlpha),
   };
 };
 
@@ -126,22 +126,18 @@ export const createNewSheet = ({ count }: { count: number }): Sheet => ({
   cells: {},
   activeCell: {
     rowIndex: 1,
-    columnIndex: 1
+    columnIndex: 1,
   },
   selections: [],
   scrollState: { scrollTop: 0, scrollLeft: 0 },
   columnSizes: {},
-  rowSizes: {}
+  rowSizes: {},
 });
 
 /**
  * UUID generator
  */
-export const uuid = () =>
-  "_" +
-  Math.random()
-    .toString(36)
-    .substr(2, 9);
+export const uuid = () => "_" + Math.random().toString(36).substr(2, 9);
 
 /**
  * Format a string
@@ -166,7 +162,7 @@ export const format = (
   try {
     if (cellConfig.decimals) {
       let fmt = Array.from({ length: cellConfig.decimals })
-        .map(_ => "0")
+        .map((_) => "0")
         .join("");
       value = SSF.format(`#.${fmt}`, num);
     }
@@ -207,75 +203,111 @@ export const FONT_FAMILIES = [
   "Comic Sans MS",
   "Courier New",
   "Verdana",
-  "Times New Roman"
+  "Times New Roman",
 ];
 
 export const AVAILABLE_FORMATS = [
   {
     label: "Number",
     value: "0.00",
-    sample: "1,000.12"
+    sample: "1,000.12",
   },
   {
     label: "Percent",
     value: FORMAT_PERCENT,
-    sample: "10.12%"
+    sample: "10.12%",
   },
   {
     label: "Scientific",
     value: "0.00E+00",
-    sample: "1.01E+03"
-  }
+    sample: "1.01E+03",
+  },
 ];
 
 export const AVAILABLE_CURRENCY_FORMATS = [
   {
     label: "Accounting",
     value: "$(0.00)",
-    sample: "$(1,000.12)"
+    sample: "$(1,000.12)",
   },
   {
     label: "Financial",
     value: "(0.00)",
-    sample: "(1,000.12)"
+    sample: "(1,000.12)",
   },
   {
     label: "Currency",
     value: FORMAT_CURRENCY,
-    sample: "$1,000.00"
+    sample: "$1,000.00",
   },
   {
     label: "Currency (rounded)",
     value: "$#",
-    sample: "$1,000"
-  }
+    sample: "$1,000",
+  },
+];
+
+export const AVAILABLE_DATE_FORMATS = [
+  {
+    label: "Date",
+    value: "M/d/yyyy",
+    sample: "9/26/2008",
+  },
+  {
+    label: "Time",
+    value: "h:mm:ss am/pm",
+    sample: "3:59:00 PM",
+  },
+  {
+    label: "Date time",
+    value: "M/d/yyyy H:mm:ss",
+    sample: "9/26/2008 15:59:00",
+  },
+  {
+    label: "Duration",
+    value: "[h]:mm:ss",
+    sample: "24:01:00",
+  },
+];
+
+export const AVAILABLE_CUSTOM_FORMATS = [
+  {
+    label: "Euro",
+    value: "[$€]#,##0.00",
+    sample: "€1,000.12",
+  },
+  {
+    label: "Indian Rupee",
+    value: "[$₹]#,##0.00",
+    sample: "₹1,000.12",
+  },
 ];
 
 export const SCALE_VALUES = [
   {
     label: "50%",
-    value: 0.5
+    value: 0.5,
   },
   {
     label: "75%",
-    value: 0.75
+    value: 0.75,
   },
   {
     label: "100%",
-    value: 1
+    value: 1,
   },
   {
     label: "125%",
-    value: 1.25
+    value: 1.25,
   },
   {
     label: "150%",
-    value: 1.5
+    value: 1.5,
   },
   {
     label: "200%",
-    value: 2
-  }
+    value: 2,
+  },
 ];
 export const DEFAULT_DATE_FORMAT = "d-mmm-yy";
 export const DEFAULT_FONT_SIZE = 10;
@@ -291,7 +323,7 @@ export const luminance = (color: string | undefined, amount: number) => {
     "#" +
     color
       .replace(/^#/, "")
-      .replace(/../g, color =>
+      .replace(/../g, (color) =>
         (
           "0" +
           Math.min(255, Math.max(0, parseInt(color, 16) + amount)).toString(16)
@@ -346,7 +378,7 @@ export const cellsInSelectionVariant = (
                 strokeTopColor: color,
                 strokeTopWidth: thickness,
                 strokeTopDash: dash,
-                lineCap
+                lineCap,
               };
             }
             if (k === bounds.right) {
@@ -355,7 +387,7 @@ export const cellsInSelectionVariant = (
                 strokeRightColor: color,
                 strokeRightWidth: thickness,
                 strokeRightDash: dash,
-                lineCap
+                lineCap,
               };
             }
             if (j === bounds.bottom) {
@@ -364,7 +396,7 @@ export const cellsInSelectionVariant = (
                 strokeBottomColor: color,
                 strokeBottomWidth: thickness,
                 strokeBottomDash: dash,
-                lineCap
+                lineCap,
               };
             }
             if (k === bounds.left) {
@@ -373,7 +405,7 @@ export const cellsInSelectionVariant = (
                 strokeLeftColor: color,
                 strokeLeftWidth: thickness,
                 strokeLeftDash: dash,
-                lineCap
+                lineCap,
               };
             }
             break;
@@ -392,7 +424,7 @@ export const cellsInSelectionVariant = (
               strokeBottomColor: color,
               strokeBottomDash: dash,
               strokeBottomWidth: thickness,
-              lineCap
+              lineCap,
             };
             break;
 
@@ -405,7 +437,7 @@ export const cellsInSelectionVariant = (
                 strokeLeftDash: dash,
                 strokeRightColor: color,
                 strokeRightDash: dash,
-                strokeRightWidth: thickness
+                strokeRightWidth: thickness,
               };
             }
             if (j !== bounds.top && j !== bounds.bottom) {
@@ -416,7 +448,7 @@ export const cellsInSelectionVariant = (
                 strokeTopDash: dash,
                 strokeBottomColor: color,
                 strokeBottomDash: dash,
-                strokeBottomWidth: thickness
+                strokeBottomWidth: thickness,
               };
             }
             if (bounds.top !== bounds.bottom) {
@@ -425,7 +457,7 @@ export const cellsInSelectionVariant = (
                   ...cells[rowIndex][columnIndex],
                   strokeBottomColor: color,
                   strokeBottomDash: dash,
-                  strokeBottomWidth: thickness
+                  strokeBottomWidth: thickness,
                 };
               }
               if (j === bounds.bottom) {
@@ -433,7 +465,7 @@ export const cellsInSelectionVariant = (
                   ...cells[rowIndex][columnIndex],
                   strokeTopColor: color,
                   strokeTopDash: dash,
-                  strokeTopWidth: thickness
+                  strokeTopWidth: thickness,
                 };
               }
             }
@@ -443,7 +475,7 @@ export const cellsInSelectionVariant = (
                   ...cells[rowIndex][columnIndex],
                   strokeRightColor: color,
                   strokeRightDash: dash,
-                  strokeRightWidth: thickness
+                  strokeRightWidth: thickness,
                 };
               }
               if (k === bounds.right) {
@@ -451,7 +483,7 @@ export const cellsInSelectionVariant = (
                   ...cells[rowIndex][columnIndex],
                   strokeLeftColor: color,
                   strokeLeftDash: dash,
-                  strokeLeftWidth: thickness
+                  strokeLeftWidth: thickness,
                 };
               }
             }
@@ -462,7 +494,7 @@ export const cellsInSelectionVariant = (
               strokeBottomColor: color,
               strokeBottomDash: dash,
               strokeBottomWidth: thickness,
-              lineCap
+              lineCap,
             };
             if (j === bounds.bottom) {
               cells[rowIndex][columnIndex] = {};
@@ -474,7 +506,7 @@ export const cellsInSelectionVariant = (
               strokeRightColor: color,
               strokeRightDash: dash,
               strokeRightWidth: thickness,
-              lineCap
+              lineCap,
             };
             if (k === bounds.right) {
               cells[rowIndex][columnIndex] = {};
@@ -488,7 +520,7 @@ export const cellsInSelectionVariant = (
                 strokeLeftColor: color,
                 strokeLeftDash: dash,
                 strokeLeftWidth: thickness,
-                lineCap
+                lineCap,
               };
             }
             break;
@@ -500,7 +532,7 @@ export const cellsInSelectionVariant = (
                 strokeRightColor: color,
                 strokeRightDash: dash,
                 strokeRightWidth: thickness,
-                lineCap
+                lineCap,
               };
             }
             break;
@@ -512,7 +544,7 @@ export const cellsInSelectionVariant = (
                 strokeTopColor: color,
                 strokeTopDash: dash,
                 strokeTopWidth: thickness,
-                lineCap
+                lineCap,
               };
             }
             break;
@@ -524,7 +556,7 @@ export const cellsInSelectionVariant = (
                 strokeBottomColor: color,
                 strokeBottomDash: dash,
                 strokeBottomWidth: thickness,
-                lineCap
+                lineCap,
               };
             }
             break;
@@ -588,7 +620,7 @@ export const changeDecimals = (format?: string, step = 1) => {
     format.substr(0, decimalIndex) +
     "." +
     Array.from({ length: len })
-      .map(_ => "0")
+      .map((_) => "0")
       .join("") +
     suffix
   );
@@ -617,7 +649,7 @@ export const getMinMax = (o: Object) => {
 /* Create custom validation */
 export const createCustomValidation = (): DataValidation => {
   return {
-    type: "custom"
+    type: "custom",
   };
 };
 
