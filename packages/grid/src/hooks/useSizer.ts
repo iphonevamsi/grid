@@ -6,6 +6,7 @@ import {
   isNull,
   autoSizerCanvas,
   castToString,
+  cellIdentifier,
 } from "./../helpers";
 import invariant from "tiny-invariant";
 
@@ -138,8 +139,8 @@ const useAutoSizer = ({
   resizeOnScroll = true,
   fontFamily = "Arial",
   fontSize = 12,
-  fontWeight = "normal",
-  fontStyle = "italic",
+  fontWeight = "",
+  fontStyle = "",
   autoResize = true,
   columnSizes = {},
   frozenRows = 0,
@@ -212,16 +213,17 @@ const useAutoSizer = ({
       if (cellValue !== null) {
         const isCellConfig = typeof cellValue === "object";
         const text = getText(cellValue);
-        if (text !== void 0 && !isNull(text)) {
+        if (cellIdentifier !== void 0 && !isNull(text) && text !== void 0) {
           /* Reset fonts */
           autoSizer.current.reset();
 
           if (isCellConfig) {
             const isBold = cellValue.bold;
             autoSizer.current.setFont({
-              fontWeight: isBold ? "bold" : "normal",
+              fontWeight: isBold ? "bold" : "",
               fontSize: (cellValue.fontSize || fontSize) * scale,
               fontFamily: cellValue.fontFamily,
+              fontStyle: cellValue.italic ? "italic" : "",
             });
           }
           const metrics = autoSizer.current.measureText(text);

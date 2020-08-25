@@ -118,7 +118,7 @@ const Editor: React.FC<CustomEditorProps & RefAttribute> = forwardRef(
         textSizer.current.setFont({
           fontSize: isFormulaMode ? FORMULA_FONT_SIZE : fontSize,
           fontFamily: isFormulaMode ? FORMULA_FONT : fontFamily,
-          fontWeight: bold ? FONT_WEIGHT.BOLD : FONT_WEIGHT.NORMAL,
+          fontWeight: bold ? FONT_WEIGHT.BOLD : "",
           scale,
         });
 

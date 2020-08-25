@@ -57,6 +57,7 @@ import {
   sanitizeSheetName,
   pointToPixel,
   DEFAULT_FONT_SIZE,
+  DEFAULT_FONT_FAMILY,
 } from "./../constants";
 import HeaderCell from "./../HeaderCell";
 import Cell from "./../Cell";
@@ -644,7 +645,8 @@ const SheetGrid: React.FC<GridProps & RefAttributeGrid> = memo(
         const fontSize = pointToPixel(
           cellConfig?.fontSize ?? DEFAULT_FONT_SIZE
         );
-        return { ...cellConfig, fontSize, spacing };
+        const fontFamily = cellConfig?.fontFamily ?? DEFAULT_FONT_FAMILY;
+        return { ...cellConfig, fontSize, fontFamily, spacing };
       },
       getText: getDisplayText,
       columnSizes,
