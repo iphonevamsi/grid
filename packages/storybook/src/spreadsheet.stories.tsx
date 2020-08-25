@@ -7,7 +7,7 @@ import Spreadsheet, {
 } from "@rowsncolumns/spreadsheet";
 import { parse, download } from "@rowsncolumns/export";
 import CalcEngine, { FormulaParser } from "@rowsncolumns/calc";
-import { produce, applyPatches } from "immer";
+import { produceWithPatches, applyPatches } from "immer";
 
 export default {
   title: "Spreadsheet",
@@ -581,46 +581,60 @@ export const TickingFormula = () => {
             }
           }
           setSheets((sheets) => {
-            return produce(sheets, (draft) => {
-              const sheet = draft.find((sheet) => sheet.name === ticker.sheet);
-              if (sheet) {
-                for (let i = 0; i < newData.length; i++) {
-                  const row = parentRow + i;
-                  sheet.cells[row] = sheet.cells[row] ?? {};
-                  for (let j = 0; j < newData[i].length; j++) {
-                    const col = parentCol + j;
-                    sheet.cells[row][col] = sheet.cells[row][col] ?? {};
+            const [newState, patches, inversePatches] = produceWithPatches(
+              { sheets },
+              (draft) => {
+                const sheet = draft.sheets.find(
+                  (sheet) => sheet.name === ticker.sheet
+                );
+                if (sheet) {
+                  for (let i = 0; i < newData.length; i++) {
+                    const row = parentRow + i;
+                    sheet.cells[row] = sheet.cells[row] ?? {};
+                    for (let j = 0; j < newData[i].length; j++) {
+                      const col = parentCol + j;
+                      sheet.cells[row][col] = sheet.cells[row][col] ?? {};
 
-                    if (row === parentRow && col === parentCol) {
-                      /**
-                       * User has deleted the parent cell
-                       * Another way is to listen to onDeleteCells and disconnect
-                       */
-                      if (sheet.cells[row][col].text === void 0) {
-                        return clearInterval(interval);
+                      if (row === parentRow && col === parentCol) {
+                        /**
+                         * User has deleted the parent cell
+                         * Another way is to listen to onDeleteCells and disconnect
+                         */
+                        if (sheet.cells[row][col].text === void 0) {
+                          return clearInterval(interval);
+                        }
+                        sheet.cells[row][col].result = newData[i][j];
+                        sheet.cells[row][col].resultType = "number";
+                        sheet.cells[row][col].formulaRange = [
+                          newData[0].length,
+                          newData.length,
+                        ];
+                      } else {
+                        sheet.cells[row][col].text = newData[i][j];
+                        sheet.cells[row][col].datatype = "number";
                       }
-                      sheet.cells[row][col].result = newData[i][j];
-                      sheet.cells[row][col].resultType = "number";
-                      sheet.cells[row][col].formulaRange = [
-                        newData[0].length,
-                        newData.length,
-                      ];
-                    } else {
-                      sheet.cells[row][col].text = newData[i][j];
-                      sheet.cells[row][col].datatype = "number";
                     }
                   }
                 }
               }
+            );
+
+            /* Allow undo/redo */
+            requestAnimationFrame(() => {
+              gridRef.current.addUndoPatch({ patches, inversePatches });
             });
+
+            return newState.sheets;
           });
           gridRef.current.onCalculate?.(changes).then((results) => {
             gridRef.current.dispatch({
               type: "UPDATE_CELLS",
               changes: results,
+              undoable: false,
+              replace: true,
             });
           });
-        }, 1000);
+        }, 5000);
       }
       return () => {
         interval && clearInterval(interval);

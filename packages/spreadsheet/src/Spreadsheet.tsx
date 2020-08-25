@@ -494,14 +494,15 @@ export type SheetGridRef = {
   redo: () => void;
   undo: () => void;
   dispatch: (action: ActionTypes) => void;
+  addUndoPatch: (patches: PatchInterface) => void;
   onCalculate: (
     changes: CellsBySheet
   ) => Promise<CellsBySheet | undefined> | undefined;
 };
 
 export interface PatchInterface {
-  patches: Patch;
-  inversePatches: Patch;
+  patches: Patch[];
+  inversePatches: Patch[];
 }
 
 export interface StateInterface {
@@ -1047,6 +1048,7 @@ const Spreadsheet: React.FC<SpreadSheetProps & RefAttributeSheetGrid> = memo(
         return {
           grid: currentGrid.current,
           resize: handleResize,
+          addUndoPatch,
           undo,
           redo,
           dispatch,
