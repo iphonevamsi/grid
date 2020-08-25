@@ -482,7 +482,8 @@ export const Formula = () => {
             },
             2: {
               datatype: "formula",
-              text: "=SUM(B2, 20)",
+              // text: "=SUM(B2, 20)",
+              text: "=SUM()",
               // text: '=HYPERLINK("Google", www.google.com)'
               // text: '=HYPERLINK("asdas")'
               // text: '=CONCAT(A1, "hello")',

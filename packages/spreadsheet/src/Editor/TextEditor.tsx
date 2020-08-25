@@ -29,6 +29,7 @@ import {
   SelectionArea,
   castToString,
   NewSelectionMode,
+  canUseDOM,
 } from "@rowsncolumns/grid";
 import useShiftDown from "../hooks/useShiftDown";
 import { useColorMode, useTheme, Box } from "@chakra-ui/core";
@@ -175,7 +176,7 @@ const TextEditor: React.FC<EditableProps & RefAttribute> = memo(
         }
         if (address) {
           Transforms.insertNodes(editor, [{ text: address }]);
-          ReactEditor.focus(editor);
+          focusEditor();
         }
       },
       [target, cursorToken]
@@ -188,11 +189,7 @@ const TextEditor: React.FC<EditableProps & RefAttribute> = memo(
       forwardedRef,
       () => {
         return {
-          focus: () => {
-            requestAnimationFrame(() => {
-              ReactEditor.focus(editor);
-            });
-          },
+          focus: focusEditor,
           editor,
           updateSelection: handleUpdateSelection,
         };
@@ -200,12 +197,34 @@ const TextEditor: React.FC<EditableProps & RefAttribute> = memo(
       [target, cursorToken]
     );
     const editor = useMemo(() => withHistory(withReact(createEditor())), []);
-    const moveToEnd = useCallback(() => {
+
+    /**
+     * Focus on the editor
+     */
+    const focusEditor = useCallback(() => {
       ReactEditor.focus(editor);
-      document.execCommand("selectAll", false, undefined);
-      // collapse selection to the end
+    }, [editor]);
+
+    /**
+     * Move cursor to end of contenteditable
+     */
+    const moveToEnd = useCallback(() => {
+      focusEditor();
       try {
-        document.getSelection()?.collapseToEnd();
+        if (!canUseDOM) {
+          return;
+        }
+        /* Move to end */
+        if (document.activeElement) {
+          const range = document.createRange();
+          range.selectNodeContents(document.activeElement);
+          range.collapse(false);
+          const selection = window.getSelection();
+          if (selection) {
+            selection.removeAllRanges();
+            selection.addRange(range);
+          }
+        }
       } catch (err) {
         console.log("Failed to collapse selection", err);
       }
@@ -308,7 +327,6 @@ const TextEditor: React.FC<EditableProps & RefAttribute> = memo(
 
           offset = offset + token.image.length + add;
         });
-
         return ranges;
       },
       [isFormulaMode, cursorToken]
