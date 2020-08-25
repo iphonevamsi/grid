@@ -449,6 +449,11 @@ export interface CellConfig extends CellFormatting {
    */
   error?: string;
   /**
+   * Last update timestamp of a cell.
+   * Can come from formula parser
+   */
+  timestamp?: number;
+  /**
    * Error message to be displayed in tooltips
    */
   errorMessage?: string;
@@ -910,7 +915,10 @@ const Spreadsheet: React.FC<SpreadSheetProps & RefAttributeSheetGrid> = memo(
         if (enableGlobalKeyHandlers) focusGrid();
 
         /* Trigger cell change */
-        if (patchHasCellChanges(patches) && selectedSheetRef.current) {
+        if (
+          patchHasCellChanges(patches) &&
+          selectedSheetRef.current !== void 0
+        ) {
           cellChangeCallback(
             selectedSheetRef.current,
             lastActiveCellRef.current,
@@ -932,6 +940,7 @@ const Spreadsheet: React.FC<SpreadSheetProps & RefAttributeSheetGrid> = memo(
         const activeCellPatch = patches.find((item: Patch) =>
           item.path.includes("currentActiveCell")
         );
+
         const selectionsPatch = patches.find((item: Patch) =>
           item.path.includes("currentSelections")
         );
@@ -947,7 +956,10 @@ const Spreadsheet: React.FC<SpreadSheetProps & RefAttributeSheetGrid> = memo(
         if (enableGlobalKeyHandlers) focusGrid();
 
         /* Trigger cell change */
-        if (patchHasCellChanges(patches) && selectedSheetRef.current) {
+        if (
+          patchHasCellChanges(patches) &&
+          selectedSheetRef.current !== void 0
+        ) {
           cellChangeCallback(
             selectedSheetRef.current,
             activeCellPatch?.value,
@@ -966,7 +978,10 @@ const Spreadsheet: React.FC<SpreadSheetProps & RefAttributeSheetGrid> = memo(
     /* Update active cell: Imperatively */
     const setActiveCell = useCallback((cell: CellInterface | null) => {
       if (!cell) return;
-      currentGrid.current?.setActiveCell(cell);
+      /**
+       * Simple to trigger activecell change if its the same cell
+       */
+      currentGrid.current?.setActiveCell({ ...cell });
     }, []);
 
     /* Update active selections: Imperatively */
@@ -1113,6 +1128,8 @@ const Spreadsheet: React.FC<SpreadSheetProps & RefAttributeSheetGrid> = memo(
           dispatch({
             type: ACTION_TYPE.UPDATE_CELLS,
             changes: values,
+            replace: true,
+            undoable: false,
           });
 
           /* Callback */

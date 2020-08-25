@@ -23,7 +23,7 @@ export interface UndoManager {
   undo: () => void;
   redo: () => void;
   add: (patches: any) => void;
-  replace: (patches: any) => void;
+  replace: (patches: any, inversePatches: any) => void;
   canUndo: boolean;
   canRedo: boolean;
   onKeyDown?: (e: React.KeyboardEvent<HTMLDivElement>) => void;
@@ -99,27 +99,26 @@ const useUndo = <T>(props: UndoProps = {}): UndoManager => {
   /**
    * Use for async update where you want to replace the last patch
    */
-  const replaceLastPatch = useCallback((patches: T[] | undefined) => {
-    if (patches === void 0) {
-      return;
-    }
-    const currentStack = undoStack.current;
-    const pointer = undoStackPointer.current;
-    const curPatches = currentStack[pointer];
-    if (curPatches.patches === void 0) {
-      return;
-    }
-    for (let i = 0; i < patches.length; i++) {
-      const patch = patches[i];
-      curPatches.patches = curPatches.patches.map((p) => {
-        if (identifier?.(p) === identifier?.(patch)) {
-          return patch;
-        }
-        return p;
-      });
-      curPatches.patches.concat(patch);
-    }
-  }, []);
+  const replaceLastPatch = useCallback(
+    (patches: T[] | undefined, inversePatches: T[] | undefined) => {
+      if (patches === void 0) {
+        return;
+      }
+      const currentStack = undoStack.current;
+      const pointer = undoStackPointer.current;
+      const curPatches = currentStack[pointer];
+
+      if (curPatches?.patches === void 0) {
+        return;
+      }
+      curPatches.patches.push(...patches);
+
+      if (inversePatches && curPatches?.inversePatches) {
+        curPatches.inversePatches.unshift(...inversePatches);
+      }
+    },
+    []
+  );
 
   return {
     undo: handleUndo,

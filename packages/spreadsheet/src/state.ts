@@ -47,6 +47,7 @@ import {
   moveMergedCells,
 } from "./formulas/helpers";
 import { FormulaError } from "./formulas";
+import { Path } from "react-konva";
 
 /* Enabled patches in immer */
 enablePatches();
@@ -57,6 +58,34 @@ export const clearCellKeepFormatting = (config: CellConfig) => {
     if (key in formattingTypeKeys) continue;
     delete config[key];
   }
+};
+
+/**
+ * When a formula parsing is successfull,
+ * we should replace the formula text with result.
+ *
+ * This removes stale formulas
+ */
+export const removeStaleFormulas = (patches: Patch[]) => {
+  return patches?.filter((patch) => {
+    if (
+      patch.value &&
+      typeof patch.value === "object" &&
+      Object.keys(patch.value).length
+    ) {
+      const value = { ...patch.value };
+      for (const key in patch.value) {
+        if (
+          value[key]?.datatype === "formula" &&
+          value[key]?.timestamp === void 0
+        ) {
+          delete value[key];
+        }
+      }
+      patch.value = value;
+    }
+    return true;
+  });
 };
 
 export const defaultSheets: Sheet[] = [
@@ -404,7 +433,7 @@ export type ActionTypes =
 
 export interface StateReducerProps {
   addUndoPatch: <T>(patches: PatchInterface<T>) => void;
-  replaceUndoPatch?: <T>(patches: T[]) => void;
+  replaceUndoPatch?: <T>(patches: T[], inversePatches?: T[]) => void;
   getCellBounds: (cell: CellInterface | null) => AreaProps | undefined;
   stateReducer?: (state: StateInterface, action: ActionTypes) => StateInterface;
 }
@@ -418,7 +447,7 @@ export const createStateReducer = ({
   stateReducer = defaultStateReducer,
 }: StateReducerProps) => {
   return (state: StateInterface, action: ActionTypes): StateInterface => {
-    const [newState, patches, inversePatches] = produceWithPatches(
+    let [newState, patches, inversePatches] = produceWithPatches(
       state,
       (draft) => {
         switch (action.type) {
@@ -1581,9 +1610,17 @@ export const createStateReducer = ({
         addUndoPatch({ patches, inversePatches });
       });
     }
-
     if (replace && replaceUndoPatch) {
-      requestAnimationFrame(() => replaceUndoPatch(patches));
+      /**
+       * For formula updates, we need to patch the patch :P
+       */
+      const isFromFormulaUpdate = action.type === ACTION_TYPE.UPDATE_CELLS;
+      requestAnimationFrame(() => {
+        replaceUndoPatch(
+          patches,
+          isFromFormulaUpdate ? removeStaleFormulas(inversePatches) : void 0
+        );
+      });
     }
 
     return stateReducer(newState, action);

@@ -8,6 +8,7 @@ export interface CellConfig {
    */
   result?: string | number | boolean | Date;
   datatype?: DATATYPES;
+  timestamp?: number;
   /**
    * Used for formulas to indicate datatype of result
    */

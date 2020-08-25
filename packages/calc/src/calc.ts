@@ -140,6 +140,7 @@ class CalcEngine {
       const collisionAddress = cellToAddress(collides as CellInterface);
       changes[sheet][cell.rowIndex][cell.columnIndex] = {
         resultType: "error",
+        timestamp: Date.now(),
         errorMessage: `Array result was not expanded because it would overwrite data in ${collisionAddress}`,
         error: new FormulaError("#REF").toString(),
       };
@@ -289,6 +290,7 @@ class CalcEngine {
     }
     if (result.resultType === "array") {
       const array = result.result as any[][];
+      const timestamp = result.timestamp;
       const vLen = array.length;
       const hLen = array[0].length;
       /* Add range of this array to formula cell */
@@ -309,6 +311,7 @@ class CalcEngine {
               resultType: detectDataType(value),
               parentCell,
               error: void 0,
+              timestamp,
             };
           } else {
             changes[sheet][row][col] = {

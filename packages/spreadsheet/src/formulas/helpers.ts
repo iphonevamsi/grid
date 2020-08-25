@@ -333,7 +333,7 @@ export const formulaToRelativeReference = (
 
         const address = cellToAddress(cell, isAbsoluteColumn, isAbsoluteRow);
 
-        if (address === null) {
+        if (address === null || cell.rowIndex <= 0 || cell.columnIndex <= 0) {
           hasReferenceExistsError = true;
           token.image = "#REF!";
         } else {

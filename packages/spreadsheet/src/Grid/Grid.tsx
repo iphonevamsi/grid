@@ -964,6 +964,7 @@ const SheetGrid: React.FC<GridProps & RefAttributeGrid> = memo(
       if (isFormulaMode) {
         return;
       }
+
       onActiveCellChange?.(activeCell, getValue(activeCell)?.text);
     }, [activeCell]);
 

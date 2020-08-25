@@ -41,6 +41,7 @@ export interface ParseResults {
   color?: string;
   underline?: boolean;
   horizontalAlign?: string;
+  timestamp?: number;
 }
 
 const basePosition: CellPosition = { row: 1, col: 1, sheet: "Sheet1" };
@@ -260,6 +261,7 @@ class FormulaParser {
 
     return removeUndefined({
       result,
+      timestamp: Date.now(),
       resultType,
       hyperlink,
       color,
