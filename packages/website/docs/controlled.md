@@ -1,0 +1,166 @@
+---
+title: Managing state - Controlled mode
+---
+import { produceWithPatches } from 'immer'
+import { useState, useRef } from 'react'
+import SpreadSheet, { defaultSheets } from '@rowsncolumns/spreadsheet'
+
+Managing SpreadSheet state externally and syncing internal state like Undo/redo requires some workaround.
+
+Diffs between the current state and previous state is generated using [Immer](https://immerjs.github.io/immer/docs/patches). We recommend using immer to maange state as it lets you immutability update state without structurally cloning the objects.
+
+### Example
+
+```jsx
+import { produceWithPatches } from 'immer'
+import React, { useState, useRef } from 'react'
+import SpreadSheet, { defaultSheets } from '@rowsncolumns/spreadsheet'
+
+function App () {
+  const gridRef = useRef()
+  const [ sheets, setSheets ] = useState(defaultSheets)
+  const handleClick = () => {
+    setSheets(prev => {
+      const [ newState, patches, inversePatches ] = produceWithPatches({ sheets: prev }, draft => {
+        const sheet = draft.sheets[0]
+        if (sheet) {
+          sheet.cells[1] = sheet.cells[1] ?? {}
+          sheet.cells[1][1] = sheet.cells[1][1] ?? {}
+          sheet.cells[1][1].text = 'Hello world'
+        }
+      });
+      // This updates the internal undo state
+      gridRef.current.addUndoPatch({ patches, inversePatches })
+
+      return newState.sheets
+    })
+  }
+  return (
+    <div>
+      <button onClick={handleClick}>Update spreadsheet</button>
+      <SpreadSheet
+        ref={gridRef}
+        sheets={sheets}
+        onChange={setSheets}
+      />
+    </div>
+  )
+}
+```
+
+
+### Demo
+
+Click button to update cell. Undo will be active
+
+export const App = () => {
+  const gridRef = useRef()
+  const [ sheets, setSheets ] = useState(defaultSheets)
+  const handleClick = () => {
+    setSheets(prev => {
+      const [ newState, patches, inversePatches ] = produceWithPatches({ sheets: prev }, draft => {
+        const sheet = draft.sheets[0]
+        if (sheet) {
+          sheet.cells[1] = sheet.cells[1] ?? {}
+          sheet.cells[1][1] = sheet.cells[1][1] ?? {}
+          sheet.cells[1][1].text = 'Hello world'
+        }
+      });      
+      gridRef.current.addUndoPatch({ patches, inversePatches })
+      return newState.sheets
+    })
+  }
+  return (
+    <div>
+      <button onClick={handleClick}>Update spreadsheet</button>
+      <SpreadSheet
+        ref={gridRef}
+        sheets={sheets}
+        onChange={setSheets}
+        autoFocus={false}
+      />
+    </div>
+  )
+}
+
+<App />
+
+
+## Imperative methods
+
+You can also update cells imperatively by accessing `gridRef.current.dispatch`
+
+```jsx
+const App = () => {
+  const gridRef = useRef()
+  const [ sheets, setSheets ] = useState(defaultSheets)
+  const handleClick = () => {
+    gridRef.current.dispatch({
+      type: 'UPDATE_CELLS',
+      changes: {
+        'Sheet1': {
+          1: {
+            1: {
+              text: 'Hello there'
+            }
+          }
+        }
+      }
+    })
+  }
+  return (
+    <div>
+      <button onClick={handleClick}>Update spreadsheet</button>
+      <SpreadSheet
+        ref={gridRef}
+        sheets={sheets}
+        onChange={setSheets}
+        autoFocus={false}
+      />
+    </div>
+  )
+}
+```
+
+### Demo
+
+Click button to update cell. Undo will be active
+
+export const App2 = () => {
+  const gridRef = useRef()
+  const [ sheets, setSheets ] = useState(defaultSheets)
+  const handleClick = () => {
+    gridRef.current.dispatch({
+      type: 'UPDATE_CELLS',
+      changes: {
+        'Sheet1': {
+          1: {
+            1: {
+              text: 'Hello there'
+            }
+          }
+        }
+      }
+    })
+  }
+  return (
+    <div>
+      <button onClick={handleClick}>Update spreadsheet</button>
+      <SpreadSheet
+        ref={gridRef}
+        sheets={sheets}
+        onChange={setSheets}
+        autoFocus={false}
+      />
+    </div>
+  )
+}
+
+<App2 />
+
+
+<br/>
+
+:::note
+Accessing imperative methods is discouraged. Instead update React State to manage the Spreadsheet cell state.
+:::

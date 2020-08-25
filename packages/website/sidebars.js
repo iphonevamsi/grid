@@ -6,9 +6,14 @@ module.exports = {
       "formula",
       "formatting",
       "roadmap",
-      "credits"
+      "credits",
     ],
-    "Getting Started": ["install","controlled-uncontrolled", "options"],
+    "Getting Started": [
+      "install",
+      "controlled-uncontrolled",
+      "controlled",
+      "options",
+    ],
     Features: [
       "features/initialize",
       "features/sheets",
