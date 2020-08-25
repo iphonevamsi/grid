@@ -1,4 +1,9 @@
-import produce, { enablePatches, applyPatches, Patch } from "immer";
+import produce, {
+  enablePatches,
+  applyPatches,
+  Patch,
+  produceWithPatches,
+} from "immer";
 import {
   uuid,
   cellsInSelectionVariant,
@@ -7,14 +12,14 @@ import {
   cloneRow,
   formattingTypeKeys,
   detectDataType,
-  getMinMax
+  getMinMax,
 } from "./constants";
 import {
   Sheet,
   SheetID,
   CellConfig,
   CellsBySheet,
-  StateInterface
+  StateInterface,
 } from "./Spreadsheet";
 import {
   PatchInterface,
@@ -26,7 +31,7 @@ import {
   Filter,
   FilterDefinition,
   isNull,
-  Direction
+  Direction,
 } from "@rowsncolumns/grid";
 import {
   CellFormatting,
@@ -35,11 +40,11 @@ import {
   AXIS,
   BORDER_STYLE,
   BORDER_VARIANT,
-  DATATYPES
+  DATATYPES,
 } from "./types";
 import {
   formulaToRelativeReference,
-  moveMergedCells
+  moveMergedCells,
 } from "./formulas/helpers";
 import { FormulaError } from "./formulas";
 
@@ -62,14 +67,14 @@ export const defaultSheets: Sheet[] = [
     frozenRows: 0,
     activeCell: {
       rowIndex: 1,
-      columnIndex: 1
+      columnIndex: 1,
     },
     mergedCells: [],
     selections: [],
     cells: {},
     scrollState: { scrollTop: 0, scrollLeft: 0 },
-    filterViews: []
-  }
+    filterViews: [],
+  },
 ];
 
 export enum ACTION_TYPE {
@@ -110,7 +115,7 @@ export enum ACTION_TYPE {
   UNPROTECT_SHEET = "UNPROTECT_SHEET",
   UPDATE_CELLS = "UPDATE_CELLS",
   CHANGE_TAB_COLOR = "CHANGE_TAB_COLOR",
-  SET_LOADING = "SET_LOADING"
+  SET_LOADING = "SET_LOADING",
 }
 
 export type ActionTypes =
@@ -118,31 +123,37 @@ export type ActionTypes =
       type: ACTION_TYPE.SELECT_SHEET;
       id: React.ReactText;
       undoable?: boolean;
+      replace?: boolean;
     }
   | {
       type: ACTION_TYPE.SELECT_NEXT_SHEET;
       undoable?: boolean;
+      replace?: boolean;
     }
   | {
       type: ACTION_TYPE.SELECT_PREV_SHEET;
       undoable?: boolean;
+      replace?: boolean;
     }
   | {
       type: ACTION_TYPE.APPLY_PATCHES;
       patches: Patch[];
       undoable?: boolean;
+      replace?: boolean;
     }
   | {
       type: ACTION_TYPE.CHANGE_SHEET_NAME;
       id: SheetID;
       name: string;
       undoable?: boolean;
+      replace?: boolean;
     }
   | {
       type: ACTION_TYPE.NEW_SHEET;
       sheet: Sheet;
       index?: number;
       undoable?: boolean;
+      replace?: boolean;
     }
   | {
       type: ACTION_TYPE.CHANGE_SHEET_CELL;
@@ -151,6 +162,7 @@ export type ActionTypes =
       value: React.ReactText;
       datatype?: DATATYPES;
       undoable?: boolean;
+      replace?: boolean;
     }
   | {
       type: ACTION_TYPE.SET_CELL_ERROR;
@@ -161,6 +173,7 @@ export type ActionTypes =
       datatype?: DATATYPES;
       errorMessage: string;
       undoable?: boolean;
+      replace?: boolean;
     }
   | {
       type: ACTION_TYPE.UPDATE_FILL;
@@ -169,24 +182,33 @@ export type ActionTypes =
       fillSelection: SelectionArea;
       selections: SelectionArea[];
       undoable?: boolean;
+      replace?: boolean;
     }
-  | { type: ACTION_TYPE.DELETE_SHEET; id: SheetID; undoable?: boolean }
+  | {
+      type: ACTION_TYPE.DELETE_SHEET;
+      id: SheetID;
+      undoable?: boolean;
+      replace?: boolean;
+    }
   | {
       type: ACTION_TYPE.SHEET_SELECTION_CHANGE;
       id: SheetID;
       activeCell: CellInterface | null;
       selections: SelectionArea[];
       undoable?: boolean;
+      replace?: boolean;
     }
   | {
       type: ACTION_TYPE.FORMATTING_CHANGE_AUTO;
       id: SheetID;
       undoable?: boolean;
+      replace?: boolean;
     }
   | {
       type: ACTION_TYPE.FORMATTING_CHANGE_PLAIN;
       id: SheetID;
       undoable?: boolean;
+      replace?: boolean;
     }
   | {
       type: ACTION_TYPE.FORMATTING_CHANGE;
@@ -194,6 +216,7 @@ export type ActionTypes =
       key: keyof CellFormatting;
       value: any;
       undoable?: boolean;
+      replace?: boolean;
     }
   | {
       type: ACTION_TYPE.DELETE_CELLS;
@@ -201,6 +224,7 @@ export type ActionTypes =
       activeCell: CellInterface | null;
       selections: SelectionArea[];
       undoable?: boolean;
+      replace?: boolean;
     }
   | {
       type: ACTION_TYPE.REMOVE_CELLS;
@@ -208,8 +232,14 @@ export type ActionTypes =
       activeCell: CellInterface | null;
       selections: SelectionArea[];
       undoable?: boolean;
+      replace?: boolean;
     }
-  | { type: ACTION_TYPE.CLEAR_FORMATTING; id: SheetID; undoable?: boolean }
+  | {
+      type: ACTION_TYPE.CLEAR_FORMATTING;
+      id: SheetID;
+      undoable?: boolean;
+      replace?: boolean;
+    }
   | {
       type: ACTION_TYPE.RESIZE;
       id: SheetID;
@@ -217,20 +247,33 @@ export type ActionTypes =
       dimension: number;
       index: number;
       undoable?: boolean;
+      replace?: boolean;
     }
-  | { type: ACTION_TYPE.MERGE_CELLS; id: SheetID; undoable?: boolean }
-  | { type: ACTION_TYPE.COPY; id: SheetID; undoable?: boolean }
+  | {
+      type: ACTION_TYPE.MERGE_CELLS;
+      id: SheetID;
+      undoable?: boolean;
+      replace?: boolean;
+    }
+  | {
+      type: ACTION_TYPE.COPY;
+      id: SheetID;
+      undoable?: boolean;
+      replace?: boolean;
+    }
   | {
       type: ACTION_TYPE.FROZEN_ROW_CHANGE;
       id: SheetID;
       count: number;
       undoable?: boolean;
+      replace?: boolean;
     }
   | {
       type: ACTION_TYPE.FROZEN_COLUMN_CHANGE;
       id: SheetID;
       count: number;
       undoable?: boolean;
+      replace?: boolean;
     }
   | {
       type: ACTION_TYPE.SET_BORDER;
@@ -239,12 +282,14 @@ export type ActionTypes =
       borderStyle: BORDER_STYLE;
       variant?: BORDER_VARIANT;
       undoable?: boolean;
+      replace?: boolean;
     }
   | {
       type: ACTION_TYPE.UPDATE_SCROLL;
       id: SheetID;
       scrollState: ScrollCoords;
       undoable?: boolean;
+      replace?: boolean;
     }
   | {
       type: ACTION_TYPE.CHANGE_FILTER;
@@ -253,30 +298,35 @@ export type ActionTypes =
       columnIndex: number;
       filter?: FilterDefinition;
       undoable?: boolean;
+      replace?: boolean;
     }
   | {
       type: ACTION_TYPE.DELETE_COLUMN;
       id: SheetID;
       activeCell: CellInterface;
       undoable?: boolean;
+      replace?: boolean;
     }
   | {
       type: ACTION_TYPE.DELETE_ROW;
       id: SheetID;
       activeCell: CellInterface;
       undoable?: boolean;
+      replace?: boolean;
     }
   | {
       type: ACTION_TYPE.INSERT_COLUMN;
       id: SheetID;
       activeCell: CellInterface;
       undoable?: boolean;
+      replace?: boolean;
     }
   | {
       type: ACTION_TYPE.INSERT_ROW;
       id: SheetID;
       activeCell: CellInterface;
       undoable?: boolean;
+      replace?: boolean;
     }
   | {
       type: ACTION_TYPE.PASTE;
@@ -295,6 +345,7 @@ export type ActionTypes =
        */
       selections?: SelectionArea[];
       undoable?: boolean;
+      replace?: boolean;
     }
   | {
       type: ACTION_TYPE.VALIDATION_SUCCESS;
@@ -303,21 +354,44 @@ export type ActionTypes =
       valid?: boolean;
       prompt?: string;
       undoable?: boolean;
+      replace?: boolean;
     }
-  | { type: ACTION_TYPE.SHOW_SHEET; id: SheetID; undoable?: boolean }
-  | { type: ACTION_TYPE.HIDE_SHEET; id: SheetID; undoable?: boolean }
-  | { type: ACTION_TYPE.PROTECT_SHEET; id: SheetID; undoable?: boolean }
-  | { type: ACTION_TYPE.UNPROTECT_SHEET; id: SheetID; undoable?: boolean }
+  | {
+      type: ACTION_TYPE.SHOW_SHEET;
+      id: SheetID;
+      undoable?: boolean;
+      replace?: boolean;
+    }
+  | {
+      type: ACTION_TYPE.HIDE_SHEET;
+      id: SheetID;
+      undoable?: boolean;
+      replace?: boolean;
+    }
+  | {
+      type: ACTION_TYPE.PROTECT_SHEET;
+      id: SheetID;
+      undoable?: boolean;
+      replace?: boolean;
+    }
+  | {
+      type: ACTION_TYPE.UNPROTECT_SHEET;
+      id: SheetID;
+      undoable?: boolean;
+      replace?: boolean;
+    }
   | {
       type: ACTION_TYPE.UPDATE_CELLS;
       changes: CellsBySheet;
       undoable?: boolean;
+      replace?: boolean;
     }
   | {
       type: ACTION_TYPE.CHANGE_TAB_COLOR;
       id: SheetID;
       color?: string;
       undoable?: boolean;
+      replace?: boolean;
     }
   | {
       type: ACTION_TYPE.SET_LOADING;
@@ -325,10 +399,12 @@ export type ActionTypes =
       cell: CellInterface;
       value?: boolean;
       undoable?: boolean;
+      replace?: boolean;
     };
 
 export interface StateReducerProps {
   addUndoPatch: <T>(patches: PatchInterface<T>) => void;
+  replaceUndoPatch?: <T>(patches: T[]) => void;
   getCellBounds: (cell: CellInterface | null) => AreaProps | undefined;
   stateReducer?: (state: StateInterface, action: ActionTypes) => StateInterface;
 }
@@ -337,13 +413,14 @@ const defaultStateReducer = (state: StateInterface) => state;
 
 export const createStateReducer = ({
   addUndoPatch,
+  replaceUndoPatch,
   getCellBounds,
-  stateReducer = defaultStateReducer
+  stateReducer = defaultStateReducer,
 }: StateReducerProps) => {
   return (state: StateInterface, action: ActionTypes): StateInterface => {
-    const newState = produce(
+    const [newState, patches, inversePatches] = produceWithPatches(
       state,
-      draft => {
+      (draft) => {
         switch (action.type) {
           case ACTION_TYPE.SELECT_SHEET:
             draft.selectedSheet = action.id;
@@ -352,7 +429,7 @@ export const createStateReducer = ({
           case ACTION_TYPE.SELECT_NEXT_SHEET: {
             const index =
               draft.sheets.findIndex(
-                sheet => sheet.id === draft.selectedSheet
+                (sheet) => sheet.id === draft.selectedSheet
               ) + 1;
             const len = draft.sheets.length;
             const newIndex = index >= len ? 0 : index;
@@ -363,7 +440,7 @@ export const createStateReducer = ({
           case ACTION_TYPE.SELECT_PREV_SHEET: {
             const index =
               draft.sheets.findIndex(
-                sheet => sheet.id === draft.selectedSheet
+                (sheet) => sheet.id === draft.selectedSheet
               ) - 1;
             const len = draft.sheets.length;
             const newIndex = index < 0 ? len - 1 : index;
@@ -372,7 +449,7 @@ export const createStateReducer = ({
           }
 
           case ACTION_TYPE.CHANGE_SHEET_NAME: {
-            const sheet = draft.sheets.find(sheet => sheet.id === action.id);
+            const sheet = draft.sheets.find((sheet) => sheet.id === action.id);
             if (sheet && !sheet.locked) {
               sheet.name = action.name;
             }
@@ -391,7 +468,7 @@ export const createStateReducer = ({
           }
 
           case ACTION_TYPE.CHANGE_SHEET_CELL: {
-            const sheet = draft.sheets.find(sheet => sheet.id === action.id);
+            const sheet = draft.sheets.find((sheet) => sheet.id === action.id);
             if (sheet && !sheet.locked) {
               const { activeCell, selections } = sheet;
               const { cell, value, datatype } = action;
@@ -437,7 +514,7 @@ export const createStateReducer = ({
           }
 
           case ACTION_TYPE.SET_CELL_ERROR: {
-            const sheet = draft.sheets.find(sheet => sheet.id === action.id);
+            const sheet = draft.sheets.find((sheet) => sheet.id === action.id);
             if (sheet && !sheet.locked) {
               const { error, errorMessage, cell, value, datatype } = action;
               sheet.cells[cell.rowIndex] = sheet.cells[cell.rowIndex] ?? {};
@@ -456,7 +533,7 @@ export const createStateReducer = ({
           case ACTION_TYPE.UPDATE_CELLS: {
             const { changes } = action;
             for (const name in changes) {
-              const sheet = draft.sheets.find(sheet => sheet.name == name);
+              const sheet = draft.sheets.find((sheet) => sheet.name == name);
               if (sheet && !sheet.locked) {
                 for (const rowIndex in changes[name]) {
                   sheet.cells[rowIndex] = sheet.cells[rowIndex] ?? {};
@@ -507,7 +584,7 @@ export const createStateReducer = ({
           }
 
           case ACTION_TYPE.VALIDATION_SUCCESS: {
-            const sheet = draft.sheets.find(sheet => sheet.id === action.id);
+            const sheet = draft.sheets.find((sheet) => sheet.id === action.id);
             if (sheet && !sheet.locked) {
               const { valid, cell, prompt } = action;
               sheet.cells[cell.rowIndex] = sheet.cells[cell.rowIndex] ?? {};
@@ -535,7 +612,7 @@ export const createStateReducer = ({
            * Todo Move logic to action handler
            */
           case ACTION_TYPE.UPDATE_FILL: {
-            const sheet = draft.sheets.find(sheet => sheet.id === action.id);
+            const sheet = draft.sheets.find((sheet) => sheet.id === action.id);
             if (sheet && !sheet.locked) {
               const { activeCell, fillSelection, selections } = action;
               const sel = selections.length
@@ -565,7 +642,7 @@ export const createStateReducer = ({
                   for (let j = sel.bounds.left; j <= sel.bounds.right; j++) {
                     /* Current cell config */
                     const cellConfig = {
-                      ...sheet.cells?.[curSelRowIndex]?.[j]
+                      ...sheet.cells?.[curSelRowIndex]?.[j],
                     };
                     // Skip locked cell
                     if (sheet.cells[i][j]?.locked) {
@@ -599,7 +676,7 @@ export const createStateReducer = ({
                   for (let j = sel.bounds.left; j <= sel.bounds.right; j++) {
                     /* Current cell config */
                     const cellConfig = {
-                      ...sheet.cells?.[curSelRowIndex]?.[j]
+                      ...sheet.cells?.[curSelRowIndex]?.[j],
                     };
                     // Skip locked cell
                     if (sheet.cells[i][j]?.locked) {
@@ -633,7 +710,7 @@ export const createStateReducer = ({
                     }
                     /* Current cell config */
                     const cellConfig = {
-                      ...sheet.cells?.[i]?.[curSelColumnIndex]
+                      ...sheet.cells?.[i]?.[curSelColumnIndex],
                     };
                     // Skip locked cell
                     if (sheet.cells[i][j]?.locked) {
@@ -667,7 +744,7 @@ export const createStateReducer = ({
                     }
                     /* Current cell config */
                     const cellConfig = {
-                      ...sheet.cells?.[i]?.[curSelColumnIndex]
+                      ...sheet.cells?.[i]?.[curSelColumnIndex],
                     };
                     // Skip locked cell
                     if (sheet.cells[i][j]?.locked) {
@@ -696,11 +773,11 @@ export const createStateReducer = ({
 
           case ACTION_TYPE.DELETE_SHEET: {
             const { id } = action;
-            const index = draft.sheets.findIndex(sheet => sheet.id === id);
+            const index = draft.sheets.findIndex((sheet) => sheet.id === id);
             if (draft.sheets[index].locked) {
               return;
             }
-            const newSheets = draft.sheets.filter(sheet => sheet.id !== id);
+            const newSheets = draft.sheets.filter((sheet) => sheet.id !== id);
             const newSelectedSheet =
               draft.selectedSheet === draft.sheets[index].id
                 ? newSheets[Math.max(0, index - 1)].id
@@ -712,7 +789,7 @@ export const createStateReducer = ({
 
           case ACTION_TYPE.SHEET_SELECTION_CHANGE: {
             const sheet = draft.sheets.find(
-              sheet => sheet.id === action.id
+              (sheet) => sheet.id === action.id
             ) as Sheet;
             if (sheet) {
               sheet.activeCell = action.activeCell;
@@ -723,7 +800,7 @@ export const createStateReducer = ({
 
           case ACTION_TYPE.FORMATTING_CHANGE_AUTO: {
             const sheet = draft.sheets.find(
-              sheet => sheet.id === action.id
+              (sheet) => sheet.id === action.id
             ) as Sheet;
             if (sheet && !sheet.locked) {
               const { activeCell, selections } = sheet;
@@ -732,8 +809,8 @@ export const createStateReducer = ({
                 : activeCell
                 ? [
                     {
-                      bounds: getCellBounds?.(activeCell) as AreaProps
-                    }
+                      bounds: getCellBounds?.(activeCell) as AreaProps,
+                    },
                   ]
                 : [];
               for (let i = 0; i < sel.length; i++) {
@@ -754,7 +831,7 @@ export const createStateReducer = ({
 
           case ACTION_TYPE.FORMATTING_CHANGE_PLAIN: {
             const sheet = draft.sheets.find(
-              sheet => sheet.id === action.id
+              (sheet) => sheet.id === action.id
             ) as Sheet;
             if (sheet && !sheet.locked) {
               const { activeCell, selections } = sheet;
@@ -763,8 +840,8 @@ export const createStateReducer = ({
                 : activeCell
                 ? [
                     {
-                      bounds: getCellBounds?.(activeCell) as AreaProps
-                    }
+                      bounds: getCellBounds?.(activeCell) as AreaProps,
+                    },
                   ]
                 : [];
               for (let i = 0; i < sel.length; i++) {
@@ -787,7 +864,7 @@ export const createStateReducer = ({
 
           case ACTION_TYPE.FORMATTING_CHANGE: {
             const sheet = draft.sheets.find(
-              sheet => sheet.id === action.id
+              (sheet) => sheet.id === action.id
             ) as Sheet;
             const { key, value } = action;
             if (sheet && !sheet.locked) {
@@ -824,7 +901,7 @@ export const createStateReducer = ({
 
           case ACTION_TYPE.DELETE_CELLS: {
             const sheet = draft.sheets.find(
-              sheet => sheet.id === action.id
+              (sheet) => sheet.id === action.id
             ) as Sheet;
             if (sheet && !sheet.locked) {
               const { activeCell, selections } = action;
@@ -877,7 +954,7 @@ export const createStateReducer = ({
 
           case ACTION_TYPE.REMOVE_CELLS: {
             const sheet = draft.sheets.find(
-              sheet => sheet.id === action.id
+              (sheet) => sheet.id === action.id
             ) as Sheet;
             if (sheet && !sheet.locked) {
               const { activeCell, selections } = action;
@@ -903,7 +980,7 @@ export const createStateReducer = ({
           /* Clear formatting */
           case ACTION_TYPE.CLEAR_FORMATTING: {
             const sheet = draft.sheets.find(
-              sheet => sheet.id === action.id
+              (sheet) => sheet.id === action.id
             ) as Sheet;
             if (sheet && !sheet.locked) {
               const { activeCell, selections } = sheet;
@@ -922,10 +999,10 @@ export const createStateReducer = ({
                     ) {
                       continue;
                     }
-                    Object.values(FORMATTING_TYPE).forEach(key => {
+                    Object.values(FORMATTING_TYPE).forEach((key) => {
                       delete sheet.cells[j]?.[k]?.[key];
                     });
-                    Object.values(STROKE_FORMATTING).forEach(key => {
+                    Object.values(STROKE_FORMATTING).forEach((key) => {
                       delete sheet.cells[j]?.[k]?.[key];
                     });
                   }
@@ -937,7 +1014,7 @@ export const createStateReducer = ({
 
           case ACTION_TYPE.RESIZE: {
             const sheet = draft.sheets.find(
-              sheet => sheet.id === action.id
+              (sheet) => sheet.id === action.id
             ) as Sheet;
             if (sheet && !sheet.locked) {
               const { axis, index, dimension } = action;
@@ -954,7 +1031,7 @@ export const createStateReducer = ({
 
           case ACTION_TYPE.MERGE_CELLS: {
             const sheet = draft.sheets.find(
-              sheet => sheet.id === action.id
+              (sheet) => sheet.id === action.id
             ) as Sheet;
             if (sheet && !sheet.locked) {
               const { selections, activeCell } = sheet;
@@ -972,7 +1049,7 @@ export const createStateReducer = ({
               }
               sheet.mergedCells = sheet.mergedCells ?? [];
               /* Check if cell is already merged */
-              const index = sheet.mergedCells.findIndex(area => {
+              const index = sheet.mergedCells.findIndex((area) => {
                 return (
                   area.left === bounds.left &&
                   area.right === bounds.right &&
@@ -991,7 +1068,7 @@ export const createStateReducer = ({
 
           case ACTION_TYPE.FROZEN_ROW_CHANGE: {
             const sheet = draft.sheets.find(
-              sheet => sheet.id === action.id
+              (sheet) => sheet.id === action.id
             ) as Sheet;
             if (sheet && !sheet.locked) {
               sheet.frozenRows = action.count;
@@ -1001,7 +1078,7 @@ export const createStateReducer = ({
 
           case ACTION_TYPE.FROZEN_COLUMN_CHANGE: {
             const sheet = draft.sheets.find(
-              sheet => sheet.id === action.id
+              (sheet) => sheet.id === action.id
             ) as Sheet;
             if (sheet && !sheet.locked) {
               sheet.frozenColumns = action.count;
@@ -1011,7 +1088,7 @@ export const createStateReducer = ({
 
           case ACTION_TYPE.SET_BORDER: {
             const sheet = draft.sheets.find(
-              sheet => sheet.id === action.id
+              (sheet) => sheet.id === action.id
             ) as Sheet;
             if (sheet && !sheet.locked) {
               const { color, variant, borderStyle } = action;
@@ -1030,12 +1107,12 @@ export const createStateReducer = ({
                 for (const col in boundedCells[row]) {
                   if (variant === "none") {
                     // Delete all stroke formatting rules
-                    Object.values(STROKE_FORMATTING).forEach(key => {
+                    Object.values(STROKE_FORMATTING).forEach((key) => {
                       delete sheet.cells[row]?.[col]?.[key];
                     });
                   } else {
                     const styles = boundedCells[row][col];
-                    Object.keys(styles).forEach(key => {
+                    Object.keys(styles).forEach((key) => {
                       sheet.cells[row] = cells[row] ?? {};
                       sheet.cells[row][col] = cells[row][col] ?? {};
                       // @ts-ignore
@@ -1050,7 +1127,7 @@ export const createStateReducer = ({
 
           case ACTION_TYPE.UPDATE_SCROLL: {
             const sheet = draft.sheets.find(
-              sheet => sheet.id === action.id
+              (sheet) => sheet.id === action.id
             ) as Sheet;
             if (sheet) {
               sheet.scrollState = action.scrollState;
@@ -1060,7 +1137,7 @@ export const createStateReducer = ({
 
           case ACTION_TYPE.CHANGE_FILTER: {
             const sheet = draft.sheets.find(
-              sheet => sheet.id === action.id
+              (sheet) => sheet.id === action.id
             ) as Sheet;
             if (sheet && !sheet.locked) {
               const { columnIndex, filterViewIndex, filter } = action;
@@ -1074,7 +1151,7 @@ export const createStateReducer = ({
                   sheet.filterViews[filterViewIndex] =
                     sheet.filterViews[filterViewIndex] ?? {};
                   sheet.filterViews[filterViewIndex].filters = {
-                    [columnIndex]: filter
+                    [columnIndex]: filter,
                   };
                 } else {
                   (sheet.filterViews[filterViewIndex].filters as Filter)[
@@ -1088,7 +1165,7 @@ export const createStateReducer = ({
 
           case ACTION_TYPE.DELETE_COLUMN: {
             const sheet = draft.sheets.find(
-              sheet => sheet.id === action.id
+              (sheet) => sheet.id === action.id
             ) as Sheet;
             if (sheet && !sheet.locked) {
               const { activeCell } = action;
@@ -1144,7 +1221,7 @@ export const createStateReducer = ({
 
           case ACTION_TYPE.DELETE_ROW: {
             const sheet = draft.sheets.find(
-              sheet => sheet.id === action.id
+              (sheet) => sheet.id === action.id
             ) as Sheet;
             if (sheet && !sheet.locked) {
               const { activeCell } = action;
@@ -1196,7 +1273,7 @@ export const createStateReducer = ({
 
           case ACTION_TYPE.INSERT_COLUMN: {
             const sheet = draft.sheets.find(
-              sheet => sheet.id === action.id
+              (sheet) => sheet.id === action.id
             ) as Sheet;
             if (sheet && !sheet.locked) {
               const { activeCell } = action;
@@ -1256,7 +1333,7 @@ export const createStateReducer = ({
 
           case ACTION_TYPE.INSERT_ROW: {
             const sheet = draft.sheets.find(
-              sheet => sheet.id === action.id
+              (sheet) => sheet.id === action.id
             ) as Sheet;
             if (sheet && !sheet.locked) {
               const { activeCell } = action;
@@ -1309,7 +1386,7 @@ export const createStateReducer = ({
 
           case ACTION_TYPE.PASTE: {
             const sheet = draft.sheets.find(
-              sheet => sheet.id === action.id
+              (sheet) => sheet.id === action.id
             ) as Sheet;
             if (sheet && !sheet.locked) {
               const { rows, activeCell, selections, cutSelection } = action;
@@ -1412,7 +1489,7 @@ export const createStateReducer = ({
 
           case ACTION_TYPE.COPY: {
             const sheet = draft.sheets.find(
-              sheet => sheet.id === action.id
+              (sheet) => sheet.id === action.id
             ) as Sheet;
             if (sheet) {
               const { activeCell, selections } = sheet;
@@ -1424,7 +1501,7 @@ export const createStateReducer = ({
 
           case ACTION_TYPE.SET_LOADING: {
             const sheet = draft.sheets.find(
-              sheet => sheet.id === action.id
+              (sheet) => sheet.id === action.id
             ) as Sheet;
             if (sheet && !sheet.locked) {
               const { value, cell } = action;
@@ -1437,9 +1514,9 @@ export const createStateReducer = ({
           }
 
           case ACTION_TYPE.HIDE_SHEET: {
-            const visibleSheets = draft.sheets.filter(sheet => !sheet.hidden);
+            const visibleSheets = draft.sheets.filter((sheet) => !sheet.hidden);
             const index = visibleSheets.findIndex(
-              sheet => sheet.id === action.id
+              (sheet) => sheet.id === action.id
             );
             if (index !== -1) {
               const newSelectedSheet =
@@ -1454,7 +1531,7 @@ export const createStateReducer = ({
 
           case ACTION_TYPE.SHOW_SHEET: {
             const sheet = draft.sheets.find(
-              sheet => sheet.id === action.id
+              (sheet) => sheet.id === action.id
             ) as Sheet;
             if (sheet) {
               sheet.hidden = false;
@@ -1464,7 +1541,7 @@ export const createStateReducer = ({
 
           case ACTION_TYPE.PROTECT_SHEET: {
             const sheet = draft.sheets.find(
-              sheet => sheet.id === action.id
+              (sheet) => sheet.id === action.id
             ) as Sheet;
             if (sheet) {
               sheet.locked = true;
@@ -1474,7 +1551,7 @@ export const createStateReducer = ({
 
           case ACTION_TYPE.UNPROTECT_SHEET: {
             const sheet = draft.sheets.find(
-              sheet => sheet.id === action.id
+              (sheet) => sheet.id === action.id
             ) as Sheet;
             if (sheet) {
               sheet.locked = false;
@@ -1484,7 +1561,7 @@ export const createStateReducer = ({
 
           case ACTION_TYPE.CHANGE_TAB_COLOR: {
             const sheet = draft.sheets.find(
-              sheet => sheet.id === action.id
+              (sheet) => sheet.id === action.id
             ) as Sheet;
             if (sheet && !sheet.locked) {
               sheet.tabColor = action.color;
@@ -1495,17 +1572,19 @@ export const createStateReducer = ({
           case ACTION_TYPE.APPLY_PATCHES:
             return applyPatches(state, action.patches);
         }
-      },
-      (patches, inversePatches) => {
-        const { undoable = true } = action;
-        if (undoable === false) {
-          return;
-        }
-        requestAnimationFrame(() =>
-          addUndoPatch<Patch[]>({ patches, inversePatches })
-        );
       }
     );
+
+    const { undoable = true, replace = false } = action;
+    if (undoable) {
+      requestAnimationFrame(() => {
+        addUndoPatch({ patches, inversePatches });
+      });
+    }
+
+    if (replace && replaceUndoPatch) {
+      requestAnimationFrame(() => replaceUndoPatch(patches));
+    }
 
     return stateReducer(newState, action);
   };

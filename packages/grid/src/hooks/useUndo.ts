@@ -16,20 +16,22 @@ export interface UndoProps {
   enableGlobalKeyHandlers?: boolean;
   onRedo?: (patches: any) => void;
   onUndo?: (patches: any) => void;
+  identifier?: (patch: any) => any;
 }
 
 export interface UndoManager {
   undo: () => void;
   redo: () => void;
   add: (patches: any) => void;
+  replace: (patches: any) => void;
   canUndo: boolean;
   canRedo: boolean;
   onKeyDown?: (e: React.KeyboardEvent<HTMLDivElement>) => void;
 }
 
 export interface PatchInterface<T> {
-  patches: T;
-  inversePatches: T;
+  patches: T[];
+  inversePatches: T[];
 }
 
 /**
@@ -37,7 +39,7 @@ export interface PatchInterface<T> {
  * @param
  */
 const useUndo = <T>(props: UndoProps = {}): UndoManager => {
-  const { enableGlobalKeyHandlers, onRedo, onUndo } = props;
+  const { enableGlobalKeyHandlers, onRedo, onUndo, identifier } = props;
   const undoStack = useRef<PatchInterface<T>[]>([]);
   const undoStackPointer = useRef<number>(-1);
   const [_, forceRender] = useReducer((s) => s + 1, 0);
@@ -94,10 +96,36 @@ const useUndo = <T>(props: UndoProps = {}): UndoManager => {
     forceRender();
   }, []);
 
+  /**
+   * Use for async update where you want to replace the last patch
+   */
+  const replaceLastPatch = useCallback((patches: T[] | undefined) => {
+    if (patches === void 0) {
+      return;
+    }
+    const currentStack = undoStack.current;
+    const pointer = undoStackPointer.current;
+    const curPatches = currentStack[pointer];
+    if (curPatches.patches === void 0) {
+      return;
+    }
+    for (let i = 0; i < patches.length; i++) {
+      const patch = patches[i];
+      curPatches.patches = curPatches.patches.map((p) => {
+        if (identifier?.(p) === identifier?.(patch)) {
+          return patch;
+        }
+        return p;
+      });
+      curPatches.patches.concat(patch);
+    }
+  }, []);
+
   return {
     undo: handleUndo,
     redo: handleRedo,
     add: addUndoable,
+    replace: replaceLastPatch,
     onKeyDown: enableGlobalKeyHandlers ? undefined : handleKeyDown,
     canUndo: !(undoStackPointer.current < 0),
     canRedo: !(undoStackPointer.current === undoStack.current.length - 1),

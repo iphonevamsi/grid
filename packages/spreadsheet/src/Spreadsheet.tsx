@@ -681,7 +681,12 @@ const Spreadsheet: React.FC<SpreadSheetProps & RefAttributeSheetGrid> = memo(
      * State reducer
      */
     const currentStateReducer = useCallback(() => {
-      return createStateReducer({ addUndoPatch, getCellBounds, stateReducer });
+      return createStateReducer({
+        addUndoPatch,
+        replaceUndoPatch,
+        getCellBounds,
+        stateReducer,
+      });
     }, []);
     const dispatch = useCallback(
       (action: ActionTypes) => {
@@ -698,6 +703,8 @@ const Spreadsheet: React.FC<SpreadSheetProps & RefAttributeSheetGrid> = memo(
             currentStateRef.current,
             action
           );
+
+          /* Callbacks */
           updateState(newState);
         } else {
           /**
@@ -764,6 +771,9 @@ const Spreadsheet: React.FC<SpreadSheetProps & RefAttributeSheetGrid> = memo(
         if (newState.selectedSheet !== state.selectedSheet) {
           onChangeSelectedSheet?.(newState.selectedSheet as React.ReactText);
         }
+
+        /* Update local references */
+        currentStateRef.current = newState;
 
         /* Call back */
         onChange?.(newState.sheets);
@@ -871,12 +881,14 @@ const Spreadsheet: React.FC<SpreadSheetProps & RefAttributeSheetGrid> = memo(
      */
     const {
       add: addUndoPatch,
+      replace: replaceUndoPatch,
       canRedo,
       canUndo,
       undo,
       redo,
       onKeyDown: onUndoKeyDown,
-    } = useUndo<Patch[]>({
+    } = useUndo<Patch>({
+      identifier: (patch: Patch) => JSON.stringify(patch.path),
       enableGlobalKeyHandlers,
       onUndo: (patches: Patch[]) => {
         /* Side-effects */
@@ -1150,8 +1162,9 @@ const Spreadsheet: React.FC<SpreadSheetProps & RefAttributeSheetGrid> = memo(
       async (id: SheetID, value: React.ReactText, cell: CellInterface) => {
         const config = getCellConfigRef.current?.(id, cell);
         let datatype = detectDataType(value);
+        const isFormula = datatype === "formula";
         /* If user has disabled */
-        if (disableFormula && datatype === "formula") {
+        if (disableFormula && isFormula) {
           datatype = "string";
         }
 
@@ -1159,7 +1172,7 @@ const Spreadsheet: React.FC<SpreadSheetProps & RefAttributeSheetGrid> = memo(
          * Catch errors early on
          * Validate circular dependency
          */
-        if (datatype === "formula") {
+        if (isFormula) {
           try {
             formulaToRelativeReference(value, cell, cell);
           } catch (err) {
@@ -1207,6 +1220,7 @@ const Spreadsheet: React.FC<SpreadSheetProps & RefAttributeSheetGrid> = memo(
             valid,
             prompt: message,
             undoable: false,
+            replace: true,
           });
         }
 
