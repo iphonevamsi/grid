@@ -1,6 +1,6 @@
 {
   "name": "example-excel-worksheet",
-  "version": "4.2.1",
+  "version": "4.2.2",
   "main": "index.js",
   "license": "MIT",
   "private": true,
@@ -8,7 +8,7 @@
     "start": "parcel index.html"
   },
   "dependencies": {
-    "@rowsncolumns/grid": "^6.2.1",
+    "@rowsncolumns/grid": "^6.2.2",
     "hot-formula-parser": "^3.0.2",
     "parcel-bundler": "^1.12.4",
     "react": "^16.13.1",
