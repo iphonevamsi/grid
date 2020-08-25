@@ -165,17 +165,16 @@ export const SheetFromJSON = () => {
             text: item[key]
           }
         }
-      }
-      
+      }      
       setSheets([sheet])
     }
     fetchJSON()
   }, [])
   return (
-    <SpreadSheet
-      autoFocus={false}
+    <SpreadSheet      
       sheets={sheets}
       onChange={setSheets}
+      autoFocus={false}
     />
   )
 }

@@ -988,7 +988,7 @@ const SheetGrid: React.FC<GridProps & RefAttributeGrid> = memo(
      */
     useEffect(() => {
       /* Ignore for first mount */
-      if (!previousSelectedSheet) {
+      if (!previousSelectedSheet || previousSelectedSheet === selectedSheet) {
         return;
       }
       if (scrollState) {
@@ -1594,6 +1594,9 @@ const SheetGrid: React.FC<GridProps & RefAttributeGrid> = memo(
     const handleKeyDown = useCallback(
       (e: React.KeyboardEvent<HTMLDivElement>) => {
         onKeyDown?.(e, activeCell, selections);
+        if (e.isDefaultPrevented()) {
+          return;
+        }
         eventRefs.current.selectionProps.onKeyDown(e);
         eventRefs.current.editableProps.onKeyDown(e);
       },

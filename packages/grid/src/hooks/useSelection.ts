@@ -634,7 +634,6 @@ const useSelection = ({
         !activeCell
       )
         return;
-
       const currentCell = modify ? selectionEnd.current : activeCell;
       var { rowIndex, columnIndex } = currentCell;
       const isMergedCell = gridRef?.current.isMergedCell({
@@ -958,8 +957,8 @@ const useSelection = ({
     (e: React.KeyboardEvent) => {
       if (!gridRef?.current) return;
       const isShiftKey = e.nativeEvent.shiftKey;
-      const isMetaKey = e.nativeEvent.ctrlKey || e.nativeEvent.metaKey;
       const isAltKey = e.nativeEvent.altKey;
+      const isMetaKey = e.nativeEvent.ctrlKey || e.nativeEvent.metaKey;
       switch (e.nativeEvent.which) {
         case KeyCodes.Right:
           keyNavigate(Direction.Right, isShiftKey, isMetaKey);
