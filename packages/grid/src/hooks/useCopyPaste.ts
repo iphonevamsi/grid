@@ -50,6 +50,13 @@ export interface CopyResults {
   cut: () => void;
 }
 
+type SupportedType =
+  | "application/xhtml+xml"
+  | "application/xml"
+  | "image/svg+xml"
+  | "text/html"
+  | "text/xml";
+
 const defaultGetText = (text: any) => text;
 
 /**
