@@ -38,7 +38,6 @@ import {
   format as defaultFormat,
   FONT_FAMILIES,
   detectDataType,
-  getMinMax,
   COLUMN_HEADER_HEIGHT,
   ROW_HEADER_WIDTH,
   DEFAULT_ROW_COUNT,

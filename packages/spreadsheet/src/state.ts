@@ -20,6 +20,7 @@ import {
   CellConfig,
   CellsBySheet,
   StateInterface,
+  SheetGridRef,
 } from "./Spreadsheet";
 import {
   PatchInterface,
@@ -439,6 +440,27 @@ export interface StateReducerProps {
 }
 
 const defaultStateReducer = (state: StateInterface) => state;
+
+/**
+ * Produce state helper function
+ * @param sheets
+ * @param gridRef
+ * @param cb
+ */
+export const produceState = (
+  sheets: Sheet[],
+  gridRef: React.RefObject<SheetGridRef>,
+  cb: (s: Sheet[]) => Pick<StateInterface, "sheets">
+) => {
+  const [nextState, patches, inversePatches] = produceWithPatches(
+    { sheets },
+    (draft) => cb(draft.sheets)
+  );
+  requestAnimationFrame(() => {
+    gridRef.current?.addUndoPatch({ patches, inversePatches });
+  });
+  return nextState.sheets;
+};
 
 export const createStateReducer = ({
   addUndoPatch,
