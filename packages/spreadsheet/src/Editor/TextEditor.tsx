@@ -425,22 +425,34 @@ const TextEditor: React.FC<EditableProps & RefAttribute> = memo(
         const text = isFromSelection
           ? (items[highlightedIndex as number] as string)
           : deserialize(value);
+        const isEnter = e.which === KeyCodes.Enter;
+        const isTab = e.which === KeyCodes.Tab;
 
-        // Enter key
-        if (e.which === KeyCodes.Enter) {
+        // Enter/Tab key
+        if (isEnter || isTab) {
+          /* Trap focus inside the grid */
+          e.preventDefault();
+
+          /**
+           * If the user is in formula mode
+           * A selection was made from the
+           */
           if (isFormulaMode && isFromSelection) {
             setInputValue("");
-            e.preventDefault();
           } else {
             /* Add a new line when Cmd/Ctrl key is pressed */
             if (isMetaKey) {
               editor.insertBreak();
               return;
             }
-            onSubmit?.(text, isShiftKey ? Direction.Up : Direction.Down);
-
-            e.preventDefault();
-
+            const dir = isEnter
+              ? isShiftKey
+                ? Direction.Up
+                : Direction.Down
+              : isShiftKey
+              ? Direction.Left
+              : Direction.Right;
+            onSubmit?.(text, dir);
             return;
           }
         }
@@ -449,18 +461,6 @@ const TextEditor: React.FC<EditableProps & RefAttribute> = memo(
           onCancel && onCancel(e);
         }
 
-        if (e.which === KeyCodes.Tab) {
-          /* Trap focus inside the grid */
-          e.preventDefault();
-
-          if (isFormulaMode && isFromSelection) {
-            setInputValue("");
-          } else {
-            onSubmit &&
-              onSubmit(text, isShiftKey ? Direction.Left : Direction.Right);
-            return;
-          }
-        }
         /* Global handler */
         onKeyDown?.(e);
 

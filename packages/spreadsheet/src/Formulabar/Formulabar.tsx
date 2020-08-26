@@ -1,4 +1,4 @@
-import React, { memo, forwardRef } from "react";
+import React, { memo, forwardRef, useImperativeHandle, useRef } from "react";
 import {
   InputGroup,
   InputLeftAddon,
@@ -32,11 +32,15 @@ interface FormulabarProps {
   onChangeHeight?: (value: number) => void;
 }
 
-export type FormulaRef = {
-  ref?: React.MutableRefObject<HTMLInputElement | null>;
+export type RefAttribute = {
+  ref?: React.Ref<FormulaRef | null>;
 };
 
-const Formulabar: React.FC<FormulabarProps & FormulaRef> = memo(
+export type FormulaRef = {
+  focus: () => void;
+};
+
+const Formulabar: React.FC<FormulabarProps & RefAttribute> = memo(
   forwardRef((props, forwardedRef) => {
     const {
       value = "",
@@ -49,6 +53,7 @@ const Formulabar: React.FC<FormulabarProps & FormulaRef> = memo(
       height = DEFAULT_FORMULABAR_HEIGHT,
       onChangeHeight,
     } = props;
+    const inputRef = useRef<HTMLInputElement>(null);
     const isFormula = isAFormula(value) || isFormulaMode;
     const { colorMode } = useColorMode();
     const theme = useTheme();
@@ -58,6 +63,16 @@ const Formulabar: React.FC<FormulabarProps & FormulaRef> = memo(
     const borderColor = isLightMode
       ? theme.colors.gray[300]
       : theme.colors.gray[600];
+
+    useImperativeHandle(
+      forwardedRef,
+      () => ({
+        focus: () => {
+          inputRef.current?.focus();
+        },
+      }),
+      []
+    );
     return (
       <Box position="relative">
         <InputGroup
@@ -107,7 +122,7 @@ const Formulabar: React.FC<FormulabarProps & FormulaRef> = memo(
             fontSize={
               isFormula ? FORMULA_FONT_SIZE : pointToPixel(DEFAULT_FONT_SIZE)
             }
-            ref={forwardedRef}
+            ref={inputRef}
             transition="none"
             _focus={{
               boxShadow: "none",
