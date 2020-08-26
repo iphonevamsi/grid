@@ -20,7 +20,7 @@ exports[`FormulaBar matches snapshot 1`] = `
       />
     </div>
     <div
-      style="height: 4px; position: absolute; left: 0px; top: 20px; right: 0px; z-index: 1; cursor: ns-resize;"
+      style="user-select: none; height: 4px; position: absolute; left: 0px; margin-top: -4px; top: 24px; right: 0px; z-index: 1; cursor: ns-resize;"
     />
   </div>
 </DocumentFragment>
