@@ -17,19 +17,22 @@ import {
   DEFAULT_FONT_SIZE,
   pointToPixel,
   DEFAULT_FORMULABAR_HEIGHT,
+  DEFAULT_FONT_COLOR
 } from "./../constants";
 import Resizer from "../Resizer";
+import TextEditor from './../Editor/TextEditor'
 
 interface FormulabarProps {
   onChange?: (value: string) => void;
-  onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
-  onFocus?: (e: React.FocusEvent<HTMLInputElement>) => void;
-  onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
+  onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement | HTMLDivElement>) => void;
+  onFocus?: (e: React.FocusEvent<HTMLInputElement | HTMLDivElement>) => void;
+  onBlur?: (e: React.FocusEvent<HTMLInputElement | HTMLDivElement>) => void;
   value?: string;
   isFormulaMode?: boolean;
   locked?: boolean;
   height?: number;
   onChangeHeight?: (value: number) => void;
+  supportedFormulas?: string[];
 }
 
 export type RefAttribute = {
@@ -48,10 +51,11 @@ const Formulabar: React.FC<FormulabarProps & RefAttribute> = memo(
       onKeyDown,
       onFocus,
       onBlur,
-      isFormulaMode,
+      isFormulaMode = false,
       locked,
       height = DEFAULT_FORMULABAR_HEIGHT,
       onChangeHeight,
+      supportedFormulas
     } = props;
     const inputRef = useRef<HTMLInputElement>(null);
     const isFormula = isAFormula(value) || isFormulaMode;
