@@ -20,7 +20,9 @@ import {
   DEFAULT_FONT_COLOR,
 } from "./../constants";
 import Resizer from "../Resizer";
-import TextEditor from "./../Editor/TextEditor";
+import TextEditor, { EditableRef } from "./../Editor/TextEditor";
+import { FormulaChangeProps } from "../Spreadsheet";
+import { Direction } from "@rowsncolumns/grid";
 
 interface FormulabarProps {
   onChange?: (value: string) => void;
@@ -29,20 +31,19 @@ interface FormulabarProps {
   ) => void;
   onFocus?: (e: React.FocusEvent<HTMLInputElement | HTMLDivElement>) => void;
   onBlur?: (e: React.FocusEvent<HTMLInputElement | HTMLDivElement>) => void;
+  onSubmit?: (value: string, direction?: Direction) => void;
+  onCancel?: () => void;
   value?: string;
   isFormulaMode?: boolean;
   locked?: boolean;
   height?: number;
   onChangeHeight?: (value: number) => void;
   supportedFormulas?: string[];
+  onFormulaChange?: (props: FormulaChangeProps) => void;
 }
 
 export type RefAttribute = {
-  ref?: React.Ref<FormulaRef | null>;
-};
-
-export type FormulaRef = {
-  focus: () => void;
+  ref?: React.Ref<EditableRef | null>;
 };
 
 const Formulabar: React.FC<FormulabarProps & RefAttribute> = memo(
@@ -58,8 +59,11 @@ const Formulabar: React.FC<FormulabarProps & RefAttribute> = memo(
       height = DEFAULT_FORMULABAR_HEIGHT,
       onChangeHeight,
       supportedFormulas,
+      onFormulaChange,
+      onSubmit,
+      onCancel,
     } = props;
-    const inputRef = useRef<HTMLInputElement>(null);
+    const inputRef = useRef<EditableRef>(null);
     const isFormula = isAFormula(value) || isFormulaMode;
     const { colorMode } = useColorMode();
     const theme = useTheme();
@@ -70,15 +74,6 @@ const Formulabar: React.FC<FormulabarProps & RefAttribute> = memo(
       ? theme.colors.gray[300]
       : theme.colors.gray[600];
 
-    useImperativeHandle(
-      forwardedRef,
-      () => ({
-        focus: () => {
-          inputRef.current?.focus();
-        },
-      }),
-      []
-    );
     return (
       <Box position="relative">
         <InputGroup
@@ -97,33 +92,49 @@ const Formulabar: React.FC<FormulabarProps & RefAttribute> = memo(
             fontStyle="italic"
             borderTopWidth={0}
             borderBottomWidth={0}
+            borderRightWidth={1}
             size="sm"
             borderRadius={0}
             children="fx"
             height="auto"
             userSelect="none"
             borderLeftColor={borderColor}
+            borderRightColor={borderColor}
           />
-          <TextEditor
-            isFormulaMode={isFormula}
-            value={value}
-            fontFamily={isFormula ? FORMULA_FONT : SYSTEM_FONT}
-            fontSize={pointToPixel(DEFAULT_FONT_SIZE) as number}
-            onChange={onChange}
-            onFocus={onFocus}
-            onBlur={onBlur}
-            autoFocus={false}
-            onKeyDown={onKeyDown}
-            tearDown
-            scale={1}
-            color={DEFAULT_FONT_COLOR}
-            wrapping
-            horizontalAlign="left"
-            disabled={locked}
-            supportedFormulas={supportedFormulas}
-            suggestionsWidth="340px"
-            suggestionsLeftPadding={`${FORMULABAR_LEFT_CORNER_WIDTH}px`}
-          />
+          <div
+            style={{
+              display: "flex",
+              flex: 1,
+              position: "relative",
+              marginTop: 4,
+              marginLeft: 6,
+              paddingLeft: 1,
+            }}
+          >
+            <TextEditor
+              ref={forwardedRef}
+              isFormulaMode={isFormula}
+              value={value}
+              fontFamily={isFormula ? FORMULA_FONT : SYSTEM_FONT}
+              fontSize={pointToPixel(DEFAULT_FONT_SIZE) as number}
+              onChange={onChange}
+              onFocus={onFocus}
+              onBlur={onBlur}
+              autoFocus={false}
+              onSubmit={onSubmit}
+              onCancel={onCancel}
+              tearDown
+              scale={1}
+              color={DEFAULT_FONT_COLOR}
+              wrapping
+              horizontalAlign="left"
+              disabled={locked}
+              supportedFormulas={supportedFormulas}
+              suggestionsWidth="340px"
+              lineHeight="13px"
+              onFormulaChange={onFormulaChange}
+            />
+          </div>
         </InputGroup>
 
         <Resizer

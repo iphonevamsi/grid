@@ -49,6 +49,7 @@ export interface CustomEditorProps extends EditorProps, ExtraEditorProps {
       HTMLTextAreaElement | HTMLInputElement | HTMLDivElement
     >
   ) => void;
+  onFocus?: (e: React.FocusEvent<HTMLDivElement>) => void;
 }
 
 export type RefAttribute = {
@@ -91,6 +92,7 @@ const Editor: React.FC<CustomEditorProps & RefAttribute> = forwardRef(
       isFormulaMode,
       supportedFormulas,
       onFormulaChange,
+      onFocus,
     } = props;
     const fontSize = useMemo(() => pointToPixel(fontSizePt) as number, [
       fontSizePt,
@@ -258,6 +260,7 @@ const Editor: React.FC<CustomEditorProps & RefAttribute> = forwardRef(
           options={dropdownOptions}
           isFormulaMode={isFormulaMode}
           autoFocus={autoFocus}
+          onFocus={onFocus}
           supportedFormulas={supportedFormulas}
           onFormulaChange={onFormulaChange}
         />

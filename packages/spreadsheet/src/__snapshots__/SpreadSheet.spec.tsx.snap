@@ -635,40 +635,44 @@ exports[`SpreadSheet matches snapshot 1`] = `
         class="css-f7ejuk"
       >
         <div
-          class="css-113xb0u"
+          class="css-19p1yte"
         >
           fx
         </div>
         <div
-          style="font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji; font-size: 13px; font-weight: normal; width: 100%; height: 100%; padding: 0px 1px; margin: 0px; box-sizing: border-box; border-width: 0px; outline: none; resize: none; overflow: hidden; vertical-align: top; background: transparent; color: rgb(0, 0, 0); white-space: pre-wrap; text-align: left; line-height: normal; text-decoration: none; cursor: text; flex: 1;"
+          style="display: flex; flex: 1; position: relative; margin-top: 4px; margin-left: 6px; padding-left: 1px;"
         >
           <div
-            contenteditable="true"
-            data-gramm="false"
-            data-slate-editor="true"
-            data-slate-node="value"
-            role="textbox"
-            style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
+            style="font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji; font-size: 13px; font-weight: normal; width: 100%; height: 100%; padding: 0px 1px; margin: 0px; box-sizing: border-box; border-width: 0px; outline: none; resize: none; overflow: hidden; vertical-align: top; background: transparent; color: rgb(0, 0, 0); white-space: pre-wrap; text-align: left; line-height: 13px; text-decoration: none; cursor: text; flex: 1; display: flex;"
           >
             <div
-              data-slate-node="element"
-              style="position: relative;"
+              contenteditable="true"
+              data-gramm="false"
+              data-slate-editor="true"
+              data-slate-node="value"
+              role="textbox"
+              style="outline: none; white-space: pre-wrap; word-wrap: break-word; flex: 1;"
             >
-              <span
-                data-slate-node="text"
+              <div
+                data-slate-node="element"
+                style="position: relative;"
               >
                 <span
-                  data-slate-leaf="true"
+                  data-slate-node="text"
                 >
                   <span
-                    data-slate-length="0"
-                    data-slate-zero-width="n"
+                    data-slate-leaf="true"
                   >
-                    ﻿
-                    <br />
+                    <span
+                      data-slate-length="0"
+                      data-slate-zero-width="n"
+                    >
+                      ﻿
+                      <br />
+                    </span>
                   </span>
                 </span>
-              </span>
+              </div>
             </div>
           </div>
         </div>

@@ -5,13 +5,20 @@ import Grid from "./../Grid";
 import { Flex, useColorMode } from "@chakra-ui/core";
 import { BottomPanel, ThemeType } from "./../styled";
 import Tabs from "./../Tabs";
-import { SpreadSheetProps, Sheet, SizeType, SheetID } from "../Spreadsheet";
+import {
+  SpreadSheetProps,
+  Sheet,
+  SizeType,
+  SheetID,
+  FormulaChangeProps,
+} from "../Spreadsheet";
 import {
   CellInterface,
   SelectionArea,
   ScrollCoords,
   isNull,
   FilterDefinition,
+  NewSelectionMode,
 } from "@rowsncolumns/grid";
 import { WorkbookGridRef } from "../Grid/Grid";
 import { AXIS } from "../types";
@@ -128,6 +135,15 @@ export interface WorkbookProps
   isFormulaInputActive?: boolean;
   supportedFormulas?: string[];
   onEditorKeyDown?: (e: React.KeyboardEvent<any>) => void;
+  formulaState?: FormulaChangeProps;
+  onChangeFormulaState?: (props: FormulaChangeProps) => void;
+  onCellEditorFocus?: () => void;
+  onFormulaBarUpdateSelections?: (
+    sheetName: React.ReactText | undefined,
+    selection: SelectionArea | undefined,
+    newSelectionMode: NewSelectionMode
+  ) => void;
+  focusFormulaBar?: () => void;
 }
 
 export type WorkBookRefAttribute = {
@@ -199,6 +215,11 @@ const Workbook: React.FC<WorkbookProps & WorkBookRefAttribute> = memo(
       isFormulaInputActive,
       supportedFormulas,
       onEditorKeyDown,
+      formulaState,
+      onChangeFormulaState,
+      onCellEditorFocus,
+      onFormulaBarUpdateSelections,
+      focusFormulaBar,
       ...rest
     } = props;
 
@@ -440,6 +461,11 @@ const Workbook: React.FC<WorkbookProps & WorkBookRefAttribute> = memo(
             isFormulaInputActive={isFormulaInputActive}
             supportedFormulas={supportedFormulas}
             onEditorKeyDown={onEditorKeyDown}
+            formulaState={formulaState}
+            onChangeFormulaState={onChangeFormulaState}
+            onCellEditorFocus={onCellEditorFocus}
+            onFormulaBarUpdateSelections={onFormulaBarUpdateSelections}
+            focusFormulaBar={focusFormulaBar}
           />
         </Flex>
         {showTabStrip || showStatusBar ? (

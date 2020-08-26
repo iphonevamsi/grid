@@ -52,8 +52,7 @@ import {
   isTokenACell,
 } from "./../formulas/helpers";
 import { Token } from "fast-formula-parser/grammar/lexing";
-import { FormulaChangeProps } from "../Grid/Grid";
-import { SheetID } from "../Spreadsheet";
+import { SheetID, FormulaChangeProps } from "../Spreadsheet";
 import { FONT_WEIGHT } from "../types";
 
 export interface EditableProps {
@@ -80,7 +79,7 @@ export interface EditableProps {
   tearDown?: boolean;
   disabled?: boolean;
   suggestionsWidth?: string;
-  suggestionsLeftPadding?: string;
+  lineHeight?: string;
 }
 
 export type RefAttribute = {
@@ -129,6 +128,7 @@ const TextEditor: React.FC<EditableProps & RefAttribute> = memo(
       bold,
       scale = 1,
       color,
+      lineHeight = "normal",
       horizontalAlign,
       underline,
       onKeyDown,
@@ -140,7 +140,6 @@ const TextEditor: React.FC<EditableProps & RefAttribute> = memo(
       tearDown = false,
       disabled,
       suggestionsWidth = "calc(100% + 4px)",
-      suggestionsLeftPadding = "0",
     } = props;
     const serialize = useCallback(
       (value?: React.ReactText): Node[] => {
@@ -430,7 +429,7 @@ const TextEditor: React.FC<EditableProps & RefAttribute> = memo(
       }
       const start = getCurrentCursorOffset(editor);
       if (start) {
-        const begin = { ...start, offset: 0 };
+        const begin = { path: [0, 0], offset: 0 };
         const range = Editor.range(editor, begin, begin);
         Transforms.select(editor, range);
       }
@@ -462,13 +461,15 @@ const TextEditor: React.FC<EditableProps & RefAttribute> = memo(
           if (isFormulaMode && isFromSelection) {
             setInputValue("");
           } else {
-            prepareCloseEditor();
             e.preventDefault();
             /* Add a new line when Cmd/Ctrl key is pressed */
             if (isMetaKey) {
               editor.insertBreak();
               return;
             }
+            /* Teardown */
+            prepareCloseEditor();
+
             const dir = isEnter
               ? isShiftKey
                 ? Direction.Up
@@ -482,6 +483,7 @@ const TextEditor: React.FC<EditableProps & RefAttribute> = memo(
         }
 
         if (e.which === KeyCodes.Escape) {
+          /* Teardown */
           prepareCloseEditor();
           onCancel && onCancel(e);
         }
@@ -526,10 +528,11 @@ const TextEditor: React.FC<EditableProps & RefAttribute> = memo(
             color: color,
             whiteSpace: "pre-wrap",
             textAlign: isFormulaMode ? "left" : horizontalAlign,
-            lineHeight: "normal",
+            lineHeight,
             textDecoration: underline ? "underline" : "none",
             cursor: "text",
             flex: 1,
+            display: "flex",
           }}
         >
           <Slate editor={editor} value={value} onChange={handleChange}>
@@ -540,6 +543,9 @@ const TextEditor: React.FC<EditableProps & RefAttribute> = memo(
               onKeyDown={handleKeyDown}
               onFocus={onFocus}
               onBlur={onBlur}
+              style={{
+                flex: 1,
+              }}
             />
           </Slate>
         </div>
@@ -552,7 +558,6 @@ const TextEditor: React.FC<EditableProps & RefAttribute> = memo(
             background={dropdownBgColor}
             pb={1}
             pt={1}
-            ml={suggestionsLeftPadding}
             position="absolute"
             top="100%"
             mt="2px"
@@ -562,6 +567,7 @@ const TextEditor: React.FC<EditableProps & RefAttribute> = memo(
             maxHeight={400}
             overflow="auto"
             zIndex={1}
+            borderRadius={4}
           >
             {(items as string[]).map((item, index: number) => {
               return (
@@ -581,7 +587,10 @@ const TextEditor: React.FC<EditableProps & RefAttribute> = memo(
                   onClick={() => onClick?.(item)}
                   key={item}
                   style={{
-                    fontWeight: selectedItem === item ? "bold" : "normal",
+                    fontWeight:
+                      !isFormulaMode && selectedItem === item
+                        ? "bold"
+                        : "normal",
                     backgroundColor:
                       highlightedIndex === index
                         ? isLight

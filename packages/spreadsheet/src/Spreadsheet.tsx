@@ -29,6 +29,7 @@ import {
   FilterDefinition,
   useUndo,
   SelectionPolicy,
+  NewSelectionMode,
 } from "@rowsncolumns/grid";
 import {
   createNewSheet,
@@ -44,6 +45,7 @@ import {
   DEFAULT_ROW_COUNT,
   DEFAULT_COLUMN_COUNT,
   DEFAULT_FORMULABAR_HEIGHT,
+  isAFormula,
 } from "./constants";
 import {
   FORMATTING_TYPE,
@@ -70,6 +72,7 @@ import TooltipComponent, { TooltipProps } from "./Tooltip";
 import validate, { ValidationResponse } from "./validation";
 import useCalc from "./hooks/useCalc";
 import { formulaToRelativeReference } from "./formulas/helpers";
+import { EditableRef } from "./Editor/TextEditor";
 
 export interface SpreadSheetProps
   extends Omit<React.HTMLAttributes<HTMLDivElement>, "onChange" | "onPaste"> {
@@ -510,6 +513,11 @@ export type SheetGridRef = {
   ) => Promise<CellsBySheet | undefined> | undefined;
 };
 
+export interface FormulaChangeProps {
+  showCellSuggestion?: boolean;
+  newSelectionMode: NewSelectionMode;
+}
+
 export interface PatchInterface {
   patches: Patch[];
   inversePatches: Patch[];
@@ -614,6 +622,7 @@ const Spreadsheet: React.FC<SpreadSheetProps & RefAttributeSheetGrid> = memo(
     /* Last active cells: for undo, redo */
     const lastActiveCellRef = useRef<CellInterface | null>(null);
     const lastSelectionsRef = useRef<SelectionArea[] | null>([]);
+    const formulaBarInputRef = useRef<EditableRef>(null);
     const [scale, setScale] = useState(initialScale);
     const currentGrid = useRef<WorkbookGridRef>(null);
     const [formulaBarHeight, setFormulaBarHeight] = useState(
@@ -635,6 +644,12 @@ const Spreadsheet: React.FC<SpreadSheetProps & RefAttributeSheetGrid> = memo(
         selectedSheet: isControlled
           ? sheetsProp?.[0].id
           : initialActiveSheet ?? initialSheets[0].id ?? sheetsProp?.[0].id,
+      };
+    });
+    const [formulaState, setFormulaState] = useState<FormulaChangeProps>(() => {
+      return {
+        newSelectionMode: "modify",
+        showCellSuggestion: false,
       };
     });
     /* Useful for tests to handle debounced state updates */
@@ -1456,7 +1471,7 @@ const Spreadsheet: React.FC<SpreadSheetProps & RefAttributeSheetGrid> = memo(
       [activeCell, isFormulaMode]
     );
 
-    const handleFormulabarBlur = useCallback(() => {
+    const handleCellEditorFocus = useCallback(() => {
       setIsFormulaInputActive(false);
     }, []);
 
@@ -1471,7 +1486,8 @@ const Spreadsheet: React.FC<SpreadSheetProps & RefAttributeSheetGrid> = memo(
           return;
         }
         setFormulaInput(value);
-
+        const isFormula = isAFormula(value);
+        setFormulaMode?.(!!isFormula);
         currentGrid.current?.setEditorValue(value, currentlyEditingCell);
       },
       [activeCell, selectedSheet]
@@ -1493,11 +1509,9 @@ const Spreadsheet: React.FC<SpreadSheetProps & RefAttributeSheetGrid> = memo(
       );
       currentGrid.current?.submitEditor(value, activeCell, nextActiveCell);
     };
-    /**
-     * When user presses Enter on formula input
-     */
-    const handleFormulabarKeydown = useCallback(
-      (e: React.KeyboardEvent<HTMLInputElement | HTMLDivElement>) => {
+
+    const handleFormulabarSubmit = useCallback(
+      (text, direction?: Direction) => {
         const currentlyEditingCell = currentGrid.current?.getEditingCell();
         const currentlyEditingSheetId = currentGrid.current?.getEditingSheetId();
         if (
@@ -1506,27 +1520,30 @@ const Spreadsheet: React.FC<SpreadSheetProps & RefAttributeSheetGrid> = memo(
         ) {
           return;
         }
-        if (e.which === KeyCodes.Enter) {
-          submitEditor(formulaInput, currentlyEditingCell);
-        }
-        if (e.which === KeyCodes.Escape) {
-          currentGrid.current?.cancelEditor();
-          setFormulaInput(activeCellConfig?.text?.toString() || "");
-          /**
-           * Switch to editing sheet and cell if
-           * user has navigated to a different sheet
-           */
-          setSelectedSheet(currentlyEditingSheetId);
-          /* Focus on the new active cell */
-          currentGrid.current?.setActiveCell(currentlyEditingCell);
-        }
-        if (e.which === KeyCodes.Tab) {
-          submitEditor(formulaInput, currentlyEditingCell, Direction.Right);
-          e.preventDefault();
-        }
+        submitEditor(text, currentlyEditingCell, direction);
       },
-      [activeCell, formulaInput, activeCellConfig]
+      []
     );
+
+    const handleFormulabarCancel = useCallback(() => {
+      const currentlyEditingCell = currentGrid.current?.getEditingCell();
+      const currentlyEditingSheetId = currentGrid.current?.getEditingSheetId();
+      if (
+        currentlyEditingCell === void 0 ||
+        currentlyEditingSheetId === void 0
+      ) {
+        return;
+      }
+      currentGrid.current?.cancelEditor();
+      setFormulaInput(activeCellConfig?.text?.toString() || "");
+      /**
+       * Switch to editing sheet and cell if
+       * user has navigated to a different sheet
+       */
+      setSelectedSheet(currentlyEditingSheetId);
+      /* Focus on the new active cell */
+      currentGrid.current?.setActiveCell(currentlyEditingCell);
+    }, []);
 
     /**
      * Handle fill
@@ -2140,6 +2157,36 @@ const Spreadsheet: React.FC<SpreadSheetProps & RefAttributeSheetGrid> = memo(
       onSheetColorChange?.(id);
     }, []);
 
+    const handleChangeFormulaState = useCallback(
+      (props: FormulaChangeProps) => {
+        setFormulaState((prev) => {
+          return {
+            ...prev,
+            ...props,
+          };
+        });
+      },
+      []
+    );
+
+    const handleFormulaBarUpdateSelections = useCallback(
+      (name, sel, newSelectionMode) => {
+        if (!formulaBarInputRef.current) {
+          return;
+        }
+        formulaBarInputRef.current.updateSelection?.(
+          name,
+          sel,
+          newSelectionMode
+        );
+      },
+      []
+    );
+
+    const handleFormulaBarFocus = useCallback(() => {
+      formulaBarInputRef.current?.focus();
+    }, []);
+
     return (
       <>
         <Global
@@ -2224,16 +2271,18 @@ const Spreadsheet: React.FC<SpreadSheetProps & RefAttributeSheetGrid> = memo(
           ) : null}
           {showFormulabar ? (
             <Formulabar
+              ref={formulaBarInputRef}
               value={formulaInput}
               onChange={handleFormulabarChange}
-              onKeyDown={handleFormulabarKeydown}
+              onSubmit={handleFormulabarSubmit}
+              onCancel={handleFormulabarCancel}
               onFocus={handleFormulabarFocus}
-              onBlur={handleFormulabarBlur}
               isFormulaMode={isFormulaMode}
               height={formulaBarHeight}
               onChangeHeight={setFormulaBarHeight}
               locked={activeCellConfig?.locked}
               supportedFormulas={supportedFormulas}
+              onFormulaChange={handleChangeFormulaState}
             />
           ) : null}
           <Workbook
@@ -2297,6 +2346,11 @@ const Spreadsheet: React.FC<SpreadSheetProps & RefAttributeSheetGrid> = memo(
             setFormulaMode={setFormulaMode}
             isFormulaInputActive={isFormulaInputActive}
             supportedFormulas={supportedFormulas}
+            formulaState={formulaState}
+            onChangeFormulaState={handleChangeFormulaState}
+            onCellEditorFocus={handleCellEditorFocus}
+            onFormulaBarUpdateSelections={handleFormulaBarUpdateSelections}
+            focusFormulaBar={handleFormulaBarFocus}
           />
         </Flex>
       </>

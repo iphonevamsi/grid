@@ -62,7 +62,13 @@ import {
 import HeaderCell from "./../HeaderCell";
 import Cell from "./../Cell";
 import { GridWrapper, ThemeType } from "./../styled";
-import { Cells, CellConfig, SizeType, SheetID } from "../Spreadsheet";
+import {
+  Cells,
+  CellConfig,
+  SizeType,
+  SheetID,
+  FormulaChangeProps,
+} from "../Spreadsheet";
 import { Direction } from "@rowsncolumns/grid";
 import { AXIS, Formatter, SelectionMode } from "../types";
 import Editor from "./../Editor";
@@ -206,6 +212,15 @@ export interface GridProps {
   isFormulaInputActive?: boolean;
   supportedFormulas?: string[];
   onEditorKeyDown?: (e: React.KeyboardEvent<any>) => void;
+  formulaState?: FormulaChangeProps;
+  onChangeFormulaState?: (s: FormulaChangeProps) => void;
+  onCellEditorFocus?: () => void;
+  onFormulaBarUpdateSelections?: (
+    sheetName: React.ReactText | undefined,
+    selection: SelectionArea | undefined,
+    newSelectionMode: NewSelectionMode
+  ) => void;
+  focusFormulaBar?: () => void;
 }
 
 export interface RowColSelection {
@@ -222,11 +237,7 @@ export interface ExtraEditorProps {
   isFormulaMode?: boolean;
   supportedFormulas?: string[];
   onFormulaChange?: (props: FormulaChangeProps) => void;
-}
-
-export interface FormulaChangeProps {
-  showCellSuggestion?: boolean;
-  newSelectionMode: NewSelectionMode;
+  onFocus?: (e: React.FocusEvent<HTMLDivElement>) => void;
 }
 
 export interface FormulaSelection {
@@ -274,6 +285,11 @@ interface InternalRef {
   rowCount: number;
   columnCount: number;
 }
+
+const defaultFormulaState: FormulaChangeProps = {
+  newSelectionMode: "modify",
+  showCellSuggestion: false,
+};
 
 /**
  * Grid component
@@ -349,6 +365,11 @@ const SheetGrid: React.FC<GridProps & RefAttributeGrid> = memo(
       gridBackgroundColor,
       isFormulaInputActive,
       children,
+      formulaState = defaultFormulaState,
+      onChangeFormulaState,
+      onCellEditorFocus,
+      onFormulaBarUpdateSelections,
+      focusFormulaBar,
       ...rest
     } = props;
     const gridRef = useRef<GridRef | null>(null);
@@ -360,12 +381,6 @@ const SheetGrid: React.FC<GridProps & RefAttributeGrid> = memo(
     const editorRef = useRef<EditableRef>(null);
     const editingCellRef = useRef<CellInterface>();
     const isFormulaModeRef = useRef<boolean>(false);
-    const [formulaState, setFormulaState] = useState<FormulaChangeProps>(() => {
-      return {
-        newSelectionMode: "modify",
-        showCellSuggestion: false,
-      };
-    });
     const [formulaSelections, setFormulaSelections] = useState<
       FormulaSelection[]
     >([]);
@@ -811,8 +826,10 @@ const SheetGrid: React.FC<GridProps & RefAttributeGrid> = memo(
 
     /* Focus on the editor */
     const focusEditor = useCallback(() => {
-      requestAnimationFrame(() => editorRef.current?.focus());
-    }, []);
+      requestAnimationFrame(() =>
+        isFormulaInputActive ? focusFormulaBar?.() : editorRef.current?.focus()
+      );
+    }, [isFormulaInputActive]);
 
     /* Focus on the editor */
     const updateFormulaEditor = useCallback(
@@ -820,16 +837,20 @@ const SheetGrid: React.FC<GridProps & RefAttributeGrid> = memo(
         const name = sanitizeSheetName(
           selectedSheet !== currentlyEditingSheetId.current ? sheetName : void 0
         );
-        editorRef.current?.updateSelection?.(name, sel, newSelectionMode);
+        if (isFormulaInputActive) {
+          onFormulaBarUpdateSelections?.(name, sel, newSelectionMode);
+        } else {
+          editorRef.current?.updateSelection?.(name, sel, newSelectionMode);
+        }
       },
-      [selectedSheet, sheetName]
+      [selectedSheet, sheetName, isFormulaInputActive]
     );
     /* Throttler */
     const updateFormulaEditorThrottle = useRef<(...a: any[]) => void>();
 
     useEffect(() => {
       updateFormulaEditorThrottle.current = throttle(updateFormulaEditor, 60);
-    }, [updateFormulaEditor, selectedSheet, sheetName]);
+    }, [updateFormulaEditor, selectedSheet, sheetName, isFormulaInputActive]);
 
     /**
      * TOOD
@@ -994,7 +1015,10 @@ const SheetGrid: React.FC<GridProps & RefAttributeGrid> = memo(
      */
     useEffect(() => {
       /* Ignore for first mount */
-      if (!previousSelectedSheet || previousSelectedSheet === selectedSheet) {
+      if (
+        previousSelectedSheet === void 0 ||
+        previousSelectedSheet === selectedSheet
+      ) {
         return;
       }
       if (scrollState) {
@@ -1188,7 +1212,7 @@ const SheetGrid: React.FC<GridProps & RefAttributeGrid> = memo(
     );
 
     const handleFormulaChange = useCallback((props: FormulaChangeProps) => {
-      setFormulaState(props);
+      onChangeFormulaState?.(props);
     }, []);
 
     /**
@@ -1242,6 +1266,7 @@ const SheetGrid: React.FC<GridProps & RefAttributeGrid> = memo(
           isFormulaMode,
           supportedFormulas,
           onFormulaChange: handleFormulaChange,
+          onFocus: onCellEditorFocus,
         };
       },
       getEditor: (cell: CellInterface | null) => {
@@ -1582,12 +1607,7 @@ const SheetGrid: React.FC<GridProps & RefAttributeGrid> = memo(
          * Enable append selection mode for formula
          */
         if (isFormulaMode && isMetaKey) {
-          setFormulaState((prev) => {
-            return {
-              ...prev,
-              newSelectionMode: "append",
-            };
-          });
+          onChangeFormulaState?.({ newSelectionMode: "append" });
         }
         eventRefs.current.selectionProps.onMouseDown(e);
         eventRefs.current.editableProps.onMouseDown(e);
