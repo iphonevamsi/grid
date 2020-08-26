@@ -26,6 +26,10 @@ export interface WorkbookProps
   extends Omit<
     SpreadSheetProps,
     | "onChange"
+    | "onCopy"
+    | "onCut"
+    | "onKeyDown"
+    | "onScroll"
     | "StatusBar"
     | "onInsertRow"
     | "onDuplicateSheet"
@@ -195,6 +199,7 @@ const Workbook: React.FC<WorkbookProps & WorkBookRefAttribute> = memo(
       isFormulaInputActive,
       supportedFormulas,
       onEditorKeyDown,
+      ...rest
     } = props;
 
     const { colorMode } = useColorMode();
@@ -371,6 +376,7 @@ const Workbook: React.FC<WorkbookProps & WorkBookRefAttribute> = memo(
           background={finalGridBackground}
         >
           <Grid
+            {...rest}
             scale={scale}
             isLightMode={isLight}
             ref={forwardedRef}

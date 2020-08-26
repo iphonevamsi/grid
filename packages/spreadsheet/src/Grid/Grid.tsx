@@ -346,6 +346,10 @@ const SheetGrid: React.FC<GridProps & RefAttributeGrid> = memo(
       setFormulaMode,
       supportedFormulas = EMPTY_ARRAY,
       onEditorKeyDown,
+      gridBackgroundColor,
+      isFormulaInputActive,
+      children,
+      ...rest
     } = props;
     const gridRef = useRef<GridRef | null>(null);
     const isLockedRef = useRef<boolean | undefined>(false);
@@ -1693,6 +1697,7 @@ const SheetGrid: React.FC<GridProps & RefAttributeGrid> = memo(
     return (
       <GridWrapper>
         <Grid
+          {...rest}
           snap={snap}
           scale={scale}
           isHiddenRow={isHiddenRow}
@@ -1722,12 +1727,12 @@ const SheetGrid: React.FC<GridProps & RefAttributeGrid> = memo(
           frozenColumns={frozenColumns}
           {...selectionProps}
           {...editableProps}
+          {...tooltipProps}
           onMouseDown={handleMouseDown}
           onKeyDown={handleKeyDown}
           onScroll={handleScroll}
           onContextMenu={showContextMenu}
           onViewChange={onViewChange}
-          {...tooltipProps}
           selectionRenderer={selectionRenderer}
         />
         {editorComponent}

@@ -7,6 +7,7 @@ import React, {
   forwardRef,
   useImperativeHandle,
   memo,
+  HTMLAttributes,
 } from "react";
 import Toolbar from "./Toolbar";
 import Formulabar from "./Formulabar";
@@ -70,7 +71,8 @@ import validate, { ValidationResponse } from "./validation";
 import useCalc from "./hooks/useCalc";
 import { formulaToRelativeReference } from "./formulas/helpers";
 
-export interface SpreadSheetProps {
+export interface SpreadSheetProps
+  extends Omit<React.HTMLAttributes<HTMLDivElement>, "onChange" | "onPaste"> {
   /**
    * Minimum column width of the grid
    */
@@ -391,7 +393,7 @@ export interface SpreadSheetProps {
   /**
    * Callback when formulaBar height changes
    */
-  onChangeFormulaBarHeight?: (value: number) => void
+  onChangeFormulaBarHeight?: (value: number) => void;
 }
 
 export type FormulaMap = Record<string, (...args: any[]) => any>;
@@ -606,6 +608,9 @@ const Spreadsheet: React.FC<SpreadSheetProps & RefAttributeSheetGrid> = memo(
       autoFocus = true,
       initialFormulaBarHeight = DEFAULT_FORMULABAR_HEIGHT,
       onChangeFormulaBarHeight,
+      ref,
+      children,
+      ...rest
     } = props;
 
     /* Last active cells: for undo, redo */
@@ -613,7 +618,9 @@ const Spreadsheet: React.FC<SpreadSheetProps & RefAttributeSheetGrid> = memo(
     const lastSelectionsRef = useRef<SelectionArea[] | null>([]);
     const [scale, setScale] = useState(initialScale);
     const currentGrid = useRef<WorkbookGridRef>(null);
-    const [formulaBarHeight, setFormulaBarHeight] = useState(initialFormulaBarHeight)
+    const [formulaBarHeight, setFormulaBarHeight] = useState(
+      initialFormulaBarHeight
+    );
     const [formulaInput, setFormulaInput] = useState("");
     const [isFormulaInputActive, setIsFormulaInputActive] = useState(false);
     const { current: isControlled } = useRef<boolean>(sheetsProp !== void 0);
@@ -1055,8 +1062,8 @@ const Spreadsheet: React.FC<SpreadSheetProps & RefAttributeSheetGrid> = memo(
 
     /* Callback fired when formulaBar height changes */
     useEffect(() => {
-      onChangeFormulaBarHeight?.(formulaBarHeight)
-    }, [ formulaBarHeight ])
+      onChangeFormulaBarHeight?.(formulaBarHeight);
+    }, [formulaBarHeight]);
 
     useImperativeHandle(
       forwardedRef,
@@ -2233,6 +2240,7 @@ const Spreadsheet: React.FC<SpreadSheetProps & RefAttributeSheetGrid> = memo(
             />
           ) : null}
           <Workbook
+            {...rest}
             scale={scale}
             StatusBar={StatusBar}
             showTabStrip={showTabStrip}
