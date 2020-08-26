@@ -77,8 +77,10 @@ export interface EditableProps {
   onFormulaChange?: (props: FormulaChangeProps) => void;
   onFocus?: (e: React.FocusEvent<HTMLDivElement>) => void;
   onBlur?: (e: React.FocusEvent<HTMLDivElement>) => void;
-  tearDown?: boolean
-  disabled?: boolean
+  tearDown?: boolean;
+  disabled?: boolean;
+  suggestionsWidth?: string;
+  suggestionsLeftPadding?: string;
 }
 
 export type RefAttribute = {
@@ -137,6 +139,8 @@ const TextEditor: React.FC<EditableProps & RefAttribute> = memo(
       onFormulaChange,
       tearDown = false,
       disabled,
+      suggestionsWidth = "calc(100% + 4px)",
+      suggestionsLeftPadding = "0",
     } = props;
     const serialize = useCallback(
       (value?: React.ReactText): Node[] => {
@@ -414,9 +418,7 @@ const TextEditor: React.FC<EditableProps & RefAttribute> = memo(
             newSelectionMode: showCellSuggestion ? "append" : "modify",
           });
 
-          setCursorSuggestionToken(
-            showCellSuggestion ? start : void 0
-          );
+          setCursorSuggestionToken(showCellSuggestion ? start : void 0);
         }
       },
       [isFormulaMode]
@@ -424,15 +426,15 @@ const TextEditor: React.FC<EditableProps & RefAttribute> = memo(
 
     const prepareCloseEditor = useCallback(() => {
       if (!tearDown) {
-        return
+        return;
       }
-      const start = getCurrentCursorOffset(editor)
+      const start = getCurrentCursorOffset(editor);
       if (start) {
-        const begin = { ...start, offset: 0 }
-        const range = Editor.range(editor, begin, begin)
-        Transforms.select(editor, range)
+        const begin = { ...start, offset: 0 };
+        const range = Editor.range(editor, begin, begin);
+        Transforms.select(editor, range);
       }
-    }, [ editor, tearDown ])
+    }, [editor, tearDown]);
 
     /**
      * Editor keydown
@@ -452,22 +454,22 @@ const TextEditor: React.FC<EditableProps & RefAttribute> = memo(
             setInputValue("");
             e.preventDefault();
           } else {
-            prepareCloseEditor()
+            prepareCloseEditor();
+            e.preventDefault();
             /* Add a new line when Cmd/Ctrl key is pressed */
             if (isMetaKey) {
               editor.insertBreak();
               return;
             }
             if (onSubmit) {
-              onSubmit(text, isShiftKey ? Direction.Up : Direction.Down);              
+              onSubmit(text, isShiftKey ? Direction.Up : Direction.Down);
               return;
             }
-            e.preventDefault();
           }
         }
 
         if (e.which === KeyCodes.Escape) {
-          prepareCloseEditor()
+          prepareCloseEditor();
           onCancel && onCancel(e);
         }
 
@@ -478,7 +480,7 @@ const TextEditor: React.FC<EditableProps & RefAttribute> = memo(
           if (isFormulaMode && isFromSelection) {
             setInputValue("");
           } else {
-            prepareCloseEditor()
+            prepareCloseEditor();
             if (onSubmit) {
               onSubmit?.(text, isShiftKey ? Direction.Left : Direction.Right);
               return;
@@ -545,19 +547,19 @@ const TextEditor: React.FC<EditableProps & RefAttribute> = memo(
         {isOpen && items.length ? (
           <Box
             ref={menuRef}
-            width="auto"
+            width={suggestionsWidth}
             left="-2px"
             shadow="md"
             background={dropdownBgColor}
             pb={1}
             pt={1}
+            ml={suggestionsLeftPadding}
             position="absolute"
             top="100%"
             mt="2px"
             borderColor={borderColor}
             borderStyle="solid"
             borderWidth={1}
-            minWidth="calc(100% + 4px)"
             maxHeight={400}
             overflow="auto"
             zIndex={1}

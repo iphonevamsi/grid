@@ -17,14 +17,16 @@ import {
   DEFAULT_FONT_SIZE,
   pointToPixel,
   DEFAULT_FORMULABAR_HEIGHT,
-  DEFAULT_FONT_COLOR
+  DEFAULT_FONT_COLOR,
 } from "./../constants";
 import Resizer from "../Resizer";
-import TextEditor from './../Editor/TextEditor'
+import TextEditor from "./../Editor/TextEditor";
 
 interface FormulabarProps {
   onChange?: (value: string) => void;
-  onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement | HTMLDivElement>) => void;
+  onKeyDown?: (
+    e: React.KeyboardEvent<HTMLInputElement | HTMLDivElement>
+  ) => void;
   onFocus?: (e: React.FocusEvent<HTMLInputElement | HTMLDivElement>) => void;
   onBlur?: (e: React.FocusEvent<HTMLInputElement | HTMLDivElement>) => void;
   value?: string;
@@ -51,7 +53,7 @@ const Formulabar: React.FC<FormulabarProps & FormulaRef> = memo(
       locked,
       height = DEFAULT_FORMULABAR_HEIGHT,
       onChangeHeight,
-      supportedFormulas
+      supportedFormulas,
     } = props;
     const isFormula = isAFormula(value) || isFormulaMode;
     const { colorMode } = useColorMode();
@@ -87,36 +89,25 @@ const Formulabar: React.FC<FormulabarProps & FormulaRef> = memo(
             userSelect="none"
             borderLeftColor={borderColor}
           />
-          <Input
-            isDisabled={locked}
-            borderTopWidth={0}
-            borderBottomWidth={0}
-            size="sm"
-            borderRadius={0}
-            pl={2}
-            backgroundColor={backgroundColor}
-            borderColor={borderColor}
-            color={color}
-            focusBorderColor={borderColor}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              onChange?.(e.target.value)
-            }
-            aria-label="value-input"
-            onBlur={onBlur}
+          <TextEditor
+            isFormulaMode={isFormula}
             value={value}
-            onKeyDown={onKeyDown}
-            onFocus={onFocus}
-            height={"100%"}
-            lineHeight={1}
-            fontSize={
-              isFormula ? FORMULA_FONT_SIZE : pointToPixel(DEFAULT_FONT_SIZE)
-            }
-            ref={forwardedRef}
-            transition="none"
-            _focus={{
-              boxShadow: "none",
-            }}
             fontFamily={isFormula ? FORMULA_FONT : SYSTEM_FONT}
+            fontSize={pointToPixel(DEFAULT_FONT_SIZE) as number}
+            onChange={onChange}
+            onFocus={onFocus}
+            onBlur={onBlur}
+            autoFocus={false}
+            onKeyDown={onKeyDown}
+            tearDown
+            scale={1}
+            color={DEFAULT_FONT_COLOR}
+            wrapping
+            horizontalAlign="left"
+            disabled={locked}
+            supportedFormulas={supportedFormulas}
+            suggestionsWidth="340px"
+            suggestionsLeftPadding={`${FORMULABAR_LEFT_CORNER_WIDTH}px`}
           />
         </InputGroup>
 

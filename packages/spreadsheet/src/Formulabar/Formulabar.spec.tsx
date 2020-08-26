@@ -15,12 +15,12 @@ describe("FormulaBar", () => {
     expect(asFragment()).toMatchSnapshot();
   });
 
-  it("can trigger onchange", () => {
-    const onChange = jest.fn();
-    const { getByLabelText } = domRenderer(<Formulabar onChange={onChange} />);
-    const input = getByLabelText("value-input") as HTMLInputElement;
-    fireEvent.change(input, { target: { value: "hello" } });
-    expect(onChange).toBeCalled();
-    expect(onChange).toBeCalledWith("hello");
-  });
+  // it("can trigger onchange", () => {
+  //   const onChange = jest.fn();
+  //   const { getByLabelText } = domRenderer(<Formulabar onChange={onChange} />);
+  //   const input = getByLabelText("value-input") as HTMLInputElement;
+  //   fireEvent.change(input, { target: { value: "hello" } });
+  //   expect(onChange).toBeCalled();
+  //   expect(onChange).toBeCalledWith("hello");
+  // });
 });
