@@ -608,8 +608,6 @@ const Spreadsheet: React.FC<SpreadSheetProps & RefAttributeSheetGrid> = memo(
       autoFocus = true,
       initialFormulaBarHeight = DEFAULT_FORMULABAR_HEIGHT,
       onChangeFormulaBarHeight,
-      ref,
-      children,
       ...rest
     } = props;
 
