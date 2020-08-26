@@ -117,8 +117,8 @@ const Formulabar: React.FC<FormulabarProps & FormulaRef> = memo(
         </InputGroup>
 
         <Resizer
-          minTop={DEFAULT_FORMULABAR_HEIGHT - 4}
-          initialTop={DEFAULT_FORMULABAR_HEIGHT - 4}
+          minTop={DEFAULT_FORMULABAR_HEIGHT}
+          top={DEFAULT_FORMULABAR_HEIGHT}
           onDrag={onChangeHeight}
         />
       </Box>

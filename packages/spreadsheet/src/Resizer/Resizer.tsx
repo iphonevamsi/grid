@@ -2,11 +2,13 @@ import React, { useRef, useEffect, useCallback } from "react";
 
 interface ResizerProps {
   onDrag?: (value: number) => void;
-  initialTop: number;
+  top: number;
   minTop?: number;
 }
 
-const Resizer = ({ onDrag, initialTop, minTop = 0 }: ResizerProps) => {
+const RESIZER_HEIGHT = 4;
+
+const Resizer = ({ onDrag, top, minTop = 0 }: ResizerProps) => {
   const dragging = useRef(false);
   const startY = useRef(0);
   const el = useRef<HTMLDivElement>(null);
@@ -37,10 +39,13 @@ const Resizer = ({ onDrag, initialTop, minTop = 0 }: ResizerProps) => {
       onMouseDown={handleMouseDown}
       ref={el}
       style={{
-        height: 4,
+        userSelect: "none",
+        // background: 'red',
+        height: RESIZER_HEIGHT,
         position: "absolute",
         left: 0,
-        top: initialTop,
+        marginTop: -RESIZER_HEIGHT,
+        top: top,
         right: 0,
         zIndex: 1,
         cursor: "ns-resize",
