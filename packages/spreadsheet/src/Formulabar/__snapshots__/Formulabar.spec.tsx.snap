@@ -3,17 +3,24 @@
 exports[`FormulaBar matches snapshot 1`] = `
 <DocumentFragment>
   <div
-    class="css-f7ejuk"
+    class="css-79elbk"
   >
     <div
-      class="css-113xb0u"
+      class="css-f7ejuk"
     >
-      fx
+      <div
+        class="css-113xb0u"
+      >
+        fx
+      </div>
+      <input
+        aria-label="value-input"
+        class="css-1h2y4da"
+        value=""
+      />
     </div>
-    <input
-      aria-label="value-input"
-      class="css-1h2y4da"
-      value=""
+    <div
+      style="height: 4px; position: absolute; left: 0px; top: 20px; right: 0px; z-index: 1; cursor: ns-resize;"
     />
   </div>
 </DocumentFragment>

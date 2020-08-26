@@ -48,6 +48,7 @@ export const DEFAULT_CELL_PADDING = 2;
 export const CELL_BORDER_WIDTH = 1;
 export const ERROR_CIRCULAR_DEPENDENCY = "Circular dependency detected.";
 export const ERROR_REFERENCE = "Reference does not exist.";
+export const DEFAULT_FORMULABAR_HEIGHT = 24
 
 /**
  * Number to alphabet

@@ -42,6 +42,7 @@ import {
   ROW_HEADER_WIDTH,
   DEFAULT_ROW_COUNT,
   DEFAULT_COLUMN_COUNT,
+  DEFAULT_FORMULABAR_HEIGHT,
 } from "./constants";
 import {
   FORMATTING_TYPE,
@@ -383,6 +384,10 @@ export interface SpreadSheetProps {
    * Autofocus the grid on initial mount
    */
   autoFocus?: boolean;
+  /**
+   * Height of formula bar
+   */
+  initialFormulaBarHeight?: number;
 }
 
 export type FormulaMap = Record<string, (...args: any[]) => any>;
@@ -595,6 +600,7 @@ const Spreadsheet: React.FC<SpreadSheetProps & RefAttributeSheetGrid> = memo(
       gridBackgroundColor,
       onCalculateSuccess,
       autoFocus = true,
+      initialFormulaBarHeight = DEFAULT_FORMULABAR_HEIGHT,
     } = props;
 
     /* Last active cells: for undo, redo */
@@ -602,6 +608,7 @@ const Spreadsheet: React.FC<SpreadSheetProps & RefAttributeSheetGrid> = memo(
     const lastSelectionsRef = useRef<SelectionArea[] | null>([]);
     const [scale, setScale] = useState(initialScale);
     const currentGrid = useRef<WorkbookGridRef>(null);
+    const [formulaBarHeight, setFormulaBarHeight] = useState(initialFormulaBarHeight)
     const [formulaInput, setFormulaInput] = useState("");
     const [isFormulaInputActive, setIsFormulaInputActive] = useState(false);
     const { current: isControlled } = useRef<boolean>(sheetsProp !== void 0);
@@ -2210,6 +2217,8 @@ const Spreadsheet: React.FC<SpreadSheetProps & RefAttributeSheetGrid> = memo(
               onFocus={handleFormulabarFocus}
               onBlur={handleFormulabarBlur}
               isFormulaMode={isFormulaMode}
+              height={formulaBarHeight}
+              onChangeHeight={setFormulaBarHeight}
               locked={activeCellConfig?.locked}
             />
           ) : null}

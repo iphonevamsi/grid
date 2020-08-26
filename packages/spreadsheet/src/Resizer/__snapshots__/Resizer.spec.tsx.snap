@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Resizer matches snapshot 1`] = `
+<DocumentFragment>
+  <div
+    style="height: 4px; position: absolute; left: 0px; top: 30px; right: 0px; z-index: 1; cursor: ns-resize;"
+  />
+</DocumentFragment>
+`;
