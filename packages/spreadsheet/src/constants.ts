@@ -43,6 +43,7 @@ export const INVALID_COLOR = "#FF5621";
 export const ERROR_COLOR = "#C63929";
 export const INFO_COLOR = "#1D72E8";
 export const HYPERLINK_COLOR = "#1155CC";
+export const DEFAULT_FONT_COLOR = '#000'
 export const LINE_HEIGHT_RATIO = 1;
 export const DEFAULT_CELL_PADDING = 2;
 export const CELL_BORDER_WIDTH = 1;

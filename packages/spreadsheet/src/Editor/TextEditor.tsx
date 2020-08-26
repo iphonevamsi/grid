@@ -75,6 +75,10 @@ export interface EditableProps {
   autoFocus?: boolean;
   supportedFormulas?: string[];
   onFormulaChange?: (props: FormulaChangeProps) => void;
+  onFocus?: (e: React.FocusEvent<HTMLDivElement>) => void;
+  onBlur?: (e: React.FocusEvent<HTMLDivElement>) => void;
+  tearDown?: boolean
+  disabled?: boolean
 }
 
 export type RefAttribute = {
@@ -113,13 +117,15 @@ const TextEditor: React.FC<EditableProps & RefAttribute> = memo(
   forwardRef((props, forwardedRef) => {
     const {
       value: initialValue,
+      onFocus,
+      onBlur,
       onChange,
       onSubmit,
       onCancel,
       fontFamily,
       fontSize,
       bold,
-      scale,
+      scale = 1,
       color,
       horizontalAlign,
       underline,
@@ -129,6 +135,8 @@ const TextEditor: React.FC<EditableProps & RefAttribute> = memo(
       autoFocus,
       supportedFormulas = [],
       onFormulaChange,
+      tearDown = false,
+      disabled,
     } = props;
     const serialize = useCallback(
       (value?: React.ReactText): Node[] => {
@@ -407,12 +415,24 @@ const TextEditor: React.FC<EditableProps & RefAttribute> = memo(
           });
 
           setCursorSuggestionToken(
-            showCellSuggestion ? getCurrentCursorOffset(editor) : void 0
+            showCellSuggestion ? start : void 0
           );
         }
       },
       [isFormulaMode]
     );
+
+    const prepareCloseEditor = useCallback(() => {
+      if (!tearDown) {
+        return
+      }
+      const start = getCurrentCursorOffset(editor)
+      if (start) {
+        const begin = { ...start, offset: 0 }
+        const range = Editor.range(editor, begin, begin)
+        Transforms.select(editor, range)
+      }
+    }, [ editor, tearDown ])
 
     /**
      * Editor keydown
@@ -432,20 +452,22 @@ const TextEditor: React.FC<EditableProps & RefAttribute> = memo(
             setInputValue("");
             e.preventDefault();
           } else {
+            prepareCloseEditor()
             /* Add a new line when Cmd/Ctrl key is pressed */
             if (isMetaKey) {
               editor.insertBreak();
               return;
             }
-            onSubmit?.(text, isShiftKey ? Direction.Up : Direction.Down);
-
+            if (onSubmit) {
+              onSubmit(text, isShiftKey ? Direction.Up : Direction.Down);              
+              return;
+            }
             e.preventDefault();
-
-            return;
           }
         }
 
         if (e.which === KeyCodes.Escape) {
+          prepareCloseEditor()
           onCancel && onCancel(e);
         }
 
@@ -456,9 +478,11 @@ const TextEditor: React.FC<EditableProps & RefAttribute> = memo(
           if (isFormulaMode && isFromSelection) {
             setInputValue("");
           } else {
-            onSubmit &&
-              onSubmit(text, isShiftKey ? Direction.Left : Direction.Right);
-            return;
+            prepareCloseEditor()
+            if (onSubmit) {
+              onSubmit?.(text, isShiftKey ? Direction.Left : Direction.Right);
+              return;
+            }
           }
         }
         /* Global handler */
@@ -509,9 +533,12 @@ const TextEditor: React.FC<EditableProps & RefAttribute> = memo(
         >
           <Slate editor={editor} value={value} onChange={handleChange}>
             <Editable
+              readOnly={disabled}
               decorate={decorate}
               renderLeaf={(props) => <Leaf {...props} />}
               onKeyDown={handleKeyDown}
+              onFocus={onFocus}
+              onBlur={onBlur}
             />
           </Slate>
         </div>

@@ -1444,14 +1444,13 @@ const Spreadsheet: React.FC<SpreadSheetProps & RefAttributeSheetGrid> = memo(
      * Formula bar focus event
      */
     const handleFormulabarFocus = useCallback(
-      (e: React.FocusEvent<HTMLInputElement>) => {
+      (e: React.FocusEvent<HTMLInputElement | HTMLDivElement>) => {
         if (isFormulaMode) {
           return;
         }
-        const input = e.target;
+        // const input = e.target;
         if (activeCell) {
-          currentGrid.current?.makeEditable(activeCell, input.value, false);
-          requestAnimationFrame(() => input?.focus());
+          currentGrid.current?.makeEditable(activeCell, void 0, false);
           setIsFormulaInputActive(true);
         }
       },
@@ -1499,7 +1498,7 @@ const Spreadsheet: React.FC<SpreadSheetProps & RefAttributeSheetGrid> = memo(
      * When user presses Enter on formula input
      */
     const handleFormulabarKeydown = useCallback(
-      (e: React.KeyboardEvent<HTMLInputElement>) => {
+      (e: React.KeyboardEvent<HTMLInputElement | HTMLDivElement>) => {
         const currentlyEditingCell = currentGrid.current?.getEditingCell();
         const currentlyEditingSheetId = currentGrid.current?.getEditingSheetId();
         if (
@@ -2235,6 +2234,7 @@ const Spreadsheet: React.FC<SpreadSheetProps & RefAttributeSheetGrid> = memo(
               height={formulaBarHeight}
               onChangeHeight={setFormulaBarHeight}
               locked={activeCellConfig?.locked}
+              supportedFormulas={supportedFormulas}
             />
           ) : null}
           <Workbook
