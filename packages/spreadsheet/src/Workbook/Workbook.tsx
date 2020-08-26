@@ -364,7 +364,12 @@ const Workbook: React.FC<WorkbookProps & WorkBookRefAttribute> = memo(
 
     return (
       <>
-        <Flex minHeight={0} flex={1} ref={containerRef} background={finalGridBackground}>
+        <Flex
+          minHeight={0}
+          flex={1}
+          ref={containerRef}
+          background={finalGridBackground}
+        >
           <Grid
             scale={scale}
             isLightMode={isLight}

@@ -1,3 +1,3 @@
-import Resizer from './Resizer'
+import Resizer from "./Resizer";
 
-export default Resizer
+export default Resizer;

@@ -388,6 +388,10 @@ export interface SpreadSheetProps {
    * Height of formula bar
    */
   initialFormulaBarHeight?: number;
+  /**
+   * Callback when formulaBar height changes
+   */
+  onChangeFormulaBarHeight?: (value: number) => void
 }
 
 export type FormulaMap = Record<string, (...args: any[]) => any>;
@@ -601,6 +605,7 @@ const Spreadsheet: React.FC<SpreadSheetProps & RefAttributeSheetGrid> = memo(
       onCalculateSuccess,
       autoFocus = true,
       initialFormulaBarHeight = DEFAULT_FORMULABAR_HEIGHT,
+      onChangeFormulaBarHeight,
     } = props;
 
     /* Last active cells: for undo, redo */
@@ -1047,6 +1052,11 @@ const Spreadsheet: React.FC<SpreadSheetProps & RefAttributeSheetGrid> = memo(
     useEffect(() => {
       onScaleChange?.(scale);
     }, [scale]);
+
+    /* Callback fired when formulaBar height changes */
+    useEffect(() => {
+      onChangeFormulaBarHeight?.(formulaBarHeight)
+    }, [ formulaBarHeight ])
 
     useImperativeHandle(
       forwardedRef,

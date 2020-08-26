@@ -18,7 +18,7 @@ import {
   pointToPixel,
   DEFAULT_FORMULABAR_HEIGHT,
 } from "./../constants";
-import Resizer from '../Resizer'
+import Resizer from "../Resizer";
 
 interface FormulabarProps {
   onChange?: (value: string) => void;
@@ -29,7 +29,7 @@ interface FormulabarProps {
   isFormulaMode?: boolean;
   locked?: boolean;
   height?: number;
-  onChangeHeight?: (value: number) => void
+  onChangeHeight?: (value: number) => void;
 }
 
 export type FormulaRef = {
@@ -59,7 +59,7 @@ const Formulabar: React.FC<FormulabarProps & FormulaRef> = memo(
       ? theme.colors.gray[300]
       : theme.colors.gray[600];
     return (
-      <Box position='relative'>
+      <Box position="relative">
         <InputGroup
           size="sm"
           borderTopWidth={1}
@@ -116,7 +116,11 @@ const Formulabar: React.FC<FormulabarProps & FormulaRef> = memo(
           />
         </InputGroup>
 
-        <Resizer minTop={DEFAULT_FORMULABAR_HEIGHT - 4} initialTop={DEFAULT_FORMULABAR_HEIGHT - 4} onDrag={onChangeHeight} />
+        <Resizer
+          minTop={DEFAULT_FORMULABAR_HEIGHT - 4}
+          initialTop={DEFAULT_FORMULABAR_HEIGHT - 4}
+          onDrag={onChangeHeight}
+        />
       </Box>
     );
   })
