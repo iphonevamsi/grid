@@ -13,11 +13,39 @@ exports[`FormulaBar matches snapshot 1`] = `
       >
         fx
       </div>
-      <input
-        aria-label="value-input"
-        class="css-1h2y4da"
-        value=""
-      />
+      <div
+        style="font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji; font-size: 13px; font-weight: normal; width: 100%; height: 100%; padding: 0px 1px; margin: 0px; box-sizing: border-box; border-width: 0px; outline: none; resize: none; overflow: hidden; vertical-align: top; background: transparent; color: rgb(0, 0, 0); white-space: pre-wrap; text-align: left; line-height: normal; text-decoration: none; cursor: text; flex: 1;"
+      >
+        <div
+          contenteditable="true"
+          data-gramm="false"
+          data-slate-editor="true"
+          data-slate-node="value"
+          role="textbox"
+          style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
+        >
+          <div
+            data-slate-node="element"
+            style="position: relative;"
+          >
+            <span
+              data-slate-node="text"
+            >
+              <span
+                data-slate-leaf="true"
+              >
+                <span
+                  data-slate-length="0"
+                  data-slate-zero-width="n"
+                >
+                  ﻿
+                  <br />
+                </span>
+              </span>
+            </span>
+          </div>
+        </div>
+      </div>
     </div>
     <div
       style="user-select: none; height: 4px; position: absolute; left: 0px; margin-top: -4px; top: 24px; right: 0px; z-index: 1; cursor: ns-resize;"
