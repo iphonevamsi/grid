@@ -126,7 +126,8 @@ function Home() {
               margin="auto"
               display="block"
               textAlign="center"
-              href="/checkout"
+              // href="/checkout"
+              isDisabled
               as="a"
               lineHeight="40px"
               mb={5}
