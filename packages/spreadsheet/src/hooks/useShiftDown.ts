@@ -71,6 +71,7 @@ const useShiftDown = (props: ShiftDownProps): ShiftDownResults => {
     selectedItem: controlledSelecteditem,
     limit = 10,
   } = props;
+
   const { current: isControlled } = useRef(controlledSelecteditem !== void 0);
   const [highlightedIndex, setHighlightedIndex] = useState<number | null>(
     defaultHighlightedIndex

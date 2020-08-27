@@ -40,6 +40,7 @@ interface FormulabarProps {
   onChangeHeight?: (value: number) => void;
   supportedFormulas?: string[];
   onFormulaChange?: (props: FormulaChangeProps) => void;
+  disabled?: boolean;
 }
 
 export type RefAttribute = {
@@ -62,6 +63,7 @@ const Formulabar: React.FC<FormulabarProps & RefAttribute> = memo(
       onFormulaChange,
       onSubmit,
       onCancel,
+      disabled,
     } = props;
     const inputRef = useRef<EditableRef>(null);
     const isFormula = isAFormula(value) || isFormulaMode;
@@ -128,7 +130,7 @@ const Formulabar: React.FC<FormulabarProps & RefAttribute> = memo(
               color={DEFAULT_FONT_COLOR}
               wrapping
               horizontalAlign="left"
-              disabled={locked}
+              disabled={locked || disabled}
               supportedFormulas={supportedFormulas}
               lineHeight="13px"
               onFormulaChange={onFormulaChange}

@@ -29,7 +29,6 @@ describe("Workbook", () => {
         StatusBar={StatusBarComponent}
         theme={theme}
         currentSheet={currentSheet}
-        showFormulabar
         showTabStrip
         showStatusBar
       />

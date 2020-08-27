@@ -9,8 +9,10 @@ import {
   escapeRegExp,
   FORMAT_DEFAULT_DECIMAL,
   cellsInSelectionVariant,
+  removeStaleFormulas,
 } from "./constants";
 import { CellInterface } from "@rowsncolumns/grid";
+import { Patch } from "immer";
 
 describe("Helper functions", () => {
   it("can format number", () => {
@@ -135,5 +137,26 @@ describe("cellsInSelectionVariant", () => {
     const [min, max] = getMinMax(cells);
     expect(min).toBe(1);
     expect(max).toBe(5);
+  });
+});
+
+describe("removeStaleFormulas", () => {
+  it("removes formulas that are not executed from undo/redo patches", () => {
+    const patches: Patch[] = [
+      {
+        op: "replace",
+        path: ["sheets", "Sheet 1", "cells", "4"],
+        value: {
+          1: {
+            datatype: "formula",
+            timestamp: void 0,
+            text: "=SUM(2,2)",
+          },
+        },
+      },
+    ];
+
+    expect(removeStaleFormulas(patches).length).toBe(1);
+    expect(removeStaleFormulas(patches)[0].value).toEqual({});
   });
 });

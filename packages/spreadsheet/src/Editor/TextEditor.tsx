@@ -162,9 +162,8 @@ const TextEditor: React.FC<EditableProps & RefAttribute> = memo(
     const [cursorToken, setCursorSuggestionToken] = useState<
       Point | undefined
     >();
-    const [value, setValue] = useState<Node[]>(() => serialize(initialValue));
+    const value = useMemo(() => serialize(initialValue), [initialValue]);
     const [target, setTarget] = useState<Token | undefined>();
-
     const handleUpdateSelection = useCallback(
       (sheetName, sel: SelectionArea | undefined, mode: NewSelectionMode) => {
         const cellAddress = selectionToAddress(sel);
@@ -338,28 +337,8 @@ const TextEditor: React.FC<EditableProps & RefAttribute> = memo(
         });
         return ranges;
       },
-      [isFormulaMode, cursorToken]
+      [isFormulaMode, value, cursorToken]
     );
-
-    useEffect(() => {
-      const normalizedValue = deserialize(value);
-      if (!isFormulaMode) {
-        setInputValue(normalizedValue);
-      }
-      /* If its the same value skip */
-      if (normalizedValue === initialValue) {
-        return;
-      }
-
-      onChange?.(normalizedValue);
-    }, [value]);
-
-    useEffect(() => {
-      /* Update editor text if initialValue changes, when user enters text in formula bar */
-      if (deserialize(value) !== initialValue) {
-        setValue(serialize(initialValue));
-      }
-    }, [initialValue]);
 
     const theme = useTheme();
     const { colorMode } = useColorMode();
@@ -377,8 +356,9 @@ const TextEditor: React.FC<EditableProps & RefAttribute> = memo(
      */
     const handleChange = useCallback(
       (value) => {
-        setValue(value);
-        const isFormula = isAFormula(deserialize(value));
+        const text = deserialize(value);
+        onChange?.(text);
+        const isFormula = isAFormula(text);
         if (isFormula) {
           const start = getCurrentCursorOffset(editor);
           if (!start) {

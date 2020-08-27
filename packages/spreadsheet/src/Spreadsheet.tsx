@@ -1480,7 +1480,6 @@ const Spreadsheet: React.FC<SpreadSheetProps & RefAttributeSheetGrid> = memo(
      */
     const handleFormulabarChange = useCallback(
       (value: string) => {
-        if (!activeCell) return;
         const currentlyEditingCell = currentGrid.current?.getEditingCell();
         if (!currentlyEditingCell) {
           return;
@@ -2283,6 +2282,7 @@ const Spreadsheet: React.FC<SpreadSheetProps & RefAttributeSheetGrid> = memo(
               locked={activeCellConfig?.locked}
               supportedFormulas={supportedFormulas}
               onFormulaChange={handleChangeFormulaState}
+              disabled={!activeCell}
             />
           ) : null}
           <Workbook

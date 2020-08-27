@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { domRenderer, cleanup, act, fireEvent } from "./../utils/test-utils";
 import TextEditor, { EditableRef } from "./TextEditor";
 import { DEFAULT_FONT_FAMILY, DEFAULT_FONT_SIZE } from "../constants";
@@ -50,6 +50,10 @@ describe("TextEditor", () => {
     let element;
     let editorRef = React.createRef<EditableRef>();
     const App = () => {
+      const [value, setValue] = useState("");
+      useEffect(() => {
+        onChange?.();
+      }, [value]);
       return (
         <>
           <TextEditor
@@ -61,7 +65,7 @@ describe("TextEditor", () => {
             color="black"
             wrapping
             horizontalAlign="left"
-            onChange={onChange}
+            onChange={setValue}
           />
         </>
       );

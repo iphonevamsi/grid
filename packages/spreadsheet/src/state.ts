@@ -13,6 +13,7 @@ import {
   formattingTypeKeys,
   detectDataType,
   getMinMax,
+  removeStaleFormulas,
 } from "./constants";
 import {
   Sheet,
@@ -59,34 +60,6 @@ export const clearCellKeepFormatting = (config: CellConfig) => {
     if (key in formattingTypeKeys) continue;
     delete config[key];
   }
-};
-
-/**
- * When a formula parsing is successfull,
- * we should replace the formula text with result.
- *
- * This removes stale formulas
- */
-export const removeStaleFormulas = (patches: Patch[]) => {
-  return patches?.filter((patch) => {
-    if (
-      patch.value &&
-      typeof patch.value === "object" &&
-      Object.keys(patch.value).length
-    ) {
-      const value = { ...patch.value };
-      for (const key in patch.value) {
-        if (
-          value[key]?.datatype === "formula" &&
-          value[key]?.timestamp === void 0
-        ) {
-          delete value[key];
-        }
-      }
-      patch.value = value;
-    }
-    return true;
-  });
 };
 
 export const defaultSheets: Sheet[] = [
@@ -456,6 +429,7 @@ export const produceState = (
     { sheets },
     (draft) => cb(draft.sheets)
   );
+
   requestAnimationFrame(() => {
     gridRef.current?.addUndoPatch({ patches, inversePatches });
   });

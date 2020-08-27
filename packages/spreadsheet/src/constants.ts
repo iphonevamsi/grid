@@ -19,6 +19,7 @@ import {
   castToString,
 } from "@rowsncolumns/grid";
 import SSF from "ssf";
+import { Patch } from "immer";
 
 export const DEFAULT_ROW_COUNT = 1000;
 export const DEFAULT_COLUMN_COUNT = 1000;
@@ -43,13 +44,13 @@ export const INVALID_COLOR = "#FF5621";
 export const ERROR_COLOR = "#C63929";
 export const INFO_COLOR = "#1D72E8";
 export const HYPERLINK_COLOR = "#1155CC";
-export const DEFAULT_FONT_COLOR = '#000'
+export const DEFAULT_FONT_COLOR = "#000";
 export const LINE_HEIGHT_RATIO = 1;
 export const DEFAULT_CELL_PADDING = 2;
 export const CELL_BORDER_WIDTH = 1;
 export const ERROR_CIRCULAR_DEPENDENCY = "Circular dependency detected.";
 export const ERROR_REFERENCE = "Reference does not exist.";
-export const DEFAULT_FORMULABAR_HEIGHT = 24
+export const DEFAULT_FORMULABAR_HEIGHT = 24;
 
 /**
  * Number to alphabet
@@ -731,4 +732,32 @@ export const escapeRegExp = (string: string) => {
   return string && reHasRegExpChar.test(string)
     ? string.replace(reRegExpChar, "\\$&")
     : string || "";
+};
+
+/**
+ * When a formula parsing is successfull,
+ * we should replace the formula text with result.
+ *
+ * This removes stale formulas
+ */
+export const removeStaleFormulas = (patches: Patch[]) => {
+  return patches?.filter((patch) => {
+    if (
+      patch.value &&
+      typeof patch.value === "object" &&
+      Object.keys(patch.value).length
+    ) {
+      const value = { ...patch.value };
+      for (const key in patch.value) {
+        if (
+          value[key]?.datatype === "formula" &&
+          value[key]?.timestamp === void 0
+        ) {
+          delete value[key];
+        }
+      }
+      patch.value = value;
+    }
+    return true;
+  });
 };
