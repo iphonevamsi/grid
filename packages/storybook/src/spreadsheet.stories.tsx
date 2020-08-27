@@ -583,38 +583,44 @@ export const TickingFormula = () => {
             }
           }
           setSheets((sheets) => {
-            return produceState(sheets, gridRef, (draft) => {
-              const sheet = draft.find((sheet) => sheet.name === ticker.sheet);
-              if (sheet) {
-                for (let i = 0; i < newData.length; i++) {
-                  const row = parentRow + i;
-                  sheet.cells[row] = sheet.cells[row] ?? {};
-                  for (let j = 0; j < newData[i].length; j++) {
-                    const col = parentCol + j;
-                    sheet.cells[row][col] = sheet.cells[row][col] ?? {};
+            return produceState(
+              sheets,
+              (draft) => {
+                const sheet = draft.find(
+                  (sheet) => sheet.name === ticker.sheet
+                );
+                if (sheet) {
+                  for (let i = 0; i < newData.length; i++) {
+                    const row = parentRow + i;
+                    sheet.cells[row] = sheet.cells[row] ?? {};
+                    for (let j = 0; j < newData[i].length; j++) {
+                      const col = parentCol + j;
+                      sheet.cells[row][col] = sheet.cells[row][col] ?? {};
 
-                    if (row === parentRow && col === parentCol) {
-                      /**
-                       * User has deleted the parent cell
-                       * Another way is to listen to onDeleteCells and disconnect
-                       */
-                      if (sheet.cells[row][col].text === void 0) {
-                        return clearInterval(interval);
+                      if (row === parentRow && col === parentCol) {
+                        /**
+                         * User has deleted the parent cell
+                         * Another way is to listen to onDeleteCells and disconnect
+                         */
+                        if (sheet.cells[row][col].text === void 0) {
+                          return clearInterval(interval);
+                        }
+                        sheet.cells[row][col].result = newData[i][j];
+                        sheet.cells[row][col].resultType = "number";
+                        sheet.cells[row][col].formulaRange = [
+                          newData[0].length,
+                          newData.length,
+                        ];
+                      } else {
+                        sheet.cells[row][col].text = newData[i][j];
+                        sheet.cells[row][col].datatype = "number";
                       }
-                      sheet.cells[row][col].result = newData[i][j];
-                      sheet.cells[row][col].resultType = "number";
-                      sheet.cells[row][col].formulaRange = [
-                        newData[0].length,
-                        newData.length,
-                      ];
-                    } else {
-                      sheet.cells[row][col].text = newData[i][j];
-                      sheet.cells[row][col].datatype = "number";
                     }
                   }
                 }
-              }
-            });
+              },
+              gridRef
+            );
           });
           gridRef.current.onCalculate?.(changes).then((results) => {
             gridRef.current.dispatch({

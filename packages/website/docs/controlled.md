@@ -26,14 +26,15 @@ function App () {
       // Undo state is managed automatically.
       // This uses immer internally.
       // draft is an immer Proxy
-      return produceState(prev, gridRef, draft => {
+      // Similar to `immer` produce, but 3rd argument is required so we can save patches
+      return produceState(prev, draft => {
         const sheet = draft.sheets[0]
         if (sheet) {
           sheet.cells[1] = sheet.cells[1] ?? {}
           sheet.cells[1][1] = sheet.cells[1][1] ?? {}
           sheet.cells[1][1].text = 'Hello world'
         }
-      });
+      }, gridRef);
     })
   }
   return (
@@ -59,14 +60,14 @@ export const App3 = () => {
   const [ sheets, setSheets ] = useState(defaultSheets)
   const handleClick = () => {
     setSheets(prev => {      
-      return produceState(prev, gridRef, draft => {
+      return produceState(prev, draft => {
         const sheet = draft[0]
         if (sheet) {
           sheet.cells[1] = sheet.cells[1] ?? {}
           sheet.cells[1][1] = sheet.cells[1][1] ?? {}
           sheet.cells[1][1].text = 'Hello world'
         }
-      });
+      }, gridRef);
     })
   }
   return (

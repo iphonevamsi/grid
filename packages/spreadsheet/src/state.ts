@@ -422,8 +422,8 @@ const defaultStateReducer = (state: StateInterface) => state;
  */
 export const produceState = (
   sheets: Sheet[],
-  gridRef: React.RefObject<SheetGridRef>,
-  cb: (s: Sheet[]) => Pick<StateInterface, "sheets">
+  cb: (s: Sheet[]) => Pick<StateInterface, "sheets"> | void,
+  gridRef: React.RefObject<SheetGridRef>
 ) => {
   const [nextState, patches, inversePatches] = produceWithPatches(
     { sheets },

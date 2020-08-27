@@ -2930,10 +2930,14 @@ describe("produceState", () => {
     ];
     const addUndoPatch = jest.fn();
     let newSheets: Sheet[];
-    // @ts-ignore
-    newSheets = produceState(sheets, { current: { addUndoPatch } }, (draft) => {
-      draft[0].cells[1][1].text = "hello world";
-    });
+    newSheets = produceState(
+      sheets,
+      (draft) => {
+        draft[0].cells[1][1].text = "hello world";
+      },
+      // @ts-ignore
+      { current: { addUndoPatch } }
+    );
     expect(newSheets[0].cells[1][1].text).toBe("hello world");
     await new Promise((resolve) =>
       requestAnimationFrame(() => {
