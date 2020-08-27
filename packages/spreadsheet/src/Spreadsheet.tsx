@@ -1460,9 +1460,6 @@ const Spreadsheet: React.FC<SpreadSheetProps & RefAttributeSheetGrid> = memo(
      */
     const handleFormulabarFocus = useCallback(
       (e: React.FocusEvent<HTMLInputElement | HTMLDivElement>) => {
-        if (isFormulaMode) {
-          return;
-        }
         if (activeCell) {
           currentGrid.current?.makeEditable(activeCell, void 0, false);
           setIsFormulaInputActive(true);

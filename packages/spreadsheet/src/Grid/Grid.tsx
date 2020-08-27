@@ -826,9 +826,7 @@ const SheetGrid: React.FC<GridProps & RefAttributeGrid> = memo(
 
     /* Focus on the editor */
     const focusEditor = useCallback(() => {
-      requestAnimationFrame(() =>
-        isFormulaInputActive ? focusFormulaBar?.() : editorRef.current?.focus()
-      );
+      isFormulaInputActive ? focusFormulaBar?.() : editorRef.current?.focus();
     }, [isFormulaInputActive]);
 
     /* Focus on the editor */
