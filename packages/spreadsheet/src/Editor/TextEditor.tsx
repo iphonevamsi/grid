@@ -290,8 +290,8 @@ const TextEditor: React.FC<EditableProps & RefAttribute> = memo(
     });
 
     useEffect(() => {
-      items.length > 0 ? openMenu() : closeMenu();
-    }, [items]);
+      target && items.length > 0 ? openMenu() : closeMenu();
+    }, [items, target]);
 
     /**
      * Slate decorator
@@ -405,12 +405,7 @@ const TextEditor: React.FC<EditableProps & RefAttribute> = memo(
       if (!tearDown) {
         return;
       }
-      const start = getCurrentCursorOffset(editor);
-      if (start) {
-        const begin = { path: [0, 0], offset: 0 };
-        const range = Editor.range(editor, begin, begin);
-        Transforms.select(editor, range);
-      }
+      Transforms.deselect(editor);
     }, [editor, tearDown]);
 
     /**
