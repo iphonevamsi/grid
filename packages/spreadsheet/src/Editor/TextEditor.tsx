@@ -78,7 +78,6 @@ export interface EditableProps {
   onBlur?: (e: React.FocusEvent<HTMLDivElement>) => void;
   tearDown?: boolean;
   disabled?: boolean;
-  suggestionsWidth?: string;
   lineHeight?: string;
 }
 
@@ -139,7 +138,6 @@ const TextEditor: React.FC<EditableProps & RefAttribute> = memo(
       onFormulaChange,
       tearDown = false,
       disabled,
-      suggestionsWidth = "calc(100% + 4px)",
     } = props;
     const serialize = useCallback(
       (value?: React.ReactText): Node[] => {
@@ -522,7 +520,7 @@ const TextEditor: React.FC<EditableProps & RefAttribute> = memo(
             borderWidth: 0,
             outline: "none",
             resize: "none",
-            overflow: "hidden",
+            overflow: "auto",
             verticalAlign: "top",
             background: "transparent",
             color: color,
@@ -552,7 +550,7 @@ const TextEditor: React.FC<EditableProps & RefAttribute> = memo(
         {isOpen && items.length ? (
           <Box
             ref={menuRef}
-            width={suggestionsWidth}
+            width={isFormulaMode ? 320 : "calc(100% + 4px)"}
             left="-2px"
             shadow="md"
             background={dropdownBgColor}

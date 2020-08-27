@@ -130,7 +130,6 @@ const Formulabar: React.FC<FormulabarProps & RefAttribute> = memo(
               horizontalAlign="left"
               disabled={locked}
               supportedFormulas={supportedFormulas}
-              suggestionsWidth="340px"
               lineHeight="13px"
               onFormulaChange={onFormulaChange}
             />

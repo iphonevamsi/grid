@@ -643,7 +643,7 @@ exports[`SpreadSheet matches snapshot 1`] = `
           style="display: flex; flex: 1; position: relative; margin-top: 4px; margin-left: 6px; padding-left: 1px;"
         >
           <div
-            style="font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji; font-size: 13px; font-weight: normal; width: 100%; height: 100%; padding: 0px 1px; margin: 0px; box-sizing: border-box; border-width: 0px; outline: none; resize: none; overflow: hidden; vertical-align: top; background: transparent; color: rgb(0, 0, 0); white-space: pre-wrap; text-align: left; line-height: 13px; text-decoration: none; cursor: text; flex: 1; display: flex;"
+            style="font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji; font-size: 13px; font-weight: normal; width: 100%; height: 100%; padding: 0px 1px; margin: 0px; box-sizing: border-box; border-width: 0px; outline: none; resize: none; overflow: auto; vertical-align: top; background: transparent; color: rgb(0, 0, 0); white-space: pre-wrap; text-align: left; line-height: 13px; text-decoration: none; cursor: text; flex: 1; display: flex;"
           >
             <div
               contenteditable="true"
