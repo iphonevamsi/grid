@@ -768,7 +768,7 @@ const Spreadsheet: React.FC<SpreadSheetProps & RefAttributeSheetGrid> = memo(
             `Use initialSheets for uncontrolled and sheets and onChange for controlled SpreadSheet`
         );
       }
-    }, [isControlled]);
+    }, [sheetsProp, isControlled]);
 
     /**
      * Update local state or triggers callback
