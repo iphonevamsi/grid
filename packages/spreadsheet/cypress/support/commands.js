@@ -25,7 +25,7 @@
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 
 Cypress.Commands.add("typeInSlate", { prevSubject: true }, (subject, text) => {
-  return cy.wrap(subject).then(subject => {
+  return cy.wrap(subject).then((subject) => {
     subject[0].dispatchEvent(
       new InputEvent("beforeinput", { inputType: "insertText", data: text })
     );
@@ -33,16 +33,23 @@ Cypress.Commands.add("typeInSlate", { prevSubject: true }, (subject, text) => {
   });
 });
 
-Cypress.Commands.add('enterText', { prevSubject: true}, (subject, text, cell, gridRef) => {
-  const pos = gridRef.current.grid.getCellOffsetFromCoords(cell)
-  return cy.get(".rowsncolumns-grid-container")
-  .dblclick(pos.x, pos.y)  
-  // .type(text)
-  .get("[data-gramm='false']")
-  .typeInSlate(text)
-  .wait(100)
-  .type("{enter}");
-})
-
+Cypress.Commands.add(
+  "enterText",
+  { prevSubject: true },
+  (subject, text, cell, gridRef) => {
+    const pos = gridRef.current.grid.getCellOffsetFromCoords(cell);
+    return (
+      cy
+        .get(".rowsncolumns-grid-container")
+        .dblclick(pos.x, pos.y)
+        // .type(text)
+        .get("[data-gramm='false']")
+        .eq(1)
+        .typeInSlate(text)
+        .wait(100)
+        .type("{enter}")
+    );
+  }
+);
 
 // import "cypress-plugin-snapshots/commands";
