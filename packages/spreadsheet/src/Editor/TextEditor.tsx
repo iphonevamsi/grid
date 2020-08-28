@@ -290,8 +290,10 @@ const TextEditor: React.FC<EditableProps & RefAttribute> = memo(
     });
 
     useEffect(() => {
-      target && items.length > 0 ? openMenu() : closeMenu();
-    }, [items, target]);
+      const showMenu = items.length;
+      if (isFormulaMode && !target) return closeMenu();
+      if (showMenu) openMenu();
+    }, [items, target, isFormulaMode]);
 
     /**
      * Slate decorator
