@@ -79,6 +79,7 @@ export interface EditableProps {
   tearDown?: boolean;
   disabled?: boolean;
   lineHeight?: string;
+  overflow?: string;
 }
 
 export type RefAttribute = {
@@ -138,6 +139,7 @@ const TextEditor: React.FC<EditableProps & RefAttribute> = memo(
       onFormulaChange,
       tearDown = false,
       disabled,
+      overflow = "hidden",
     } = props;
     const serialize = useCallback(
       (value?: React.ReactText): Node[] => {
@@ -502,7 +504,7 @@ const TextEditor: React.FC<EditableProps & RefAttribute> = memo(
             borderWidth: 0,
             outline: "none",
             resize: "none",
-            overflow: "auto",
+            overflow: overflow,
             verticalAlign: "top",
             background: "transparent",
             color: color,
