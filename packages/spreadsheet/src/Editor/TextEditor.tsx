@@ -290,8 +290,13 @@ const TextEditor: React.FC<EditableProps & RefAttribute> = memo(
     });
 
     useEffect(() => {
-      target && items.length > 0 ? openMenu() : closeMenu();
-    }, [items, target]);
+      const showMenu = items.length > 0;
+      if ((isFormulaMode && !target) || !showMenu) {
+        closeMenu();
+      } else {
+        openMenu();
+      }
+    }, [items, target, isFormulaMode]);
 
     /**
      * Slate decorator
@@ -396,6 +401,8 @@ const TextEditor: React.FC<EditableProps & RefAttribute> = memo(
           });
 
           setCursorSuggestionToken(showCellSuggestion ? start : void 0);
+        } else {
+          setInputValue(text);
         }
       },
       [isFormulaMode]
