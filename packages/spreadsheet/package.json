@@ -1,6 +1,6 @@
 {
   "name": "@rowsncolumns/spreadsheet",
-  "version": "7.0.3",
+  "version": "7.0.4",
   "main": "dist/index.js",
   "license": "Copyright Rows n' Columns",
   "scripts": {
