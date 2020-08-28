@@ -290,9 +290,12 @@ const TextEditor: React.FC<EditableProps & RefAttribute> = memo(
     });
 
     useEffect(() => {
-      const showMenu = items.length;
-      if (isFormulaMode && !target) return closeMenu();
-      if (showMenu) openMenu();
+      const showMenu = items.length > 0;
+      if ((isFormulaMode && !target) || !showMenu) {
+        closeMenu();
+      } else {
+        openMenu();
+      }
     }, [items, target, isFormulaMode]);
 
     /**
@@ -398,6 +401,8 @@ const TextEditor: React.FC<EditableProps & RefAttribute> = memo(
           });
 
           setCursorSuggestionToken(showCellSuggestion ? start : void 0);
+        } else {
+          setInputValue(text);
         }
       },
       [isFormulaMode]
