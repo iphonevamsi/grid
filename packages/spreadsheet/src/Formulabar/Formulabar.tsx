@@ -133,6 +133,7 @@ const Formulabar: React.FC<FormulabarProps & RefAttribute> = memo(
               disabled={locked || disabled}
               supportedFormulas={supportedFormulas}
               lineHeight="13px"
+              overflow="auto"
               onFormulaChange={onFormulaChange}
             />
           </div>
